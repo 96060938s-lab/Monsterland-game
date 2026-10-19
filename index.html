@@ -7,61 +7,74 @@
 <title>MonsterWorld</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;color:white;background:linear-gradient(#182b62,#512d77,#171b3c);min-height:100vh}
-header{text-align:center;padding:20px 10px;background:#111a3c;border-bottom:3px solid #8e75ff}
-h1{margin:0;color:#ffe66d;font-size:32px;text-shadow:2px 3px #8138a5}
+body{margin:0;background:linear-gradient(#17234e,#43265e,#17182f);color:white;font-family:Arial,sans-serif}
+header{text-align:center;background:#111936;padding:18px 8px;border-bottom:3px solid #9279ff}
+h1{color:#ffe66d;margin:0;font-size:30px}
 header p{margin:8px 0 0}
-main{max-width:850px;margin:auto;padding:15px}
-.stats{display:flex;justify-content:space-around;gap:10px;flex-wrap:wrap;margin-bottom:18px}
-.stat{background:#26386b;border:1px solid #7769db;padding:12px;border-radius:14px;font-weight:bold}
+.stats{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;padding:12px}
+.stat{background:#293966;padding:11px 15px;border-radius:12px;font-weight:bold}
+nav{display:flex;gap:7px;padding:8px;max-width:700px;margin:auto}
+nav button{flex:1;background:#354475;color:white;border:1px solid #7788d2}
+nav button.active{background:#ffe66d;color:#30204d}
+main{max-width:850px;margin:auto;padding:12px}
+.panel{background:#202b55;padding:15px;border-radius:16px;margin-bottom:14px}
 h2{color:#ffe66d}
-.panel{background:#202b55;padding:15px;border-radius:18px;margin-bottom:18px}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.monster{background:#303d70;border:2px solid #6777b9;border-radius:16px;padding:12px;text-align:center}
-.monster.owned{border-color:#6ee7a2}
-.art{font-size:64px;line-height:1.4}
+.monster{background:#303d70;border:2px solid #6475b8;border-radius:14px;padding:12px;text-align:center}
+.owned{border-color:#6ee7a2}
+.art{font-size:60px;line-height:1.4}
 .monster h3{margin:5px 0}
-.monster p{font-size:14px;min-height:32px}
-button{background:#ffd95c;color:#34234b;border:0;border-radius:10px;padding:11px;font-weight:bold;font-size:15px;width:100%;cursor:pointer}
-button:disabled{background:#777b91;color:#eee;cursor:not-allowed}
-.small{font-size:12px;color:#d5dafa}
-#message{font-weight:bold;text-align:center;min-height:24px;color:#9dffc2}
-footer{text-align:center;padding:20px;color:#c9c9e8;font-size:12px}
+.monster p{font-size:13px;min-height:30px}
+button{border:0;border-radius:10px;padding:11px;font-weight:bold;font-size:14px;cursor:pointer}
+.monster button{width:100%;background:#ffd95c;color:#34234b}
+button:disabled{background:#777b91;color:white}
+.hero{text-align:center;padding:20px 5px}
+.hero .art{font-size:100px}
+#message{text-align:center;color:#9dffc2;min-height:22px}
+.hidden{display:none}
+footer{text-align:center;padding:18px;color:#c9c9e8;font-size:12px}
 @media(min-width:600px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 </style>
 </head>
 <body>
 <header>
 <h1>🌎 MonsterWorld 👾</h1>
-<p>¡Colecciona monstruos y descubre un mundo mágico!</p>
+<p>¡Crea tu propia colección de monstruos!</p>
 </header>
 
-<main>
 <div class="stats">
 <div class="stat">🪙 Monedas: <span id="coins">100</span></div>
-<div class="stat">👾 Colección: <span id="count">1</span>/8</div>
+<div class="stat">👾 Monstruos: <span id="count">1</span>/8</div>
 </div>
 
-<div class="panel">
+<nav>
+<button id="nav-inicio" class="active" onclick="showPage('inicio')">🏠 Inicio</button>
+<button id="nav-coleccion" onclick="showPage('coleccion')">📖 Colección</button>
+<button id="nav-tienda" onclick="showPage('tienda')">🛒 Tienda</button>
+</nav>
+
+<main>
+<section id="page-inicio" class="panel">
 <h2>🏡 Tu mundo</h2>
-<p>Cuida tu colección y consigue nuevos compañeros para tu aventura.</p>
-<div id="starter"></div>
-<p id="message" aria-live="polite">¡Tu aventura comienza aquí!</p>
-</div>
+<div class="hero" id="hero"></div>
+<p style="text-align:center">¡Tu aventura acaba de comenzar!</p>
+<p id="message" aria-live="polite">Cuida tu colección y descubre nuevos amigos.</p>
+</section>
 
-<div class="panel">
+<section id="page-coleccion" class="panel hidden">
 <h2>📖 Mi colección</h2>
+<p>Aquí aparecen solamente los monstruos que has desbloqueado.</p>
 <div class="grid" id="collection"></div>
-</div>
+</section>
 
-<div class="panel">
-<h2>🛒 Descubre nuevos monstruos</h2>
-<p class="small">Desbloquea personajes usando las monedas de tu juego.</p>
+<section id="page-tienda" class="panel hidden">
+<h2>🛒 Tienda de monstruos</h2>
+<p>Usa tus monedas para desbloquear nuevos compañeros.</p>
 <div class="grid" id="shop"></div>
-</div>
+</section>
 </main>
 
-<footer>MonsterWorld · Juego de colección</footer>
+<footer>MonsterWorld · Colecciona, descubre y juega</footer>
 
 <script>
 const monsters=[
@@ -76,73 +89,71 @@ const monsters=[
 ];
 
 let save;
-try {
+try{
  save=JSON.parse(localStorage.getItem("monsterWorldSave"));
-} catch(e) { save=null; }
+}catch(e){save=null;}
 
-if(!save || typeof save.coins!=="number" ||
-   !Array.isArray(save.owned) || !save.owned.includes("bubu")){
+if(!save||typeof save.coins!=="number"||
+ !Array.isArray(save.owned)||!save.owned.includes("bubu")){
  save={coins:100,owned:["bubu"]};
 }
 
 save.owned=[...new Set(save.owned.filter(id=>
  monsters.some(m=>m.id===id)))];
-if(!save.owned.includes("bubu"))save.owned.unshift("bubu");
 
 function persist(){
- try{
-  localStorage.setItem("monsterWorldSave",JSON.stringify(save));
- }catch(e){}
+ try{localStorage.setItem("monsterWorldSave",JSON.stringify(save));}
+ catch(e){}
+}
+
+function showPage(page){
+ ["inicio","coleccion","tienda"].forEach(p=>{
+  document.getElementById("page-"+p).classList.toggle("hidden",p!==page);
+  document.getElementById("nav-"+p).classList.toggle("active",p===page);
+ });
 }
 
 function render(){
  document.getElementById("coins").textContent=save.coins;
  document.getElementById("count").textContent=save.owned.length;
 
- const starter=monsters.find(m=>m.id==="bubu");
- document.getElementById("starter").innerHTML=
- `<div class="art">${starter.art}</div>
- <h3>${starter.name}</h3><p>${starter.desc}</p>`;
+ const hero=monsters.find(m=>m.id==="bubu");
+ document.getElementById("hero").innerHTML=
+ `<div class="art">${hero.art}</div><h2>${hero.name}</h2>
+ <p>${hero.desc}</p>`;
 
  document.getElementById("collection").innerHTML=
  monsters.filter(m=>save.owned.includes(m.id)).map(m=>
  `<div class="monster owned">
  <div class="art">${m.art}</div><h3>${m.name}</h3>
- <p>${m.desc}</p><button disabled>✅ Desbloqueado</button>
+ <p>${m.desc}</p><button disabled>✅ Lo tienes</button>
  </div>`).join("");
 
- document.getElementById("shop").innerHTML=
- monsters.filter(m=>!save.owned.includes(m.id)).map(m=>
+ const available=monsters.filter(m=>!save.owned.includes(m.id));
+ document.getElementById("shop").innerHTML=available.length?
+ available.map(m=>
  `<div class="monster">
- <div class="art">❔</div><h3>${m.name}</h3>
- <p>${m.desc}</p>
- <p>🪙 ${m.price} monedas</p>
- <button onclick="unlock('${m.id}')"
- ${save.coins<m.price?"disabled":""}>
- ${save.coins<m.price?"Te faltan monedas":"Desbloquear"}
- </button>
- </div>`).join("");
-
- if(!monsters.some(m=>!save.owned.includes(m.id))){
-  document.getElementById("shop").innerHTML=
-  "<p>🎉 ¡Has desbloqueado todos los monstruos!</p>";
- }
+ <div class="art">${m.art}</div><h3>${m.name}</h3>
+ <p>${m.desc}</p><p>🪙 ${m.price} monedas</p>
+ <button onclick="unlock('${m.id}')" ${save.coins<m.price?"disabled":""}>
+ ${save.coins<m.price?"Faltan monedas":"Desbloquear"}
+ </button></div>`).join("")
+ :"<p>🎉 ¡Ya tienes todos los monstruos!</p>";
 }
 
 function unlock(id){
- const m=monsters.find(monster=>monster.id===id);
- if(!m || save.owned.includes(id))return;
+ const m=monsters.find(x=>x.id===id);
+ if(!m||save.owned.includes(id))return;
  if(save.coins<m.price){
-  document.getElementById("message").textContent=
-  "No tienes suficientes monedas.";
+  document.getElementById("message").textContent="No tienes suficientes monedas.";
   return;
  }
  save.coins-=m.price;
  save.owned.push(id);
  persist();
  render();
- document.getElementById("message").textContent=
- "🎉 ¡Has desbloqueado a "+m.name+"!";
+ document.getElementById("message").textContent="🎉 ¡Desbloqueaste a "+m.name+"!";
+ showPage("coleccion");
 }
 
 persist();
