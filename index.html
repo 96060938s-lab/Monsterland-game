@@ -3,89 +3,306 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#17152d">
 <title>MonsterWorld</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:linear-gradient(#17234e,#43265e,#17182f);color:white;font-family:Arial,sans-serif}
-header{text-align:center;background:#111936;padding:18px 8px;border-bottom:3px solid #9279ff}
-h1{color:#ffe66d;margin:0;font-size:30px}
-header p{margin:8px 0 0}
-.stats{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;padding:12px}
-.stat{background:#293966;padding:11px 15px;border-radius:12px;font-weight:bold}
-nav{display:flex;gap:7px;padding:8px;max-width:700px;margin:auto}
-nav button{flex:1;background:#354475;color:white;border:1px solid #7788d2}
-nav button.active{background:#ffe66d;color:#30204d}
-main{max-width:850px;margin:auto;padding:12px}
-.panel{background:#202b55;padding:15px;border-radius:16px;margin-bottom:14px}
-h2{color:#ffe66d}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.monster{background:#303d70;border:2px solid #6475b8;border-radius:14px;padding:12px;text-align:center}
-.owned{border-color:#6ee7a2}
-.art{font-size:60px;line-height:1.4}
-.monster h3{margin:5px 0}
-.monster p{font-size:13px;min-height:30px}
-button{border:0;border-radius:10px;padding:11px;font-weight:bold;font-size:14px;cursor:pointer}
-.monster button{width:100%;background:#ffd95c;color:#34234b}
-button:disabled{background:#777b91;color:white}
-.hero{text-align:center;padding:20px 5px}
-.hero .art{font-size:100px}
-#message{text-align:center;color:#9dffc2;min-height:22px}
-.hidden{display:none}
-footer{text-align:center;padding:18px;color:#c9c9e8;font-size:12px}
-@media(min-width:600px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+:root{
+ --bg:#17152d;
+ --panel:#211d38;
+ --gold:#ffd66b;
+ --green:#00c99a;
+ --text:#f8f5ff;
+ --muted:#a9a5c5;
+}
+body{
+ margin:0;
+ color:var(--text);
+ font-family:Arial,sans-serif;
+ background:
+ radial-gradient(ellipse at 50% 0%,#493b76 0%,transparent 55%),
+ linear-gradient(180deg,#17152d,#21182f,#111321);
+ min-height:100vh;
+ padding-bottom:110px;
+}
+button{font:inherit;cursor:pointer}
+button:disabled{opacity:.5;cursor:default}
+.top{
+ display:flex;justify-content:space-between;align-items:center;
+ gap:8px;padding:15px 12px 10px;
+}
+.brand{display:flex;align-items:center;gap:9px}
+.logo{
+ width:46px;height:46px;border:3px solid var(--gold);
+ border-radius:50%;display:grid;place-items:center;
+ font-size:25px;background:#33264e;
+}
+.brand h1{font-size:20px;margin:0;color:var(--gold)}
+.brand small{display:block;color:#c9b9ff;margin-top:4px}
+.wallet{
+ border:1px solid #8c7443;background:#28223d;
+ border-radius:25px;padding:10px;color:var(--gold);
+ font-weight:bold;white-space:nowrap;
+}
+.profile{
+ margin:0 14px 18px;padding:12px;
+ background:#ffffff0b;border:1px solid #ffffff14;
+ border-radius:15px;display:flex;justify-content:space-between;
+ align-items:center;gap:8px;
+}
+.level{color:var(--gold);font-weight:bold}
+.profile small{color:var(--muted)}
+main{max-width:760px;margin:auto;padding:0 12px}
+.page-title{padding:0 4px 14px}
+.page-title h2{font-size:24px;margin:5px 0 8px}
+.page-title p{color:#c3bed9;font-size:13px;margin:0}
+.grid{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:12px;align-items:start;
+}
+.monster{
+ overflow:hidden;min-width:0;position:relative;
+ background:linear-gradient(180deg,#36345a,#1b192d);
+ border:1px solid #5d527d;border-radius:24px;
+ box-shadow:0 7px 20px #08071480;
+}
+.picture{
+ height:155px;position:relative;display:flex;
+ align-items:center;justify-content:center;overflow:hidden;
+ background:
+ radial-gradient(ellipse at 50% 30%,#b5d7c96b,transparent 65%),
+ linear-gradient(145deg,#526a72,#393454,#635078);
+}
+.picture.plant{background:linear-gradient(145deg,#9bc77c,#477e79,#f0bd9d)}
+.picture.ray{background:linear-gradient(145deg,#77ddeb,#5e6fba,#f6d5a7)}
+.picture.ghost{background:linear-gradient(145deg,#c7c5ff,#777fc7,#efc6ec)}
+.picture.fire{background:linear-gradient(145deg,#ffbc69,#dc5a63,#552b68)}
+.picture.ice{background:linear-gradient(145deg,#d7f8ff,#80b9e8,#b4a8f2)}
+.picture.magic{background:linear-gradient(145deg,#b6a1ff,#4c4d9a,#e6a9ef)}
+.picture.dragon{background:linear-gradient(145deg,#8ce4c2,#3c7897,#7163b5)}
+.picture img{
+ width:100%;height:100%;object-fit:cover;
+}
+.emoji-art{font-size:78px;filter:drop-shadow(0 7px 5px #17152d55)}
+.level-tag,.rarity{
+ position:absolute;top:9px;border-radius:18px;
+ padding:6px 8px;font-size:10px;font-weight:bold;
+}
+.level-tag{left:8px;background:#073c38;color:#68ffd8}
+.rarity{right:8px;background:#08aa76;color:white}
+.rarity.epic{background:#9d36e8}
+.rarity.legendary{background:#c58c21}
+.details{padding:10px 9px 12px;text-align:center}
+.details h3{margin:0 0 9px;font-size:19px}
+.kind{
+ display:inline-block;background:#37324a;border:1px solid #625776;
+ padding:6px 7px;border-radius:20px;font-size:10px;
+ font-weight:bold;margin-bottom:10px;
+}
+.rate{color:var(--gold);font-size:11px;font-weight:bold}
+.bubbles{display:flex;justify-content:center;gap:5px;margin:1px 0 13px}
+.bubble{
+ width:27px;height:27px;border-radius:50%;
+ border:1px solid #7b7894;background:#4b485c;
+ box-shadow:inset 0 2px 4px #ffffff19;
+}
+.bubble.locked{background:#242236;border-color:#39354b;color:#777}
+.care{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+.care button{background:none;color:#bcb8d5;border:0;padding:3px 0}
+.care .circle{
+ display:grid;place-items:center;margin:auto auto 6px;
+ width:51px;height:51px;border-radius:50%;
+ border:5px solid #e9a54f;background:#29243b;
+ font-size:23px;
+}
+.care button:nth-child(2) .circle{border-color:#25cfe8}
+.care button:nth-child(3) .circle{border-color:#8c88ff}
+.care span{font-size:10px;font-weight:bold}
+.status{
+ min-height:31px;color:#a7f5cf;font-size:11px;
+ margin:9px 0 0;
+}
+.action-btn{
+ width:100%;border:1px solid #9c8650;
+ border-radius:14px;padding:11px 4px;
+ background:#44351f;color:#ffe5a0;font-weight:bold;
+}
+.primary{
+ background:linear-gradient(90deg,#ffe18a,#f5bd4f);
+ color:#30213c;border:0;border-radius:12px;
+ padding:12px;font-weight:bold;
+}
+.section{
+ background:#ffffff09;border:1px solid #ffffff15;
+ border-radius:18px;padding:15px;margin-bottom:12px;
+}
+.section h3{color:var(--gold);margin-top:0}
+.section p{color:#c5bfd9;font-size:13px;line-height:1.5}
+.list-item{
+ background:#302a49;border-radius:12px;
+ padding:12px;margin:9px 0;
+ display:flex;align-items:center;justify-content:space-between;gap:8px;
+}
+.list-item strong{font-size:13px}
+.list-item small{display:block;color:var(--muted);margin-top:5px}
+.bottom-nav{
+ position:fixed;z-index:10;bottom:8px;left:8px;right:8px;
+ max-width:740px;margin:auto;
+ display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+ gap:4px;padding:9px 5px;
+ background:#171522f5;border:1px solid #ffffff17;
+ border-radius:23px;box-shadow:0 0 25px #0008;
+}
+.bottom-nav button{
+ border:1px solid transparent;border-radius:15px;
+ padding:9px 1px 7px;background:transparent;
+ color:#858198;font-weight:bold;min-width:0;
+}
+.bottom-nav button .ico{display:block;font-size:23px;margin-bottom:6px}
+.bottom-nav button .lbl{font-size:9px}
+.bottom-nav button.active{
+ border-color:var(--gold);color:var(--gold);
+ background:#342b42;
+}
+.hidden{display:none!important}
+.notice{
+ text-align:center;min-height:24px;color:#a7f5cf;
+ font-size:12px;padding:8px 0;
+}
+.empty{text-align:center;color:var(--muted);padding:25px 5px}
+@media(min-width:600px){
+ .picture{height:210px}
+ .emoji-art{font-size:100px}
+ .details{padding:14px}
+ .care .circle{width:58px;height:58px}
+}
 </style>
 </head>
-<body>
-<header>
-<h1>🌎 MonsterWorld 👾</h1>
-<p>¡Crea tu propia colección de monstruos!</p>
-</header>
 
-<div class="stats">
-<div class="stat">🪙 Monedas: <span id="coins">100</span></div>
-<div class="stat">👾 Monstruos: <span id="count">1</span>/8</div>
+<body>
+<div class="top">
+ <div class="brand">
+  <div class="logo">👾</div>
+  <div>
+   <h1>MonsterWorld</h1>
+   <small>Tu mundo mágico</small>
+  </div>
+ </div>
+ <div class="wallet">🪙 <span id="coins">100</span></div>
 </div>
 
-<nav>
-<button id="nav-inicio" class="active" onclick="showPage('inicio')">🏠 Inicio</button>
-<button id="nav-coleccion" onclick="showPage('coleccion')">📖 Colección</button>
-<button id="nav-tienda" onclick="showPage('tienda')">🛒 Tienda</button>
-</nav>
+<div class="profile">
+ <div>
+  <div class="level">⭐ NIVEL <span id="playerLevel">1</span></div>
+  <small>Entrenador de monstruos</small>
+ </div>
+ <div style="text-align:right">
+  <strong id="count">1 / 8</strong><br>
+  <small>Mis monstruos</small>
+ </div>
+</div>
 
 <main>
-<section id="page-inicio" class="panel">
-<h2>🏡 Tu mundo</h2>
-<div class="hero" id="hero"></div>
-<p style="text-align:center">¡Tu aventura acaba de comenzar!</p>
-<p id="message" aria-live="polite">Cuida tu colección y descubre nuevos amigos.</p>
-</section>
+ <section id="page-monstruos">
+  <div class="page-title">
+   <h2>Mis monstruos 👾</h2>
+   <p>Cuida, alimenta y haz crecer tus criaturas.</p>
+  </div>
+  <div class="grid" id="collection"></div>
+ </section>
 
-<section id="page-coleccion" class="panel hidden">
-<h2>📖 Mi colección</h2>
-<p>Aquí aparecen solamente los monstruos que has desbloqueado.</p>
-<div class="grid" id="collection"></div>
-</section>
+ <section id="page-tienda" class="hidden">
+  <div class="page-title">
+   <h2>🛒 Tienda</h2>
+   <p>Descubre nuevos amigos para tu colección.</p>
+  </div>
+  <div class="grid" id="shop"></div>
+ </section>
 
-<section id="page-tienda" class="panel hidden">
-<h2>🛒 Tienda de monstruos</h2>
-<p>Usa tus monedas para desbloquear nuevos compañeros.</p>
-<div class="grid" id="shop"></div>
-</section>
+ <section id="page-premios" class="hidden">
+  <div class="page-title">
+   <h2>🎁 Premios</h2>
+   <p>Consigue monedas para tu aventura.</p>
+  </div>
+  <div class="section">
+   <h3>🎁 Regalo diario</h3>
+   <p>Vuelve cada día para reclamar tus monedas de juego.</p>
+   <button class="primary" id="dailyButton" onclick="claimDaily()">Reclamar 20 monedas</button>
+   <p id="dailyStatus"></p>
+  </div>
+  <div class="section">
+   <h3>⭐ Tu progreso</h3>
+   <p>Monstruos desbloqueados: <strong id="prizeCount">1</strong></p>
+   <p>Cuida tus monstruos para seguir disfrutando de tu mundo.</p>
+  </div>
+ </section>
+
+ <section id="page-social" class="hidden">
+  <div class="page-title">
+   <h2>👥 Social</h2>
+   <p>Comparte tu aventura con tus amigos.</p>
+  </div>
+  <div class="section">
+   <h3>🌎 Comparte MonsterWorld</h3>
+   <p>Invita a tus amigos a conocer tu colección.</p>
+   <button class="primary" onclick="shareGame()">Compartir juego</button>
+  </div>
+  <div class="section">
+   <h3>🤝 Próximamente</h3>
+   <p>La visita a otros jugadores y el intercambio de monstruos necesitarán una conexión a un servidor.</p>
+  </div>
+ </section>
+
+ <section id="page-salon" class="hidden">
+  <div class="page-title">
+   <h2>🏆 Salón</h2>
+   <p>Tu rincón de logros y colección.</p>
+  </div>
+  <div class="section">
+   <h3>👑 Mi entrenador</h3>
+   <p>Nivel actual: <strong id="hallLevel">1</strong></p>
+   <p>Monstruos descubiertos: <strong id="hallCount">1</strong> de 8.</p>
+   <p>Monedas acumuladas actualmente: <strong id="hallCoins">100</strong>.</p>
+  </div>
+  <div class="section">
+   <h3>🏅 Objetivo</h3>
+   <p>Desbloquea los ocho monstruos para completar tu colección.</p>
+  </div>
+ </section>
+
+ <div id="notice" class="notice" aria-live="polite"></div>
 </main>
 
-<footer>MonsterWorld · Colecciona, descubre y juega</footer>
+<nav class="bottom-nav">
+ <button class="active" id="nav-monstruos" onclick="showPage('monstruos')">
+  <span class="ico">🐾</span><span class="lbl">MONSTRUOS</span>
+ </button>
+ <button id="nav-tienda" onclick="showPage('tienda')">
+  <span class="ico">🏪</span><span class="lbl">TIENDA</span>
+ </button>
+ <button id="nav-premios" onclick="showPage('premios')">
+  <span class="ico">🎁</span><span class="lbl">PREMIOS</span>
+ </button>
+ <button id="nav-social" onclick="showPage('social')">
+  <span class="ico">👥</span><span class="lbl">SOCIAL</span>
+ </button>
+ <button id="nav-salon" onclick="showPage('salon')">
+  <span class="ico">🏆</span><span class="lbl">SALÓN</span>
+ </button>
+</nav>
 
 <script>
 const monsters=[
-{id:"bubu",name:"Bubu",art:'<img src="Imagenes/bubu.png" style="width:100%;max-width:180px;height:150px;object-fit:contain;">',price:0,desc:"Tu primer compañero"},
-{id:"flama",name:"Flama",art:"🐲",price:40,desc:"Un pequeño dragón"},
-{id:"bosque",name:"Musguito",art:"🌿",price:60,desc:"Guardián del bosque"},
-{id:"fantasma",name:"Fanty",art:"👻",price:80,desc:"Espíritu amistoso"},
-{id:"fuego",name:"Chispas",art:"🔥",price:100,desc:"Criatura de fuego"},
-{id:"hielo",name:"Nevito",art:"🐧",price:120,desc:"Amigo de las nieves"},
-{id:"mago",name:"Misterio",art:"🧙",price:150,desc:"Mago de los secretos"},
-{id:"dragon",name:"Dracón",art:"🐉",price:200,desc:"Dragón legendario"}
+ {id:"bubu",name:"Bubu",art:'<img src="imagenes/bubu.png" alt="Bubu" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'"><span class="emoji-art" style="display:none">👾</span>',price:0,desc:"Tu primer compañero",kind:"✨ MÁGICO",rate:500,rarity:"COMÚN",theme:"magic"},
+ {id:"flama",name:"Flama",art:'<span class="emoji-art">🐲</span>',price:40,desc:"Un pequeño dragón",kind:"🔥 FUEGO",rate:1500,rarity:"POCO COMÚN",theme:"fire"},
+ {id:"bosque",name:"Musguito",art:'<span class="emoji-art">🌱</span>',price:60,desc:"Guardián del bosque",kind:"🌿 PLANTA",rate:2000,rarity:"POCO COMÚN",theme:"plant"},
+ {id:"fantasma",name:"Fanty",art:'<span class="emoji-art">👻</span>',price:80,desc:"Espíritu amistoso",kind:"🌙 ESPÍRITU",rate:2500,rarity:"POCO COMÚN",theme:"ghost"},
+ {id:"fuego",name:"Chispas",art:'<span class="emoji-art">🦊</span>',price:100,desc:"Criatura de fuego",kind:"🔥 FUEGO",rate:3000,rarity:"ÉPICO",theme:"fire"},
+ {id:"hielo",name:"Nevito",art:'<span class="emoji-art">🐧</span>',price:120,desc:"Amigo de las nieves",kind:"❄️ HIELO",rate:3500,rarity:"POCO COMÚN",theme:"ice"},
+ {id:"mago",name:"Misterio",art:'<span class="emoji-art">🧙</span>',price:150,desc:"Mago de los secretos",kind:"✨ MAGIA",rate:4500,rarity:"ÉPICO",theme:"magic"},
+ {id:"dragon",name:"Dracón",art:'<span class="emoji-art">🐉</span>',price:200,desc:"Dragón legendario",kind:"⚡ RAYO",rate:6000,rarity:"LEGENDARIO",theme:"ray"}
 ];
 
 let save;
@@ -93,67 +310,138 @@ try{
  save=JSON.parse(localStorage.getItem("monsterWorldSave"));
 }catch(e){save=null;}
 
-if(!save||typeof save.coins!=="number"||
- !Array.isArray(save.owned)||!save.owned.includes("bubu")){
- save={coins:100,owned:["bubu"]};
+if(!save || typeof save.coins!=="number" ||
+ !Array.isArray(save.owned) || !save.owned.includes("bubu")){
+ save={coins:100,owned:["bubu"],care:{},lastDaily:""};
 }
-
-save.owned=[...new Set(save.owned.filter(id=>
- monsters.some(m=>m.id===id)))];
+if(!save.care)save.care={};
+if(!save.lastDaily)save.lastDaily="";
+save.owned=[...new Set(save.owned.filter(id=>monsters.some(m=>m.id===id)))];
 
 function persist(){
- try{localStorage.setItem("monsterWorldSave",JSON.stringify(save));}
- catch(e){}
+ try{
+  localStorage.setItem("monsterWorldSave",JSON.stringify(save));
+ }catch(e){}
 }
 
 function showPage(page){
- ["inicio","coleccion","tienda"].forEach(p=>{
+ ["monstruos","tienda","premios","social","salon"].forEach(p=>{
   document.getElementById("page-"+p).classList.toggle("hidden",p!==page);
   document.getElementById("nav-"+p).classList.toggle("active",p===page);
  });
+ render();
+ window.scrollTo(0,0);
+}
+
+function notice(text){
+ document.getElementById("notice").textContent=text;
+}
+
+function monsterCard(m,owned){
+ const c=save.care[m.id]||{comer:0,banar:0,dormir:0};
+ return `<article class="monster">
+  <div class="picture ${m.theme}">
+   ${m.art}
+   <span class="level-tag">Nv.${1+Math.floor((c.comer+c.banar+c.dormir)/3)}</span>
+   <span class="rarity ${m.rarity==="ÉPICO"?"epic":m.rarity==="LEGENDARIO"?"legendary":""}">${m.rarity}</span>
+  </div>
+  <div class="details">
+   <h3>${m.name}</h3>
+   <div class="kind">${m.kind}</div>
+   <div class="rate">⚡ +${(m.rate/1000).toFixed(1)}K/h</div>
+   <div class="bubbles">
+    <span class="bubble" title="Energía"></span>
+    <span class="bubble" title="Ánimo"></span>
+    <span class="bubble locked">🔒</span>
+    <span class="bubble locked">🔒</span>
+    <span class="bubble locked">🔒</span>
+   </div>
+   ${owned?`
+   <div class="care">
+    <button onclick="care('${m.id}','comer')"><span class="circle">🍪</span><span>COMER</span></button>
+    <button onclick="care('${m.id}','banar')"><span class="circle">🛁</span><span>BAÑAR</span></button>
+    <button onclick="care('${m.id}','dormir')"><span class="circle">🌙</span><span>DORMIR</span></button>
+   </div>
+   <p class="status" id="status-${m.id}">${m.desc}</p>
+   `:`
+   <p>${m.desc}</p>
+   <button class="action-btn" onclick="unlock('${m.id}')" ${save.coins<m.price?"disabled":""}>
+    ${save.coins<m.price?"FALTAN MONEDAS":"🪙 "+m.price+" · DESBLOQUEAR"}
+   </button>
+   `}
+  </div>
+ </article>`;
 }
 
 function render(){
  document.getElementById("coins").textContent=save.coins;
- document.getElementById("count").textContent=save.owned.length;
+ document.getElementById("count").textContent=save.owned.length+" / "+monsters.length;
+ document.getElementById("prizeCount").textContent=save.owned.length;
+ document.getElementById("hallCount").textContent=save.owned.length;
+ document.getElementById("hallCoins").textContent=save.coins;
+ const level=1+Math.floor(save.owned.length/2);
+ document.getElementById("playerLevel").textContent=level;
+ document.getElementById("hallLevel").textContent=level;
 
- const hero=monsters.find(m=>m.id==="bubu");
- document.getElementById("hero").innerHTML=
- `<div class="art">${hero.art}</div><h2>${hero.name}</h2>
- <p>${hero.desc}</p>`;
-
- document.getElementById("collection").innerHTML=
- monsters.filter(m=>save.owned.includes(m.id)).map(m=>
- `<div class="monster owned">
- <div class="art">${m.art}</div><h3>${m.name}</h3>
- <p>${m.desc}</p><button disabled>✅ Lo tienes</button>
- </div>`).join("");
-
+ const owned=monsters.filter(m=>save.owned.includes(m.id));
+ document.getElementById("collection").innerHTML=owned.map(m=>monsterCard(m,true)).join("");
  const available=monsters.filter(m=>!save.owned.includes(m.id));
  document.getElementById("shop").innerHTML=available.length?
- available.map(m=>
- `<div class="monster">
- <div class="art">${m.art}</div><h3>${m.name}</h3>
- <p>${m.desc}</p><p>🪙 ${m.price} monedas</p>
- <button onclick="unlock('${m.id}')" ${save.coins<m.price?"disabled":""}>
- ${save.coins<m.price?"Faltan monedas":"Desbloquear"}
- </button></div>`).join("")
- :"<p>🎉 ¡Ya tienes todos los monstruos!</p>";
+ available.map(m=>monsterCard(m,false)).join(""):'<div class="empty">🎉 ¡Has conseguido todos los monstruos!</div>';
+
+ const today=new Date().toISOString().slice(0,10);
+ const claimed=save.lastDaily===today;
+ document.getElementById("dailyButton").disabled=claimed;
+ document.getElementById("dailyButton").textContent=claimed?"Premio diario reclamado":"Reclamar 20 monedas";
+ document.getElementById("dailyStatus").textContent=claimed?"Ya reclamaste tu regalo de hoy.":"Regalo virtual del juego; no es dinero real.";
+}
+
+function care(id,action){
+ const m=monsters.find(x=>x.id===id);
+ if(!m||!save.owned.includes(id))return;
+ if(!save.care[id])save.care[id]={comer:0,banar:0,dormir:0};
+ save.care[id][action]=(save.care[id][action]||0)+1;
+ const messages={
+  comer:"🍪 ¡"+m.name+" ha comido! Está feliz.",
+  banar:"🛁 ¡"+m.name+" está limpio y brillante!",
+  dormir:"🌙 ¡"+m.name+" está descansando."
+ };
+ persist();
+ render();
+ notice(messages[action]);
 }
 
 function unlock(id){
  const m=monsters.find(x=>x.id===id);
  if(!m||save.owned.includes(id))return;
- if(save.coins<m.price){
-  document.getElementById("message").textContent="No tienes suficientes monedas.";
-  return;
- }
+ if(save.coins<m.price){notice("No tienes suficientes monedas.");return;}
  save.coins-=m.price;
  save.owned.push(id);
  persist();
+ showPage("monstruos");
+ notice("🎉 ¡Desbloqueaste a "+m.name+"!");
+}
+
+function claimDaily(){
+ const today=new Date().toISOString().slice(0,10);
+ if(save.lastDaily===today){notice("Ya reclamaste tu regalo de hoy.");return;}
+ save.coins+=20;
+ save.lastDaily=today;
+ persist();
  render();
- document.getElementById("message").textContent="🎉 ¡Desbloqueaste a "+m.name+"!";
- showPage("coleccion");
+ notice("🎁 ¡Recibiste 20 monedas virtuales!");
+}
+
+function shareGame(){
+ const url=window.location.href;
+ if(navigator.share){
+  navigator.share({title:"MonsterWorld",text:"¡Ven a descubrir mis monstruos!",url:url}).catch(()=>{});
+ }else if(navigator.clipboard){
+  navigator.clipboard.writeText(url).then(()=>notice("Enlace copiado. ¡Compártelo con tus amigos!"))
+  .catch(()=>notice("Copia el enlace de MonsterWorld desde la barra del navegador."));
+ }else{
+  notice("Copia el enlace de MonsterWorld desde tu navegador.");
+ }
 }
 
 persist();
