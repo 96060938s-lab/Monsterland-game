@@ -1,260 +1,152 @@
-<!DOCTYPE html><html lang="es">
+
+<!DOCTYPE html>
+<html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MonsterWorld</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;color:white;background:linear-gradient(180deg,#171044,#30156a,#10152e);min-height:100vh}
-header{padding:20px 15px;text-align:center;background:linear-gradient(135deg,#7025bd,#3125a8);border-bottom:3px solid #a78bfa}
-h1{margin:0;font-size:30px;text-shadow:0 3px 8px #000}
-header p{margin:8px 0 0;color:#e9ddff}
-.stats{display:flex;justify-content:space-around;gap:8px;padding:12px}
-.stat{background:#ffffff15;border:1px solid #ffffff30;border-radius:12px;padding:12px 6px;text-align:center;flex:1;font-weight:bold}
-.container{padding:12px;max-width:600px;margin:auto}
-.panel{background:#ffffff12;border:1px solid #ffffff25;border-radius:18px;padding:16px;margin-bottom:15px;box-shadow:0 5px 20px #0003}
-h2{font-size:20px;margin:0 0 12px}
-.monster{font-size:95px;text-align:center;padding:12px;animation:flotar 2s infinite ease-in-out}
-@keyframes flotar{50%{transform:translateY(-8px)}}
-.name{text-align:center;font-size:24px;font-weight:bold}
-.level{text-align:center;color:#c4b5fd;margin:7px}
-.progress{height:12px;background:#ffffff25;border-radius:20px;overflow:hidden;margin:8px 0 14px}
-.bar{height:100%;width:70%;background:linear-gradient(90deg,#4ade80,#bef264);transition:width .3s}
-.needs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.need{background:#ffffff10;border-radius:12px;padding:10px;font-size:14px}
-button{border:0;border-radius:12px;padding:12px;color:white;font-weight:bold;font-size:15px;cursor:pointer;background:linear-gradient(135deg,#8b5cf6,#5b35c8)}
-button:active{transform:scale(.97)}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
-.actions button{width:100%}
-.wide{width:100%;margin-top:10px}
-.cards{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.card{background:#ffffff10;border:1px solid #ffffff20;border-radius:14px;text-align:center;padding:12px}
-.card .emoji{font-size:48px}
-.card button{width:100%;margin-top:8px;padding:10px;font-size:13px}
-.lock{opacity:.65}
-footer{text-align:center;padding:20px;color:#c4b5fd;font-size:12px}
-#mensaje{text-align:center;min-height:20px;color:#86efac;margin-top:10px}
+body{margin:0;font-family:Arial,sans-serif;color:white;background:linear-gradient(#182b62,#512d77,#171b3c);min-height:100vh}
+header{text-align:center;padding:20px 10px;background:#111a3c;border-bottom:3px solid #8e75ff}
+h1{margin:0;color:#ffe66d;font-size:32px;text-shadow:2px 3px #8138a5}
+header p{margin:8px 0 0}
+main{max-width:850px;margin:auto;padding:15px}
+.stats{display:flex;justify-content:space-around;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.stat{background:#26386b;border:1px solid #7769db;padding:12px;border-radius:14px;font-weight:bold}
+h2{color:#ffe66d}
+.panel{background:#202b55;padding:15px;border-radius:18px;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.monster{background:#303d70;border:2px solid #6777b9;border-radius:16px;padding:12px;text-align:center}
+.monster.owned{border-color:#6ee7a2}
+.art{font-size:64px;line-height:1.4}
+.monster h3{margin:5px 0}
+.monster p{font-size:14px;min-height:32px}
+button{background:#ffd95c;color:#34234b;border:0;border-radius:10px;padding:11px;font-weight:bold;font-size:15px;width:100%;cursor:pointer}
+button:disabled{background:#777b91;color:#eee;cursor:not-allowed}
+.small{font-size:12px;color:#d5dafa}
+#message{font-weight:bold;text-align:center;min-height:24px;color:#9dffc2}
+footer{text-align:center;padding:20px;color:#c9c9e8;font-size:12px}
+@media(min-width:600px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 </style>
 </head>
 <body>
 <header>
-<h1>🌎 MonsterWorld</h1>
-<p>¡Cuida, colecciona y entrena monstruos!</p>
-</header><div class="stats">
-<div class="stat">🪙 Monedas<br><span id="monedas">100</span></div>
-<div class="stat">⭐ Nivel<br><span id="nivel">1</span></div>
-<div class="stat">👾 Monstruos<br><span id="cantidad">1</span></div>
-</div><main class="container">
-<section class="panel">
-<h2>🏡 Mi monstruo</h2>
-<div class="monster" id="monstruo">👾</div>
-<div class="name" id="nombre">Bubu</div>
-<div class="level">Nivel <span id="nivelMonstruo">1</span></div><div>❤️ Energía: <span id="energiaTexto">70</span>%</div>
-<div class="progress"><div class="bar" id="energiaBarra"></div></div>
-<div>🍖 Hambre: <span id="hambreTexto">70</span>%</div>
-<div class="progress"><div class="bar" id="hambreBarra"></div></div>
-<div>😊 Felicidad: <span id="felicidadTexto">70</span>%</div>
-<div class="progress"><div class="bar" id="felicidadBarra"></div></div><div class="actions">
-<button onclick="cuidar('comer')">🍎 Dar comida (5)</button>
-<button onclick="cuidar('jugar')">🎾 Jugar</button>
-<button onclick="cuidar('dormir')">💤 Descansar</button>
-<button onclick="cuidar('limpiar')">🧼 Limpiar</button>
+<h1>🌎 MonsterWorld 👾</h1>
+<p>¡Colecciona monstruos y descubre un mundo mágico!</p>
+</header>
+
+<main>
+<div class="stats">
+<div class="stat">🪙 Monedas: <span id="coins">100</span></div>
+<div class="stat">👾 Colección: <span id="count">1</span>/8</div>
 </div>
-<div id="mensaje"></div>
-</section><section class="panel">
-<h2>🎁 Recompensa diaria</h2>
-<p>Entra cada día para conseguir monedas.</p>
-<button class="wide" id="diario" onclick="recompensa()">🎁 Reclamar 25 monedas</button>
-</section><section class="panel">
-<h2>🥚 Colección de monstruos</h2>
-<p>¡Consigue nuevos compañeros para tu aventura!</p>
-<div class="cards" id="coleccion"></div>
-</section><section class="panel">
-<h2>🛍️ Tienda</h2>
-<div class="cards">
-<div class="card">
-<div class="emoji">🍎</div>
-<strong>Comida</strong>
-<p>Recupera el hambre</p>
-<button onclick="comprarComida()">Comprar · 5 🪙</button>
+
+<div class="panel">
+<h2>🏡 Tu mundo</h2>
+<p>Cuida tu colección y consigue nuevos compañeros para tu aventura.</p>
+<div id="starter"></div>
+<p id="message" aria-live="polite">¡Tu aventura comienza aquí!</p>
 </div>
-<div class="card">
-<div class="emoji">💎</div>
-<strong>Cristal mágico</strong>
-<p>Un objeto especial</p>
-<button onclick="comprarCristal()">Comprar · 20 🪙</button>
+
+<div class="panel">
+<h2>📖 Mi colección</h2>
+<div class="grid" id="collection"></div>
 </div>
+
+<div class="panel">
+<h2>🛒 Descubre nuevos monstruos</h2>
+<p class="small">Desbloquea personajes usando las monedas de tu juego.</p>
+<div class="grid" id="shop"></div>
 </div>
-</section><section class="panel">
-<h2>💾 Tu partida</h2>
-<p>Tu progreso se guarda en este navegador.</p>
-<button class="wide" onclick="guardar(true)">Guardar partida</button>
-</section>
-</main><footer>MonsterWorld © 2026 · Tu aventura comienza aquí 🌟</footer><script>
-const monstruos = [
-{id:"bubu",nombre:"Bubu",emoji:"👾",precio:0},
-{id:"slime",nombre:"Slime",emoji:"🟢",precio:50},
-{id:"dragon",nombre:"Dragón",emoji:"🐉",precio:100},
-{id:"fantasma",nombre:"Fantasma",emoji:"👻",precio:75},
-{id:"zorro",nombre:"Zorro mágico",emoji:"🦊",precio:60},
-{id:"unicornio",nombre:"Unicornio",emoji:"🦄",precio:150}
+</main>
+
+<footer>MonsterWorld · Juego de colección</footer>
+
+<script>
+const monsters=[
+{id:"bubu",name:"Bubu",art:"👾",price:0,desc:"Tu primer compañero"},
+{id:"flama",name:"Flama",art:"🐲",price:40,desc:"Un pequeño dragón"},
+{id:"bosque",name:"Musguito",art:"🌿",price:60,desc:"Guardián del bosque"},
+{id:"fantasma",name:"Fanty",art:"👻",price:80,desc:"Espíritu amistoso"},
+{id:"fuego",name:"Chispas",art:"🔥",price:100,desc:"Criatura de fuego"},
+{id:"hielo",name:"Nevito",art:"🐧",price:120,desc:"Amigo de las nieves"},
+{id:"mago",name:"Misterio",art:"🧙",price:150,desc:"Mago de los secretos"},
+{id:"dragon",name:"Dracón",art:"🐉",price:200,desc:"Dragón legendario"}
 ];
 
-let partida = {
-monedas:100,
-nivel:1,
-experiencia:0,
-actual:"bubu",
-desbloqueados:["bubu"],
-energia:70,
-hambre:70,
-felicidad:70,
-ultimoDiario:"",
-comidas:0,
-cristales:0
-};
+let save;
+try {
+ save=JSON.parse(localStorage.getItem("monsterWorldSave"));
+} catch(e) { save=null; }
 
-function cargar(){
-try{
-const datos=localStorage.getItem("monsterworld_partida");
-if(datos){
-const guardada=JSON.parse(datos);
-if(Array.isArray(guardada.desbloqueados)&&typeof guardada.monedas==="number"){
-partida={...partida,...guardada};
-}
-}
-}catch(e){}
-mostrar();
+if(!save || typeof save.coins!=="number" ||
+   !Array.isArray(save.owned) || !save.owned.includes("bubu")){
+ save={coins:100,owned:["bubu"]};
 }
 
-function guardar(mostrarAviso=false){
-localStorage.setItem("monsterworld_partida",JSON.stringify(partida));
-if(mostrarAviso)mensaje("✅ ¡Partida guardada!");
+save.owned=[...new Set(save.owned.filter(id=>
+ monsters.some(m=>m.id===id)))];
+if(!save.owned.includes("bubu"))save.owned.unshift("bubu");
+
+function persist(){
+ try{
+  localStorage.setItem("monsterWorldSave",JSON.stringify(save));
+ }catch(e){}
 }
 
-function mensaje(texto){
-document.getElementById("mensaje").textContent=texto;
+function render(){
+ document.getElementById("coins").textContent=save.coins;
+ document.getElementById("count").textContent=save.owned.length;
+
+ const starter=monsters.find(m=>m.id==="bubu");
+ document.getElementById("starter").innerHTML=
+ `<div class="art">${starter.art}</div>
+ <h3>${starter.name}</h3><p>${starter.desc}</p>`;
+
+ document.getElementById("collection").innerHTML=
+ monsters.filter(m=>save.owned.includes(m.id)).map(m=>
+ `<div class="monster owned">
+ <div class="art">${m.art}</div><h3>${m.name}</h3>
+ <p>${m.desc}</p><button disabled>✅ Desbloqueado</button>
+ </div>`).join("");
+
+ document.getElementById("shop").innerHTML=
+ monsters.filter(m=>!save.owned.includes(m.id)).map(m=>
+ `<div class="monster">
+ <div class="art">❔</div><h3>${m.name}</h3>
+ <p>${m.desc}</p>
+ <p>🪙 ${m.price} monedas</p>
+ <button onclick="unlock('${m.id}')"
+ ${save.coins<m.price?"disabled":""}>
+ ${save.coins<m.price?"Te faltan monedas":"Desbloquear"}
+ </button>
+ </div>`).join("");
+
+ if(!monsters.some(m=>!save.owned.includes(m.id))){
+  document.getElementById("shop").innerHTML=
+  "<p>🎉 ¡Has desbloqueado todos los monstruos!</p>";
+ }
 }
 
-function subirExperiencia(cantidad){
-partida.experiencia+=cantidad;
-while(partida.experiencia>=100){
-partida.experiencia-=100;
-partida.nivel++;
-partida.monedas+=10;
-}
-}
-
-function cuidar(accion){
-if(accion==="comer"){
-if(partida.monedas<5){mensaje("❌ Necesitas 5 monedas.");return;}
-partida.monedas-=5;
-partida.hambre=Math.min(100,partida.hambre+25);
-partida.energia=Math.min(100,partida.energia+5);
-partida.comidas++;
-mensaje("🍎 ¡Qué rico! Bubu ha comido.");
-}
-if(accion==="jugar"){
-if(partida.energia<10){mensaje("😴 Bubu necesita descansar.");return;}
-partida.energia-=10;
-partida.hambre=Math.max(0,partida.hambre-8);
-partida.felicidad=Math.min(100,partida.felicidad+20);
-subirExperiencia(15);
-partida.monedas+=3;
-mensaje("🎾 ¡Buen trabajo! Ganaste 3 monedas y experiencia.");
-}
-if(accion==="dormir"){
-partida.energia=Math.min(100,partida.energia+30);
-partida.felicidad=Math.min(100,partida.felicidad+5);
-mensaje("💤 ¡Bubu ha descansado!");
-}
-if(accion==="limpiar"){
-partida.felicidad=Math.min(100,partida.felicidad+10);
-subirExperiencia(5);
-mensaje("🧼 ¡Tu monstruo está limpio!");
-}
-mostrar();
-guardar();
+function unlock(id){
+ const m=monsters.find(monster=>monster.id===id);
+ if(!m || save.owned.includes(id))return;
+ if(save.coins<m.price){
+  document.getElementById("message").textContent=
+  "No tienes suficientes monedas.";
+  return;
+ }
+ save.coins-=m.price;
+ save.owned.push(id);
+ persist();
+ render();
+ document.getElementById("message").textContent=
+ "🎉 ¡Has desbloqueado a "+m.name+"!";
 }
 
-function recompensa(){
-const hoy=new Date().toLocaleDateString("en-CA");
-if(partida.ultimoDiario===hoy){
-mensaje("🎁 Ya reclamaste tu premio de hoy.");
-return;
-}
-partida.monedas+=25;
-partida.ultimoDiario=hoy;
-mensaje("🎉 ¡Recibiste 25 monedas!");
-mostrar();
-guardar();
-}
-
-function comprarComida(){
-if(partida.monedas<5){mensaje("❌ No tienes suficientes monedas.");return;}
-partida.monedas-=5;
-partida.hambre=Math.min(100,partida.hambre+25);
-partida.comidas++;
-mensaje("🍎 ¡Compraste comida!");
-mostrar();
-guardar();
-}
-
-function comprarCristal(){
-if(partida.monedas<20){mensaje("❌ No tienes suficientes monedas.");return;}
-partida.monedas-=20;
-partida.cristales++;
-mensaje("💎 ¡Compraste un cristal mágico!");
-mostrar();
-guardar();
-}
-
-function adoptar(id){
-const m=monstruos.find(x=>x.id===id);
-if(!m)return;
-if(partida.desbloqueados.includes(id)){
-partida.actual=id;
-mensaje("👾 ¡Ahora estás usando a "+m.nombre+"!");
-}else{
-if(partida.monedas<m.precio){
-mensaje("❌ Necesitas "+m.precio+" monedas.");
-return;
-}
-partida.monedas-=m.precio;
-partida.desbloqueados.push(id);
-partida.actual=id;
-mensaje("🎉 ¡Has conseguido a "+m.nombre+"!");
-}
-mostrar();
-guardar();
-}
-
-function mostrar(){
-document.getElementById("monedas").textContent=partida.monedas;
-document.getElementById("nivel").textContent=partida.nivel;
-document.getElementById("cantidad").textContent=partida.desbloqueados.length;
-document.getElementById("nivelMonstruo").textContent=partida.nivel;
-const actual=monstruos.find(m=>m.id===partida.actual)||monstruos[0];
-document.getElementById("monstruo").textContent=actual.emoji;
-document.getElementById("nombre").textContent=actual.nombre;
-["energia","hambre","felicidad"].forEach(k=>{
-document.getElementById(k+"Texto").textContent=partida[k];
-document.getElementById(k+"Barra").style.width=partida[k]+"%";
-});
-document.getElementById("diario").textContent=
-partida.ultimoDiario===new Date().toLocaleDateString("en-CA")
-?"✅ Premio diario reclamado":"🎁 Reclamar 25 monedas";
-document.getElementById("coleccion").innerHTML=monstruos.map(m=>{
-const tiene=partida.desbloqueados.includes(m.id);
-return `<div class="card ${tiene?"":"lock"}">
-<div class="emoji">${m.emoji}</div>
-<strong>${m.nombre}</strong>
-<p>${tiene?(partida.actual===m.id?"⭐ En uso":"✅ Conseguido"):"🪙 "+m.precio+" monedas"}</p>
-<button onclick="adoptar('${m.id}')">${tiene?"Elegir":"Conseguir"}</button>
-</div>`;
-}).join("");
-}
-
-cargar();
-</script></body>
+persist();
+render();
+</script>
+</body>
 </html>
