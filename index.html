@@ -183,6 +183,15 @@ main{max-width:760px;margin:auto;padding:0 12px}
 
 <body>
 <div class="top">
+<div id="portada" style="position:fixed;inset:0;z-index:9999;background:linear-gradient(180deg,#17152d,#493b76,#111321);display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;font-family:Arial,sans-serif;text-align:center;">
+  <div style="font-size:75px;">👾</div>
+  <h1 style="color:#f4cc70;font-size:32px;margin:15px 0 8px;">MonsterWorld</h1>
+  <p style="color:#d8caff;">Tu mundo mágico te espera</p>
+  <div style="width:75%;max-width:280px;height:14px;background:#30264b;border:1px solid #f4cc70;border-radius:20px;overflow:hidden;margin-top:25px;">
+    <div id="barraCarga" style="width:0%;height:100%;background:linear-gradient(90deg,#a56cff,#f4cc70);border-radius:20px;transition:width .2s;"></div>
+  </div>
+  <p id="textoCarga" style="color:#f4cc70;font-size:14px;">Cargando tu mundo... 0%</p>
+</div>
  <div class="brand">
   <div class="logo">👾</div>
   <div>
@@ -446,6 +455,25 @@ function shareGame(){
 
 persist();
 render();
+let progreso = 0;
+
+const intervaloCarga = setInterval(() => {
+  progreso += 2;
+
+  document.getElementById("barraCarga").style.width =
+    progreso + "%";
+
+  document.getElementById("textoCarga").textContent =
+    "Cargando tu mundo... " + progreso + "%";
+
+  if (progreso >= 100) {
+    clearInterval(intervaloCarga);
+
+    setTimeout(() => {
+      document.getElementById("portada").style.display = "none";
+    }, 400);
+  }
+}, 60);
 </script>
 </body>
 </html>
