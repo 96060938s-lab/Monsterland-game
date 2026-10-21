@@ -184,6 +184,93 @@ main{max-width:760px;margin:auto;padding:0 12px}
  .details{padding:14px}
  .care .circle{width:58px;height:58px}
 }
+
+/* VENTANA DE PRODUCTOS */
+.care-modal{
+ position:fixed;
+ inset:0;
+ z-index:10000;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:18px;
+ background:rgba(9,8,20,.88);
+}
+.care-modal.hidden{
+ display:none!important;
+}
+.care-modal-card{
+ width:100%;
+ max-width:420px;
+ max-height:85vh;
+ overflow-y:auto;
+ position:relative;
+ background:var(--panel);
+ border:1px solid #65558c;
+ border-radius:22px;
+ padding:20px;
+ box-shadow:0 12px 40px #0009;
+}
+.care-modal-card h2{
+ margin:0 35px 8px 0;
+ color:var(--gold);
+}
+.care-modal-card p{
+ color:var(--muted);
+ font-size:13px;
+}
+.care-close{
+ position:absolute;
+ right:12px;
+ top:12px;
+ border:0;
+ border-radius:50%;
+ width:36px;
+ height:36px;
+ background:#39314f;
+ color:white;
+ font-size:18px;
+}
+.care-option{
+ background:#302a49;
+ border:1px solid #4b4168;
+ border-radius:14px;
+ padding:12px;
+ margin-top:10px;
+}
+.care-option-title{
+ font-weight:bold;
+ color:white;
+}
+.care-option-desc{
+ font-size:12px;
+ color:var(--muted);
+ margin:5px 0 10px;
+}
+.care-option-actions{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:8px;
+}
+.care-buy,.care-ad{
+ border:0;
+ border-radius:10px;
+ padding:10px 5px;
+ font-weight:bold;
+}
+.care-buy{
+ background:var(--gold);
+ color:#30213c;
+}
+.care-ad{
+ background:var(--green);
+ color:#172b32;
+}
+.care-quantity{
+ width:100%;
+ accent-color:var(--green);
+}
+ 
 </style>
 </head>
 
