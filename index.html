@@ -464,9 +464,11 @@ function monsterCard(m,owned){
    </div>
    ${owned?`
    <div class="care">
-    <button onclick="care('${m.id}','comer')"><span class="circle">🍪</span><span>COMER</span></button>
-    <button onclick="care('${m.id}','banar')"><span class="circle">🛁</span><span>BAÑAR</span></button>
-    <button onclick="care('${m.id}','dormir')"><span class="circle">🌙</span><span>DORMIR</span></button>
+   
+   <button onclick="care('${m.id}','comer')"><span class="circle" style="background:conic-gradient(#e9a54f ${comida}%,#29243b 0)">${"🍪"}</span><span>COMER</span></button>
+   <button onclick="care('${m.id}','banar')"><span class="circle" style="background:conic-gradient(#25cfe8 ${bano}%,#29243b 0)">🛁</span><span>BAÑAR</span></button>
+   <button onclick="care('${m.id}','dormir')"><span class="circle" style="background:conic-gradient(#8c88ff ${sueno}%,#29243b 0)">🌙</span><span>DORMIR</span></button>
+
    </div>
    <p class="status" id="status-${m.id}">${m.desc}</p>
    `:`
