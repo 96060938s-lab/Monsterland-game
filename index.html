@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,42 +6,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="theme-color" content="#17152d">
 <title>MonsterWorld</title>
-
 <style>
 *{box-sizing:border-box}
-:root{
- --bg:#17152d;
- --panel:#211d38;
- --gold:#ffd66b;
- --green:#00c99a;
- --text:#f8f5ff;
- --muted:#a9a5c5;
-}
-body{
- margin:0;color:var(--text);font-family:Arial,sans-serif;
- background:radial-gradient(ellipse at 50% 0%,#493b76 0%,transparent 55%),
- linear-gradient(180deg,#17152d,#21182f,#111321);
- min-height:100vh;padding-bottom:110px;
-}
+:root{--bg:#17152d;--panel:#211d38;--gold:#ffd66b;--green:#00c99a;--text:#f8f5ff;--muted:#a9a5c5}
+body{margin:0;color:var(--text);font-family:Arial,sans-serif;background:radial-gradient(ellipse at 50% 0%,#493b76 0%,transparent 55%),linear-gradient(180deg,#17152d,#21182f,#111321);min-height:100vh;padding-bottom:110px}
 button{font:inherit;cursor:pointer}
 button:disabled{opacity:.5;cursor:default}
 .top{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:15px 12px 10px}
 .brand{display:flex;align-items:center;gap:9px}
-.logo{
- width:46px;height:46px;border:3px solid var(--gold);border-radius:50%;
- display:grid;place-items:center;font-size:25px;background:#33264e;
-}
+.logo{width:46px;height:46px;border:3px solid var(--gold);border-radius:50%;display:grid;place-items:center;font-size:25px;background:#33264e}
 .brand h1{font-size:20px;margin:0;color:var(--gold)}
 .brand small{display:block;color:#c9b9ff;margin-top:4px}
-.wallet{
- border:1px solid #8c7443;background:#28223d;border-radius:25px;
- padding:10px;color:var(--gold);font-weight:bold;white-space:nowrap;
-}
-.profile{
- margin:0 14px 18px;padding:12px;background:#ffffff0b;
- border:1px solid #ffffff14;border-radius:15px;display:flex;
- justify-content:space-between;align-items:center;gap:8px;
-}
+.wallet{border:1px solid #8c7443;background:#28223d;border-radius:25px;padding:10px;color:var(--gold);font-weight:bold;white-space:nowrap}
+.profile{margin:0 14px 18px;padding:12px;background:#ffffff0b;border:1px solid #ffffff14;border-radius:15px;display:flex;justify-content:space-between;align-items:center;gap:8px}
 .level{color:var(--gold);font-weight:bold}
 .profile small{color:var(--muted)}
 main{max-width:760px;margin:auto;padding:0 12px}
@@ -48,17 +26,8 @@ main{max-width:760px;margin:auto;padding:0 12px}
 .page-title h2{font-size:24px;margin:5px 0 8px}
 .page-title p{color:#c3bed9;font-size:13px;margin:0}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
-.monster{
- overflow:hidden;min-width:0;position:relative;
- background:linear-gradient(180deg,#36345a,#1b192d);
- border:1px solid #5d527d;border-radius:24px;box-shadow:0 7px 20px #08071480;
-}
-.picture{
- height:155px;position:relative;display:flex;align-items:center;
- justify-content:center;overflow:hidden;
- background:radial-gradient(ellipse at 50% 30%,#b5d7c96b,transparent 65%),
- linear-gradient(145deg,#526a72,#393454,#635078);
-}
+.monster{overflow:hidden;min-width:0;position:relative;background:linear-gradient(180deg,#36345a,#1b192d);border:1px solid #5d527d;border-radius:24px;box-shadow:0 7px 20px #08071480}
+.picture{height:155px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(ellipse at 50% 30%,#b5d7c96b,transparent 65%),linear-gradient(145deg,#526a72,#393454,#635078)}
 .picture.plant{background:linear-gradient(145deg,#9bc77c,#477e79,#f0bd9d)}
 .picture.ray{background:linear-gradient(145deg,#77ddeb,#5e6fba,#f6d5a7)}
 .picture.ghost{background:linear-gradient(145deg,#c7c5ff,#777fc7,#efc6ec)}
@@ -68,88 +37,47 @@ main{max-width:760px;margin:auto;padding:0 12px}
 .picture.dragon{background:linear-gradient(145deg,#8ce4c2,#3c7897,#7163b5)}
 .picture img{width:100%;height:100%;object-fit:cover}
 .emoji-art{font-size:78px;filter:drop-shadow(0 7px 5px #17152d55)}
-.level-tag,.rarity{
- position:absolute;top:9px;border-radius:18px;padding:6px 8px;
- font-size:10px;font-weight:bold;
-}
+.level-tag,.rarity{position:absolute;top:9px;border-radius:18px;padding:6px 8px;font-size:10px;font-weight:bold}
 .level-tag{left:8px;background:#073c38;color:#68ffd8}
 .rarity{right:8px;background:#08aa76;color:white}
 .rarity.epic{background:#9d36e8}
 .rarity.legendary{background:#c58c21}
 .details{padding:10px 9px 12px;text-align:center}
 .details h3{margin:0 0 9px;font-size:19px}
-.kind{
- display:inline-block;background:#37324a;border:1px solid #625776;
- padding:6px 7px;border-radius:20px;font-size:10px;font-weight:bold;margin-bottom:10px;
-}
+.kind{display:inline-block;background:#37324a;border:1px solid #625776;padding:6px 7px;border-radius:20px;font-size:10px;font-weight:bold;margin-bottom:10px}
 .rate{color:var(--gold);font-size:11px;font-weight:bold}
 .bubbles{display:flex;justify-content:center;gap:5px;margin:1px 0 13px}
-.bubble{
- width:27px;height:27px;border-radius:50%;border:1px solid #7b7894;
- background:#4b485c;box-shadow:inset 0 2px 4px #ffffff19;
-}
+.bubble{width:27px;height:27px;border-radius:50%;border:1px solid #7b7894;background:#4b485c;box-shadow:inset 0 2px 4px #ffffff19}
 .bubble.locked{background:#242236;border-color:#39354b;color:#777}
 .care{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
 .care button{background:none;color:#bcb8d5;border:0;padding:3px 0}
-.care .circle{
- display:grid;place-items:center;margin:auto auto 6px;width:51px;height:51px;
- border-radius:50%;border:5px solid #e9a54f;
- background:conic-gradient(#e9a54f 100%,#29243b 0);font-size:23px;
- transition:background .3s,border-color .3s;
-}
+.care .circle{display:grid;place-items:center;margin:auto auto 6px;width:51px;height:51px;border-radius:50%;border:5px solid #e9a54f;background:conic-gradient(#e9a54f 100%,#29243b 0);font-size:23px;transition:background .3s,border-color .3s}
 .care button:nth-child(2) .circle{border-color:#25cfe8}
 .care button:nth-child(3) .circle{border-color:#8c88ff}
 .care span{font-size:10px;font-weight:bold}
 .status{min-height:31px;color:#a7f5cf;font-size:11px;margin:9px 0 0}
-.action-btn{
- width:100%;border:1px solid #9c8650;border-radius:14px;padding:11px 4px;
- background:#44351f;color:#ffe5a0;font-weight:bold;
-}
-.primary{
- background:linear-gradient(90deg,#ffe18a,#f5bd4f);color:#30213c;
- border:0;border-radius:12px;padding:12px;font-weight:bold;
-}
+.action-btn{width:100%;border:1px solid #9c8650;border-radius:14px;padding:11px 4px;background:#44351f;color:#ffe5a0;font-weight:bold}
+.primary{background:linear-gradient(90deg,#ffe18a,#f5bd4f);color:#30213c;border:0;border-radius:12px;padding:12px;font-weight:bold}
 .section{background:#ffffff09;border:1px solid #ffffff15;border-radius:18px;padding:15px;margin-bottom:12px}
 .section h3{color:var(--gold);margin-top:0}
 .section p{color:#c5bfd9;font-size:13px;line-height:1.5}
-.list-item{
- background:#302a49;border-radius:12px;padding:12px;margin:9px 0;
- display:flex;align-items:center;justify-content:space-between;gap:8px;
-}
+.list-item{background:#302a49;border-radius:12px;padding:12px;margin:9px 0;display:flex;align-items:center;justify-content:space-between;gap:8px}
 .list-item strong{font-size:13px}
 .list-item small{display:block;color:var(--muted);margin-top:5px}
-.bottom-nav{
- position:fixed;z-index:10;bottom:8px;left:8px;right:8px;max-width:740px;
- margin:auto;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
- gap:4px;padding:9px 5px;background:#171522f5;
- border:1px solid #ffffff17;border-radius:23px;box-shadow:0 0 25px #0008;
-}
-.bottom-nav button{
- border:1px solid transparent;border-radius:15px;padding:9px 1px 7px;
- background:transparent;color:#858198;font-weight:bold;min-width:0;
-}
+.bottom-nav{position:fixed;z-index:10;bottom:8px;left:8px;right:8px;max-width:740px;margin:auto;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;padding:9px 5px;background:#171522f5;border:1px solid #ffffff17;border-radius:23px;box-shadow:0 0 25px #0008}
+.bottom-nav button{border:1px solid transparent;border-radius:15px;padding:9px 1px 7px;background:transparent;color:#858198;font-weight:bold;min-width:0}
 .bottom-nav button .ico{display:block;font-size:23px;margin-bottom:6px}
 .bottom-nav button .lbl{font-size:9px}
 .bottom-nav button.active{border-color:var(--gold);color:var(--gold);background:#342b42}
 .hidden{display:none!important}
 .notice{text-align:center;min-height:24px;color:#a7f5cf;font-size:12px;padding:8px 0}
 .empty{text-align:center;color:var(--muted);padding:25px 5px}
-.care-modal{
- position:fixed;inset:0;z-index:10000;display:flex;align-items:center;
- justify-content:center;padding:18px;background:rgba(9,8,20,.88);
-}
+.care-modal{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(9,8,20,.88)}
 .care-modal.hidden{display:none!important}
-.care-modal-card{
- width:100%;max-width:420px;max-height:85vh;overflow-y:auto;position:relative;
- background:var(--panel);border:1px solid #65558c;border-radius:22px;
- padding:20px;box-shadow:0 12px 40px #0009;
-}
+.care-modal-card{width:100%;max-width:420px;max-height:85vh;overflow-y:auto;position:relative;background:var(--panel);border:1px solid #65558c;border-radius:22px;padding:20px;box-shadow:0 12px 40px #0009}
 .care-modal-card h2{margin:0 35px 8px 0;color:var(--gold)}
 .care-modal-card p{color:var(--muted);font-size:13px}
-.care-close{
- position:absolute;right:12px;top:12px;border:0;border-radius:50%;
- width:36px;height:36px;background:#39314f;color:white;font-size:18px;
-}
+.care-close{position:absolute;right:12px;top:12px;border:0;border-radius:50%;width:36px;height:36px;background:#39314f;color:white;font-size:18px}
 .care-option{background:#302a49;border:1px solid #4b4168;border-radius:14px;padding:12px;margin-top:10px}
 .care-option-title{font-weight:bold;color:white}
 .care-option-desc{font-size:12px;color:var(--muted);margin:5px 0 10px}
@@ -158,34 +86,115 @@ main{max-width:760px;margin:auto;padding:0 12px}
 .care-buy{background:var(--gold);color:#30213c}
 .care-ad{background:var(--green);color:#172b32}
 .care-quantity{width:100%;accent-color:var(--green)}
-@media(min-width:600px){
- .picture{height:210px}
- .emoji-art{font-size:100px}
- .details{padding:14px}
- .care .circle{width:58px;height:58px}
-}
+
+/* NUEVA PORTADA CON TRES MONSTRUOS DIBUJADOS */
+#portada{overflow:hidden}
+.portada-subtitulo{color:#d8caff;margin:8px 15px 0;font-size:15px}
+.portada-monstruos{display:flex;justify-content:center;align-items:flex-end;gap:3px;width:100%;max-width:390px;padding:12px 10px;margin:18px auto 8px}
+.mascota-portada{flex:1;min-width:0;text-align:center;animation:flotarMascota 2.4s ease-in-out infinite;filter:drop-shadow(0 8px 9px #08061770)}
+.mascota-portada:nth-child(2){animation-delay:.45s}
+.mascota-portada:nth-child(3){animation-delay:.9s}
+.mascota-portada svg{width:100%;max-width:125px;height:auto;overflow:visible}
+.nombre-mascota{font-size:10px;font-weight:900;letter-spacing:1px;margin-top:2px}
+.nombre-fuego{color:#ffad71;text-shadow:0 0 10px #ff5722}
+.nombre-naturaleza{color:#8dffad;text-shadow:0 0 10px #38e878}
+.nombre-agua{color:#86eaff;text-shadow:0 0 10px #35cfff}
+@keyframes flotarMascota{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@media(min-width:600px){.picture{height:210px}.emoji-art{font-size:100px}.details{padding:14px}.care .circle{width:58px;height:58px}}
+@media(max-width:350px){.portada-monstruos{gap:0;padding-left:4px;padding-right:4px}.nombre-mascota{font-size:9px}.mascota-portada svg{max-width:105px}}
 </style>
 </head>
-
 <body>
+
 <div id="portada" style="position:fixed;inset:0;z-index:9999;background:linear-gradient(180deg,#17152d,#493b76,#111321);display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;font-family:Arial,sans-serif;text-align:center;">
- <div style="font-size:75px;">👾</div>
- <h1 style="color:#f4cc70;font-size:32px;margin:15px 0 8px;">MonsterWorld</h1>
- <p style="color:#d8caff;">Tu mundo mágico te espera</p>
- <div style="width:75%;max-width:280px;height:14px;background:#30264b;border:1px solid #f4cc70;border-radius:20px;overflow:hidden;margin-top:25px;">
+ <h1 style="color:#f4cc70;font-size:32px;margin:0 0 2px;">MonsterWorld</h1>
+ <p class="portada-subtitulo">Tu mundo mágico te espera</p>
+
+ <div class="portada-monstruos">
+  <!-- MONSTRUO DE FUEGO -->
+  <div class="mascota-portada">
+   <svg viewBox="0 0 120 130" role="img" aria-label="Monstruo de fuego">
+    <defs>
+     <linearGradient id="cuerpoFuego" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffd16b"/><stop offset="100%" stop-color="#ff393d"/>
+     </linearGradient>
+    </defs>
+    <path d="M29 48 Q8 26 30 8 Q32 27 47 25 Q51 4 65 2 Q64 25 82 24 Q106 29 92 52" fill="#ff642e" stroke="#ffc05d" stroke-width="3" stroke-linejoin="round"/>
+    <ellipse cx="60" cy="76" rx="38" ry="39" fill="url(#cuerpoFuego)" stroke="#ffbd52" stroke-width="3"/>
+    <ellipse cx="22" cy="82" rx="10" ry="16" fill="#ff713d" stroke="#ffbd52" stroke-width="3" transform="rotate(-25 22 82)"/>
+    <ellipse cx="98" cy="82" rx="10" ry="16" fill="#ff713d" stroke="#ffbd52" stroke-width="3" transform="rotate(25 98 82)"/>
+    <ellipse cx="46" cy="68" rx="10" ry="13" fill="white"/><ellipse cx="74" cy="68" rx="10" ry="13" fill="white"/>
+    <ellipse cx="48" cy="71" rx="5" ry="7" fill="#462747"/><ellipse cx="72" cy="71" rx="5" ry="7" fill="#462747"/>
+    <circle cx="50" cy="68" r="2.5" fill="white"/><circle cx="74" cy="68" r="2.5" fill="white"/>
+    <ellipse cx="34" cy="84" rx="7" ry="4" fill="#ff9c7c"/><ellipse cx="86" cy="84" rx="7" ry="4" fill="#ff9c7c"/>
+    <path d="M48 87 Q60 101 72 87" fill="none" stroke="#692c3a" stroke-width="4" stroke-linecap="round"/>
+    <ellipse cx="44" cy="112" rx="14" ry="7" fill="#ff713d"/><ellipse cx="76" cy="112" rx="14" ry="7" fill="#ff713d"/>
+    <path d="M39 47 L31 40 M81 43 L89 36" stroke="#ffefb5" stroke-width="3" stroke-linecap="round"/>
+   </svg>
+   <div class="nombre-mascota nombre-fuego">FUEGO</div>
+  </div>
+
+  <!-- MONSTRUO DE NATURALEZA -->
+  <div class="mascota-portada">
+   <svg viewBox="0 0 120 130" role="img" aria-label="Monstruo de naturaleza">
+    <defs>
+     <linearGradient id="cuerpoPlanta" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#d4ff83"/><stop offset="100%" stop-color="#22bc78"/>
+     </linearGradient>
+    </defs>
+    <path d="M43 39 Q16 26 30 5 Q51 10 55 33" fill="#43d779" stroke="#b5ff91" stroke-width="3"/>
+    <path d="M65 33 Q70 7 94 13 Q99 35 75 41" fill="#26bd78" stroke="#b5ff91" stroke-width="3"/>
+    <path d="M60 35 Q47 20 60 11 Q73 22 60 35" fill="#f5df71" stroke="#b5ff91" stroke-width="2"/>
+    <ellipse cx="60" cy="77" rx="39" ry="39" fill="url(#cuerpoPlanta)" stroke="#c9ff91" stroke-width="3"/>
+    <ellipse cx="22" cy="83" rx="10" ry="16" fill="#4cda83" stroke="#a5ff9d" stroke-width="3" transform="rotate(-25 22 83)"/>
+    <ellipse cx="98" cy="83" rx="10" ry="16" fill="#4cda83" stroke="#a5ff9d" stroke-width="3" transform="rotate(25 98 83)"/>
+    <path d="M29 53 Q38 45 46 51" fill="none" stroke="#f2ffbf" stroke-width="4" stroke-linecap="round"/>
+    <ellipse cx="46" cy="69" rx="10" ry="13" fill="white"/><ellipse cx="74" cy="69" rx="10" ry="13" fill="white"/>
+    <ellipse cx="48" cy="72" rx="5" ry="7" fill="#28583c"/><ellipse cx="72" cy="72" rx="5" ry="7" fill="#28583c"/>
+    <circle cx="50" cy="69" r="2.5" fill="white"/><circle cx="74" cy="69" r="2.5" fill="white"/>
+    <ellipse cx="34" cy="85" rx="7" ry="4" fill="#ff9fbd"/><ellipse cx="86" cy="85" rx="7" ry="4" fill="#ff9fbd"/>
+    <path d="M48 88 Q60 100 72 88" fill="none" stroke="#28583c" stroke-width="4" stroke-linecap="round"/>
+    <path d="M38 104 Q27 112 39 117 M82 104 Q93 112 81 117" fill="none" stroke="#1d9e60" stroke-width="4" stroke-linecap="round"/>
+   </svg>
+   <div class="nombre-mascota nombre-naturaleza">NATURALEZA</div>
+  </div>
+
+  <!-- MONSTRUO DE AGUA -->
+  <div class="mascota-portada">
+   <svg viewBox="0 0 120 130" role="img" aria-label="Monstruo de agua">
+    <defs>
+     <linearGradient id="cuerpoAgua" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#b4faff"/><stop offset="100%" stop-color="#268cff"/>
+     </linearGradient>
+    </defs>
+    <path d="M35 47 Q9 38 18 18 Q41 22 48 43" fill="#44caff" stroke="#a4f6ff" stroke-width="3"/>
+    <path d="M85 47 Q111 38 102 18 Q79 22 72 43" fill="#44caff" stroke="#a4f6ff" stroke-width="3"/>
+    <ellipse cx="60" cy="77" rx="38" ry="39" fill="url(#cuerpoAgua)" stroke="#a4f6ff" stroke-width="3"/>
+    <ellipse cx="23" cy="83" rx="10" ry="16" fill="#36baff" stroke="#a4f6ff" stroke-width="3" transform="rotate(-25 23 83)"/>
+    <ellipse cx="97" cy="83" rx="10" ry="16" fill="#36baff" stroke="#a4f6ff" stroke-width="3" transform="rotate(25 97 83)"/>
+    <path d="M40 45 Q60 35 80 45" fill="none" stroke="#e8ffff" stroke-width="4" stroke-linecap="round"/>
+    <ellipse cx="46" cy="69" rx="10" ry="13" fill="white"/><ellipse cx="74" cy="69" rx="10" ry="13" fill="white"/>
+    <ellipse cx="48" cy="72" rx="5" ry="7" fill="#214d8d"/><ellipse cx="72" cy="72" rx="5" ry="7" fill="#214d8d"/>
+    <circle cx="50" cy="69" r="2.5" fill="white"/><circle cx="74" cy="69" r="2.5" fill="white"/>
+    <ellipse cx="34" cy="85" rx="7" ry="4" fill="#ffb7db"/><ellipse cx="86" cy="85" rx="7" ry="4" fill="#ffb7db"/>
+    <path d="M48 88 Q60 100 72 88" fill="none" stroke="#214d8d" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="31" cy="40" r="4" fill="#d9ffff"/><circle cx="91" cy="53" r="3" fill="#d9ffff"/>
+    <circle cx="88" cy="105" r="5" fill="#d9ffff" stroke="#55bfff" stroke-width="2"/>
+   </svg>
+   <div class="nombre-mascota nombre-agua">AGUA</div>
+  </div>
+ </div>
+
+ <div style="width:75%;max-width:280px;height:14px;background:#30264b;border:1px solid #f4cc70;border-radius:20px;overflow:hidden;margin-top:16px;">
   <div id="barraCarga" style="width:0%;height:100%;background:linear-gradient(90deg,#a56cff,#f4cc70);border-radius:20px;transition:width .2s;"></div>
  </div>
  <p id="textoCarga" style="color:#f4cc70;font-size:14px;">Cargando tu mundo... 0%</p>
 </div>
 
 <div class="top">
- <div class="brand">
-  <div class="logo">👾</div>
-  <div><h1>MonsterWorld</h1><small>Tu mundo mágico</small></div>
- </div>
+ <div class="brand"><div class="logo">👾</div><div><h1>MonsterWorld</h1><small>Tu mundo mágico</small></div></div>
  <div class="wallet">🪙 <span id="coins">100</span></div>
 </div>
-
 <div class="profile">
  <div><div class="level">⭐ NIVEL <span id="playerLevel">1</span></div><small>Entrenador de monstruos</small></div>
  <div style="text-align:right"><strong id="count">1 / 8</strong><br><small>Mis monstruos</small></div>
@@ -196,36 +205,23 @@ main{max-width:760px;margin:auto;padding:0 12px}
   <div class="page-title"><h2>Mis monstruos 👾</h2><p>Cuida, alimenta y haz crecer tus criaturas.</p></div>
   <div class="grid" id="collection"></div>
  </section>
-
  <section id="page-tienda" class="hidden">
   <div class="page-title"><h2>🛒 Tienda</h2><p>Descubre nuevos amigos para tu colección.</p></div>
   <div class="grid" id="shop"></div>
  </section>
-
  <section id="page-premios" class="hidden">
   <div class="page-title"><h2>🎁 Premios</h2><p>Consigue monedas para tu aventura.</p></div>
-  <div class="section">
-   <h3>🎁 Regalo diario</h3><p>Vuelve cada día para reclamar tus monedas de juego.</p>
-   <button class="primary" id="dailyButton" onclick="claimDaily()">Reclamar 20 monedas</button>
-   <p id="dailyStatus"></p>
-  </div>
+  <div class="section"><h3>🎁 Regalo diario</h3><p>Vuelve cada día para reclamar tus monedas de juego.</p><button class="primary" id="dailyButton" onclick="claimDaily()">Reclamar 20 monedas</button><p id="dailyStatus"></p></div>
   <div class="section"><h3>⭐ Tu progreso</h3><p>Monstruos desbloqueados: <strong id="prizeCount">1</strong></p><p>Cuida tus monstruos para seguir disfrutando de tu mundo.</p></div>
  </section>
-
  <section id="page-social" class="hidden">
   <div class="page-title"><h2>👥 Social</h2><p>Comparte tu aventura con tus amigos.</p></div>
   <div class="section"><h3>🌎 Comparte MonsterWorld</h3><p>Invita a tus amigos a conocer tu colección.</p><button class="primary" onclick="shareGame()">Compartir juego</button></div>
   <div class="section"><h3>🤝 Próximamente</h3><p>La visita a otros jugadores y el intercambio de monstruos necesitarán una conexión a un servidor.</p></div>
  </section>
-
  <section id="page-salon" class="hidden">
   <div class="page-title"><h2>🏆 Salón</h2><p>Tu rincón de logros y colección.</p></div>
-  <div class="section">
-   <h3>👑 Mi entrenador</h3>
-   <p>Nivel actual: <strong id="hallLevel">1</strong></p>
-   <p>Monstruos descubiertos: <strong id="hallCount">1</strong> de 8.</p>
-   <p>Monedas acumuladas actualmente: <strong id="hallCoins">100</strong>.</p>
-  </div>
+  <div class="section"><h3>👑 Mi entrenador</h3><p>Nivel actual: <strong id="hallLevel">1</strong></p><p>Monstruos descubiertos: <strong id="hallCount">1</strong> de 8.</p><p>Monedas acumuladas actualmente: <strong id="hallCoins">100</strong>.</p></div>
   <div class="section"><h3>🏅 Objetivo</h3><p>Desbloquea los ocho monstruos para completar tu colección.</p></div>
  </section>
  <div id="notice" class="notice" aria-live="polite"></div>
@@ -242,14 +238,12 @@ main{max-width:760px;margin:auto;padding:0 12px}
 <div id="careModal" class="care-modal hidden">
  <div class="care-modal-card">
   <button class="care-close" onclick="closeCareMenu()">✕</button>
-  <h2 id="careModalTitle">🍪 COMER</h2>
-  <p id="careModalSubtitle">Elige un producto para tu monstruo.</p>
+  <h2 id="careModalTitle">🍪 COMER</h2><p id="careModalSubtitle">Elige un producto para tu monstruo.</p>
   <div id="careOptions"></div>
   <div class="care-option">
    <label for="careQuantity">¿Cuántas unidades quieres utilizar?</label>
    <input id="careQuantity" class="care-quantity" type="range" min="1" max="10" value="1" oninput="updateCareQuantity(this.value)">
-   <p>Cantidad: <strong id="careQuantityValue">1</strong></p>
-   <p>Total: <strong id="careTotal">0</strong> 🪙</p>
+   <p>Cantidad: <strong id="careQuantityValue">1</strong></p><p>Total: <strong id="careTotal">0</strong> 🪙</p>
    <button class="care-buy" onclick="buyCareProducts()">COMPRAR</button>
    <button class="care-ad" onclick="watchCareAds()">VER ANUNCIOS</button>
   </div>
@@ -269,21 +263,13 @@ const monsters=[
 ];
 
 let save;
-try{
- save=JSON.parse(localStorage.getItem("monsterWorldSave"));
-}catch(e){save=null;}
-
-if(!save || typeof save.coins!=="number" || !Array.isArray(save.owned) || !save.owned.includes("bubu")){
- save={coins:100,owned:["bubu"],care:{},lastDaily:""};
-}
+try{save=JSON.parse(localStorage.getItem("monsterWorldSave"));}catch(e){save=null;}
+if(!save||typeof save.coins!=="number"||!Array.isArray(save.owned)||!save.owned.includes("bubu"))save={coins:100,owned:["bubu"],care:{},lastDaily:""};
 if(!save.care)save.care={};
 if(!save.lastDaily)save.lastDaily="";
 save.owned=[...new Set(save.owned.filter(id=>monsters.some(m=>m.id===id)))];
 
-function persist(){
- try{localStorage.setItem("monsterWorldSave",JSON.stringify(save));}catch(e){}
-}
-
+function persist(){try{localStorage.setItem("monsterWorldSave",JSON.stringify(save));}catch(e){}}
 const CARE_HOURS=24;
 const CARE_TIME=CARE_HOURS*60*60*1000;
 const SPECIAL_SLEEP_TIME=4*60*60*1000;
@@ -292,190 +278,94 @@ const SPECIAL_BONUS=1.25;
 function startSpecialSleep(id){
  updateProduction();
  if(!save.sleep)save.sleep={};
-
- save.sleep[id]={
-  sleeping:true,
-  until:Date.now()+SPECIAL_SLEEP_TIME,
-  bonusUntil:0
- };
-
+ save.sleep[id]={sleeping:true,until:Date.now()+SPECIAL_SLEEP_TIME,bonusUntil:0};
  if(!save.production)save.production={};
- if(save.production[id]){
-  save.production[id].lastAt=Date.now();
-  save.production[id].remainder=0;
- }
-
- persist();
- render();
- notice("🌙 Tu monstruo comienza a dormir durante 4 horas.");
+ if(save.production[id]){save.production[id].lastAt=Date.now();save.production[id].remainder=0;}
+ persist();render();notice("🌙 Tu monstruo comienza a dormir durante 4 horas.");
 }
-
 function wakeSpecialMonster(id){
- if(!save.sleep || !save.sleep[id])return;
- const sleep=save.sleep[id];
- const now=Date.now();
-
- if(now<sleep.until){
-  notice("🌙 Tu monstruo todavía está durmiendo.");
-  return;
- }
-
- if(sleep.bonusUntil && now<sleep.bonusUntil){
-  notice("⚡ La bonificación del 25 % sigue activa.");
-  return;
- }
-
- sleep.sleeping=false;
- sleep.bonusUntil=now+SPECIAL_SLEEP_TIME;
-
+ if(!save.sleep||!save.sleep[id])return;
+ const sleep=save.sleep[id],now=Date.now();
+ if(now<sleep.until){notice("🌙 Tu monstruo todavía está durmiendo.");return;}
+ if(sleep.bonusUntil&&now<sleep.bonusUntil){notice("⚡ La bonificación del 25 % sigue activa.");return;}
+ sleep.sleeping=false;sleep.bonusUntil=now+SPECIAL_SLEEP_TIME;
  if(!save.needs)save.needs={};
- if(!save.needs[id]){
-  save.needs[id]={comer:now,banar:now,dormir:now};
- }
+ if(!save.needs[id])save.needs[id]={comer:now,banar:now,dormir:now};
  save.needs[id].dormir=now;
-
  if(!save.production)save.production={};
- if(save.production[id]){
-  save.production[id].lastAt=now;
-  save.production[id].remainder=0;
- }
-
- persist();
- render();
- notice("⚡ ¡Monstruo despierto! Bono de producción +25 % durante 4 horas.");
+ if(save.production[id]){save.production[id].lastAt=now;save.production[id].remainder=0;}
+ persist();render();notice("⚡ ¡Monstruo despierto! Bono de producción +25 % durante 4 horas.");
 }
 
 function updateProduction(){
  const now=Date.now();
  if(!save.production)save.production={};
-
  monsters.forEach(m=>{
   if(!save.owned.includes(m.id))return;
   let p=save.production[m.id];
-
-  if(!p){
-   save.production[m.id]={lastAt:now,caredUntil:now+CARE_TIME,remainder:0};
-   return;
-  }
-
+  if(!p){save.production[m.id]={lastAt:now,caredUntil:now+CARE_TIME,remainder:0};return;}
   if(typeof p.lastAt!=="number")p.lastAt=now;
   if(typeof p.caredUntil!=="number")p.caredUntil=now+CARE_TIME;
   if(typeof p.remainder!=="number")p.remainder=0;
-
   const start=p.lastAt;
   if(!save.sleep)save.sleep={};
   const sleep=save.sleep[m.id];
-
-  if(sleep && sleep.sleeping && now<sleep.until){
-   p.lastAt=now;
-   p.remainder=0;
-   return;
-  }
-
-  if(sleep && sleep.sleeping && now>=sleep.until){
-   sleep.sleeping=false;
-   save.needs=save.needs||{};
+  if(sleep&&sleep.sleeping&&now<sleep.until){p.lastAt=now;p.remainder=0;return;}
+  if(sleep&&sleep.sleeping&&now>=sleep.until){
+   sleep.sleeping=false;save.needs=save.needs||{};
    save.needs[m.id]=save.needs[m.id]||{comer:now,banar:now,dormir:now};
-   save.needs[m.id].dormir=now;
-   persist();
+   save.needs[m.id].dormir=now;persist();
   }
-
   const end=Math.min(now,p.caredUntil);
-
   if(end>start){
-   const bonusActive=sleep && !sleep.sleeping && sleep.bonusUntil && now<sleep.bonusUntil;
+   const bonusActive=sleep&&!sleep.sleeping&&sleep.bonusUntil&&now<sleep.bonusUntil;
    const productionRate=m.rate*(bonusActive?SPECIAL_BONUS:1);
    const earned=productionRate*(end-start)/3600000+p.remainder;
-   const wholeCoins=Math.floor(earned);
-   save.coins+=wholeCoins;
-   p.remainder=earned-wholeCoins;
+   const wholeCoins=Math.floor(earned);save.coins+=wholeCoins;p.remainder=earned-wholeCoins;
   }
-
-  p.lastAt=now;
-  if(now>=p.caredUntil)p.remainder=0;
+  p.lastAt=now;if(now>=p.caredUntil)p.remainder=0;
  });
 }
-
 function resumeCare(id){
- const now=Date.now();
- if(!save.production)save.production={};
+ const now=Date.now();if(!save.production)save.production={};
  save.production[id]={lastAt:now,caredUntil:now+CARE_TIME,remainder:0};
 }
-
 function showPage(page){
  ["monstruos","tienda","premios","social","salon"].forEach(p=>{
   document.getElementById("page-"+p).classList.toggle("hidden",p!==page);
   document.getElementById("nav-"+p).classList.toggle("active",p===page);
  });
- render();
- window.scrollTo(0,0);
+ render();window.scrollTo(0,0);
 }
-
-function notice(text){
- document.getElementById("notice").textContent=text;
-}
-
+function notice(text){document.getElementById("notice").textContent=text;}
 const NEED_INTERVAL=20*60*1000;
-
 function getNeedPercent(id,action){
  if(!save.needs)save.needs={};
- if(!save.needs[id]){
-  const now=Date.now();
-  save.needs[id]={comer:now,banar:now,dormir:now};
- }
+ if(!save.needs[id]){const now=Date.now();save.needs[id]={comer:now,banar:now,dormir:now};}
  if(typeof save.needs[id][action]!=="number")save.needs[id][action]=Date.now();
- const elapsed=Date.now()-save.needs[id][action];
- const steps=Math.floor(elapsed/NEED_INTERVAL);
+ const elapsed=Date.now()-save.needs[id][action],steps=Math.floor(elapsed/NEED_INTERVAL);
  return Math.max(0,100-steps*10);
 }
-
 function monsterCard(m,owned){
  const c=save.care[m.id]||{comer:0,banar:0,dormir:0};
- const comida=getNeedPercent(m.id,"comer");
- const bano=getNeedPercent(m.id,"banar");
- const sueno=getNeedPercent(m.id,"dormir");
-
- let sleepText="";
- const sleep=save.sleep&&save.sleep[m.id];
- const now=Date.now();
-
- if(sleep&&sleep.sleeping&&now<sleep.until){
-  sleepText="🌙 Durmiendo";
- }else if(sleep&&sleep.bonusUntil&&now<sleep.bonusUntil){
-  sleepText="⚡ Bono +25 % activo";
- }
-
+ const comida=getNeedPercent(m.id,"comer"),bano=getNeedPercent(m.id,"banar"),sueno=getNeedPercent(m.id,"dormir");
+ let sleepText="";const sleep=save.sleep&&save.sleep[m.id],now=Date.now();
+ if(sleep&&sleep.sleeping&&now<sleep.until)sleepText="🌙 Durmiendo";
+ else if(sleep&&sleep.bonusUntil&&now<sleep.bonusUntil)sleepText="⚡ Bono +25 % activo";
  return `<article class="monster">
-  <div class="picture ${m.theme}">
-   ${m.art}
-   <span class="level-tag">Nv.${1+Math.floor((c.comer+c.banar+c.dormir)/3)}</span>
-   <span class="rarity ${m.rarity==="ÉPICO"?"epic":m.rarity==="LEGENDARIO"?"legendary":""}">${m.rarity}</span>
-  </div>
-  <div class="details">
-   <h3>${m.name}</h3>
-   <div class="kind">${m.kind}</div>
-   <div class="rate">⚡ +${(m.rate/1000).toFixed(1)}K/h</div>
-   <div class="bubbles">
-    <span class="bubble" title="Energía"></span><span class="bubble" title="Ánimo"></span>
-    <span class="bubble locked">🔒</span><span class="bubble locked">🔒</span><span class="bubble locked">🔒</span>
-   </div>
-   ${owned?`
-   <div class="care">
-    <button onclick="openCareMenu('${m.id}','comer')"><span class="circle" style="background:conic-gradient(#e9a54f ${comida}%,#29243b 0)">🍪</span><span>COMER</span></button>
-    <button onclick="openCareMenu('${m.id}','banar')"><span class="circle" style="background:conic-gradient(#25cfe8 ${bano}%,#29243b 0)">🛁</span><span>BAÑAR</span></button>
-    <button onclick="openCareMenu('${m.id}','dormir')"><span class="circle" style="background:conic-gradient(#8c88ff ${sueno}%,#29243b 0)">🌙</span><span>DORMIR</span></button>
-   </div>
-   <p class="status" id="status-${m.id}">${sleepText||m.desc}</p>
-   `:`
-   <p>${m.desc}</p>
-   <button class="action-btn" onclick="unlock('${m.id}')" ${save.coins<m.price?"disabled":""}>
-    ${save.coins<m.price?"FALTAN MONEDAS":"🪙 "+m.price+" · DESBLOQUEAR"}
-   </button>
-   `}
-  </div>
- </article>`;
+ <div class="picture ${m.theme}">${m.art}
+ <span class="level-tag">Nv.${1+Math.floor((c.comer+c.banar+c.dormir)/3)}</span>
+ <span class="rarity ${m.rarity==="ÉPICO"?"epic":m.rarity==="LEGENDARIO"?"legendary":""}">${m.rarity}</span></div>
+ <div class="details"><h3>${m.name}</h3><div class="kind">${m.kind}</div>
+ <div class="rate">⚡ +${(m.rate/1000).toFixed(1)}K/h</div>
+ <div class="bubbles"><span class="bubble" title="Energía"></span><span class="bubble" title="Ánimo"></span><span class="bubble locked">🔒</span><span class="bubble locked">🔒</span><span class="bubble locked">🔒</span></div>
+ ${owned?`<div class="care">
+ <button onclick="openCareMenu('${m.id}','comer')"><span class="circle" style="background:conic-gradient(#e9a54f ${comida}%,#29243b 0)">🍪</span><span>COMER</span></button>
+ <button onclick="openCareMenu('${m.id}','banar')"><span class="circle" style="background:conic-gradient(#25cfe8 ${bano}%,#29243b 0)">🛁</span><span>BAÑAR</span></button>
+ <button onclick="openCareMenu('${m.id}','dormir')"><span class="circle" style="background:conic-gradient(#8c88ff ${sueno}%,#29243b 0)">🌙</span><span>DORMIR</span></button>
+ </div><p class="status" id="status-${m.id}">${sleepText||m.desc}</p>`:`<p>${m.desc}</p><button class="action-btn" onclick="unlock('${m.id}')" ${save.coins<m.price?"disabled":""}>${save.coins<m.price?"FALTAN MONEDAS":"🪙 "+m.price+" · DESBLOQUEAR"}</button>`}
+ </div></article>`;
 }
-
 function render(){
  document.getElementById("coins").textContent=Math.floor(save.coins);
  document.getElementById("count").textContent=save.owned.length+" / "+monsters.length;
@@ -483,267 +373,114 @@ function render(){
  document.getElementById("hallCount").textContent=save.owned.length;
  document.getElementById("hallCoins").textContent=Math.floor(save.coins);
  const level=1+Math.floor(save.owned.length/2);
- document.getElementById("playerLevel").textContent=level;
- document.getElementById("hallLevel").textContent=level;
-
- const owned=monsters.filter(m=>save.owned.includes(m.id));
- document.getElementById("collection").innerHTML=owned.map(m=>monsterCard(m,true)).join("");
+ document.getElementById("playerLevel").textContent=level;document.getElementById("hallLevel").textContent=level;
+ document.getElementById("collection").innerHTML=monsters.filter(m=>save.owned.includes(m.id)).map(m=>monsterCard(m,true)).join("");
  const available=monsters.filter(m=>!save.owned.includes(m.id));
- document.getElementById("shop").innerHTML=available.length?
-  available.map(m=>monsterCard(m,false)).join(""):'<div class="empty">🎉 ¡Has conseguido todos los monstruos!</div>';
-
- const today=new Date().toISOString().slice(0,10);
- const claimed=save.lastDaily===today;
+ document.getElementById("shop").innerHTML=available.length?available.map(m=>monsterCard(m,false)).join():'<div class="empty">🎉 ¡Has conseguido todos los monstruos!</div>';
+ const today=new Date().toISOString().slice(0,10),claimed=save.lastDaily===today;
  document.getElementById("dailyButton").disabled=claimed;
  document.getElementById("dailyButton").textContent=claimed?"Premio diario reclamado":"Reclamar 20 monedas";
  document.getElementById("dailyStatus").textContent=claimed?"Ya reclamaste tu regalo de hoy.":"Regalo virtual del juego; no es dinero real.";
 }
-
 function care(id,action){
- const m=monsters.find(x=>x.id===id);
- if(!m||!save.owned.includes(id))return;
+ const m=monsters.find(x=>x.id===id);if(!m||!save.owned.includes(id))return;
  if(!save.care[id])save.care[id]={comer:0,banar:0,dormir:0};
-
- updateProduction();
- save.care[id][action]=(save.care[id][action]||0)+1;
+ updateProduction();save.care[id][action]=(save.care[id][action]||0)+1;
  if(!save.needs)save.needs={};
- if(!save.needs[id]){
-  const now=Date.now();
-  save.needs[id]={comer:now,banar:now,dormir:now};
- }
+ if(!save.needs[id]){const now=Date.now();save.needs[id]={comer:now,banar:now,dormir:now};}
  save.needs[id][action]=Date.now();
-
- const messages={
-  comer:"🍪 ¡"+m.name+" ha comido! Está feliz.",
-  banar:"🛁 ¡"+m.name+" está limpio y brillante!",
-  dormir:"🌙 ¡"+m.name+" está descansando."
- };
-
- resumeCare(id);
- persist();
- render();
- notice(messages[action]);
+ const messages={comer:"🍪 ¡"+m.name+" ha comido! Está feliz.",banar:"🛁 ¡"+m.name+" está limpio y brillante!",dormir:"🌙 ¡"+m.name+" está descansando."};
+ resumeCare(id);persist();render();notice(messages[action]);
 }
 
-let careProductSelected=0;
-let careMonsterSelected=null;
-let careActionSelected=null;
-
+let careProductSelected=0,careMonsterSelected=null,careActionSelected=null;
 const careProducts={
- comer:[
-  {name:"Galleta mágica",price:10,recovery:6,ads:1},
-  {name:"Fruta encantada",price:25,recovery:17,ads:2},
-  {name:"Comida energética",price:50,recovery:44,ads:0},
-  {name:"Banquete real",price:100,recovery:100,ads:0}
- ],
- banar:[
-  {name:"Esponja simple",price:10,recovery:6,ads:1},
-  {name:"Jabón mágico",price:25,recovery:17,ads:2},
-  {name:"Champú brillante",price:50,recovery:44,ads:0},
-  {name:"Baño premium",price:100,recovery:100,ads:0}
- ],
- dormir:[
-  {name:"Descanso especial gratuito",price:0,recovery:100,ads:0,free:true},
-  {name:"Bebida suave",price:10,recovery:6,ads:1},
-  {name:"Bebida mediana",price:25,recovery:17,ads:2},
-  {name:"Bebida fuerte",price:50,recovery:44,ads:0},
-  {name:"Poción de sueño",price:100,recovery:100,ads:0}
- ]
+ comer:[{name:"Galleta mágica",price:10,recovery:6,ads:1},{name:"Fruta encantada",price:25,recovery:17,ads:2},{name:"Comida energética",price:50,recovery:44,ads:0},{name:"Banquete real",price:100,recovery:100,ads:0}],
+ banar:[{name:"Esponja simple",price:10,recovery:6,ads:1},{name:"Jabón mágico",price:25,recovery:17,ads:2},{name:"Champú brillante",price:50,recovery:44,ads:0},{name:"Baño premium",price:100,recovery:100,ads:0}],
+ dormir:[{name:"Descanso especial gratuito",price:0,recovery:100,ads:0,free:true},{name:"Bebida suave",price:10,recovery:6,ads:1},{name:"Bebida mediana",price:25,recovery:17,ads:2},{name:"Bebida fuerte",price:50,recovery:44,ads:0},{name:"Poción de sueño",price:100,recovery:100,ads:0}]
 };
-
 function openCareMenu(id,action){
  if(!save.owned.includes(id))return;
- careMonsterSelected=id;
- careActionSelected=action;
- careProductSelected=0;
-
+ careMonsterSelected=id;careActionSelected=action;careProductSelected=0;
  const titles={comer:"🍪 Alimentos",banar:"🛁 Productos de baño",dormir:"🌙 Productos de descanso"};
  document.getElementById("careModalTitle").textContent=titles[action];
  document.getElementById("careModalSubtitle").textContent="Elige un producto para tu monstruo.";
-
  const list=careProducts[action];
  if(action==="dormir"){
   const sleep=save.sleep&&save.sleep[id];
   if(sleep&&sleep.sleeping&&Date.now()>=sleep.until){
-   sleep.sleeping=false;
-   save.needs=save.needs||{};
+   sleep.sleeping=false;save.needs=save.needs||{};
    save.needs[id]=save.needs[id]||{comer:Date.now(),banar:Date.now(),dormir:Date.now()};
-   save.needs[id].dormir=Date.now();
-   persist();
+   save.needs[id].dormir=Date.now();persist();
   }
-  if(sleep&&sleep.sleeping){
-   notice("🌙 Tu monstruo sigue durmiendo. Vuelve cuando termine el descanso.");
-  }else if(sleep&&sleep.until&&Date.now()>=sleep.until&&(!sleep.bonusUntil||Date.now()>=sleep.bonusUntil)){
-   notice("⚡ ¡Tu monstruo ya puede despertar!");
-  }
+  if(sleep&&sleep.sleeping)notice("🌙 Tu monstruo sigue durmiendo. Vuelve cuando termine el descanso.");
+  else if(sleep&&sleep.until&&Date.now()>=sleep.until&&(!sleep.bonusUntil||Date.now()>=sleep.bonusUntil))notice("⚡ ¡Tu monstruo ya puede despertar!");
  }
-
- const container=document.getElementById("careOptions");
- container.innerHTML=list.map((p,i)=>{
-  let label=p.name;
-  const sleep=save.sleep&&save.sleep[id];
-  const now=Date.now();
-
-  if(action==="dormir"&&p.free&&sleep&&sleep.sleeping&&now<sleep.until){
-   label="🌙 Monstruo descansando...";
-  }else if(action==="dormir"&&p.free&&sleep&&sleep.until&&now>=sleep.until&&(!sleep.bonusUntil||now>=sleep.bonusUntil)){
-   label="🌅 Despertar monstruo";
-  }else if(action==="dormir"&&p.free&&sleep&&sleep.bonusUntil&&now<sleep.bonusUntil){
-   label="⚡ Bonificación activa +25 %";
-  }
-
-  return `<div class="care-option" style="border-color:${i===0?"#ffd66b":"#4b4168"}">
-   <label style="display:flex;align-items:center;gap:9px">
-    <input type="radio" name="careProduct" ${i===0?"checked":""} onchange="selectCareProduct(${i})">
-    <span class="care-option-title">${label}</span>
-    <span style="margin-left:auto;color:#ffd66b;white-space:nowrap">${p.free?"GRATIS":p.price+" 🪙"}</span>
-   </label>
-   <div class="care-option-desc">Recuperación: ${p.recovery}%${p.ads>0?" · "+p.ads+" anuncio(s) por unidad":""}</div>
-  </div>`;
+ document.getElementById("careOptions").innerHTML=list.map((p,i)=>{
+  let label=p.name;const sleep=save.sleep&&save.sleep[id],now=Date.now();
+  if(action==="dormir"&&p.free&&sleep&&sleep.sleeping&&now<sleep.until)label="🌙 Monstruo descansando...";
+  else if(action==="dormir"&&p.free&&sleep&&sleep.until&&now>=sleep.until&&(!sleep.bonusUntil||now>=sleep.bonusUntil))label="🌅 Despertar monstruo";
+  else if(action==="dormir"&&p.free&&sleep&&sleep.bonusUntil&&now<sleep.bonusUntil)label="⚡ Bonificación activa +25 %";
+  return `<div class="care-option" style="border-color:${i===0?"#ffd66b":"#4b4168"}"><label style="display:flex;align-items:center;gap:9px"><input type="radio" name="careProduct" ${i===0?"checked":""} onchange="selectCareProduct(${i})"><span class="care-option-title">${label}</span><span style="margin-left:auto;color:#ffd66b;white-space:nowrap">${p.free?"GRATIS":p.price+" 🪙"}</span></label><div class="care-option-desc">Recuperación: ${p.recovery}%${p.ads>0?" · "+p.ads+" anuncio(s) por unidad":""}</div></div>`;
  }).join("");
-
  document.getElementById("careQuantity").value=1;
- document.getElementById("careModal").classList.remove("hidden");
- updateCareQuantity(1);
+ document.getElementById("careModal").classList.remove("hidden");updateCareQuantity(1);
 }
-
-function selectCareProduct(index){
- careProductSelected=index;
- updateCareQuantity(document.getElementById("careQuantity").value);
-}
-
+function selectCareProduct(index){careProductSelected=index;updateCareQuantity(document.getElementById("careQuantity").value);}
 function updateCareQuantity(value){
- const quantity=Math.max(1,Math.min(10,Number(value)||1));
- const p=careProducts[careActionSelected]?.[careProductSelected];
- document.getElementById("careQuantityValue").textContent=quantity;
- document.getElementById("careTotal").textContent=p?p.price*quantity:0;
+ const quantity=Math.max(1,Math.min(10,Number(value)||1)),p=careProducts[careActionSelected]?.[careProductSelected];
+ document.getElementById("careQuantityValue").textContent=quantity;document.getElementById("careTotal").textContent=p?p.price*quantity:0;
  const adButton=document.querySelector("#careModal .care-ad");
- if(adButton){
-  adButton.style.display=p&&p.ads>0?"block":"none";
-  adButton.textContent=p&&p.ads>0?"VER "+(p.ads*quantity)+" ANUNCIO(S)":"";
- }
+ if(adButton){adButton.style.display=p&&p.ads>0?"block":"none";adButton.textContent=p&&p.ads>0?"VER "+(p.ads*quantity)+" ANUNCIO(S)":"";}
 }
-
-function closeCareMenu(){
- document.getElementById("careModal").classList.add("hidden");
-}
-
+function closeCareMenu(){document.getElementById("careModal").classList.add("hidden");}
 function buyCareProducts(){
- const list=careProducts[careActionSelected];
- const p=list&&list[careProductSelected];
- const quantity=Number(document.getElementById("careQuantity").value);
+ const list=careProducts[careActionSelected],p=list&&list[careProductSelected],quantity=Number(document.getElementById("careQuantity").value);
  if(!p||!quantity)return;
-
  if(careActionSelected==="dormir"&&p.free===true){
-  const id=careMonsterSelected;
-  const sleep=save.sleep&&save.sleep[id];
-  const now=Date.now();
-
-  if(sleep&&sleep.sleeping&&now<sleep.until){
-   notice("🌙 Tu monstruo todavía está durmiendo.");
-   return;
-  }
-
-  if(sleep&&sleep.bonusUntil&&now<sleep.bonusUntil){
-   notice("⚡ Tu monstruo ya tiene activo el bono del 25 %. Espera a que termine.");
-   return;
-  }
-
-  if(sleep&&sleep.until&&now>=sleep.until){
-   wakeSpecialMonster(id);
-   closeCareMenu();
-   return;
-  }
-
-  startSpecialSleep(id);
-  closeCareMenu();
-  return;
+  const id=careMonsterSelected,sleep=save.sleep&&save.sleep[id],now=Date.now();
+  if(sleep&&sleep.sleeping&&now<sleep.until){notice("🌙 Tu monstruo todavía está durmiendo.");return;}
+  if(sleep&&sleep.bonusUntil&&now<sleep.bonusUntil){notice("⚡ Tu monstruo ya tiene activo el bono del 25 %. Espera a que termine.");return;}
+  if(sleep&&sleep.until&&now>=sleep.until){wakeSpecialMonster(id);closeCareMenu();return;}
+  startSpecialSleep(id);closeCareMenu();return;
  }
-
  const total=p.price*quantity;
- if(save.coins<total){
-  notice("No tienes suficientes monedas.");
-  return;
- }
-
- updateProduction();
- save.coins-=total;
-
+ if(save.coins<total){notice("No tienes suficientes monedas.");return;}
+ updateProduction();save.coins-=total;
  if(!save.needs)save.needs={};
- if(!save.needs[careMonsterSelected]){
-  const now=Date.now();
-  save.needs[careMonsterSelected]={comer:now,banar:now,dormir:now};
- }
-
- const need=careActionSelected;
- const current=getNeedPercent(careMonsterSelected,need);
- const restored=Math.min(100,current+p.recovery*quantity);
- const steps=Math.floor((100-restored)/10);
+ if(!save.needs[careMonsterSelected]){const now=Date.now();save.needs[careMonsterSelected]={comer:now,banar:now,dormir:now};}
+ const need=careActionSelected,current=getNeedPercent(careMonsterSelected,need);
+ const restored=Math.min(100,current+p.recovery*quantity),steps=Math.floor((100-restored)/10);
  save.needs[careMonsterSelected][need]=Date.now()-steps*NEED_INTERVAL;
-
- if(!save.care[careMonsterSelected]){
-  save.care[careMonsterSelected]={comer:0,banar:0,dormir:0};
- }
- save.care[careMonsterSelected][need]+=quantity;
-
- resumeCare(careMonsterSelected);
- persist();
- render();
- closeCareMenu();
- notice("¡Producto utilizado correctamente!");
+ if(!save.care[careMonsterSelected])save.care[careMonsterSelected]={comer:0,banar:0,dormir:0};
+ save.care[careMonsterSelected][need]+=quantity;resumeCare(careMonsterSelected);
+ persist();render();closeCareMenu();notice("¡Producto utilizado correctamente!");
 }
-
 function watchCareAds(){
- const list=careProducts[careActionSelected];
- const p=list&&list[careProductSelected];
+ const list=careProducts[careActionSelected],p=list&&list[careProductSelected];
  if(!p||p.ads<=0)return;
  notice("Los anuncios reales aún no están conectados. No se ha entregado ningún producto.");
 }
-
 function unlock(id){
- const m=monsters.find(x=>x.id===id);
- if(!m||save.owned.includes(id))return;
+ const m=monsters.find(x=>x.id===id);if(!m||save.owned.includes(id))return;
  if(save.coins<m.price){notice("No tienes suficientes monedas.");return;}
- updateProduction();
- save.coins-=m.price;
- save.owned.push(id);
- resumeCare(id);
- persist();
- showPage("monstruos");
- notice("🎉 ¡Desbloqueaste a "+m.name+"!");
+ updateProduction();save.coins-=m.price;save.owned.push(id);resumeCare(id);persist();
+ showPage("monstruos");notice("🎉 ¡Desbloqueaste a "+m.name+"!");
 }
-
 function claimDaily(){
  const today=new Date().toISOString().slice(0,10);
  if(save.lastDaily===today){notice("Ya reclamaste tu regalo diario.");return;}
- save.coins+=20;
- save.lastDaily=today;
- persist();
- render();
- notice("🎁 ¡Recibiste 20 monedas virtuales!");
+ save.coins+=20;save.lastDaily=today;persist();render();notice("🎁 ¡Recibiste 20 monedas virtuales!");
 }
-
 function shareGame(){
  const url=window.location.href;
- if(navigator.share){
-  navigator.share({title:"MonsterWorld",text:"¡Ven a descubrir mis monstruos!",url:url}).catch(()=>{});
- }else if(navigator.clipboard){
-  navigator.clipboard.writeText(url).then(()=>notice("Enlace copiado. ¡Compártelo con tus amigos!"))
-  .catch(()=>notice("Copia el enlace de MonsterWorld desde la barra del navegador."));
- }else{
-  notice("Copia el enlace de MonsterWorld desde tu navegador.");
- }
+ if(navigator.share)navigator.share({title:"MonsterWorld",text:"¡Ven a descubrir mis monstruos!",url:url}).catch(()=>{});
+ else if(navigator.clipboard)navigator.clipboard.writeText(url).then(()=>notice("Enlace copiado. ¡Compártelo con tus amigos!")).catch(()=>notice("Copia el enlace de MonsterWorld desde la barra del navegador."));
+ else notice("Copia el enlace de MonsterWorld desde tu navegador.");
 }
 
-updateProduction();
-persist();
-render();
-
-setInterval(()=>{
- updateProduction();
- persist();
- render();
-},1000);
+updateProduction();persist();render();
+setInterval(()=>{updateProduction();persist();render();},1000);
 
 let progreso=0;
 const intervaloCarga=setInterval(()=>{
