@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -18,23 +19,10 @@ button:disabled{opacity:.5;cursor:default}
 .logo{width:46px;height:46px;border:3px solid var(--gold);border-radius:50%;display:grid;place-items:center;font-size:25px;background:#33264e}
 .brand h1{font-size:20px;margin:0;color:var(--gold)}
 .brand small{display:block;color:#c9b9ff;margin-top:4px}
-
-/* BILLETERA */
-.wallet{
-border:1px solid #8c7443;
-background:linear-gradient(145deg,#39304e,#211d38);
-border-radius:18px;
-padding:9px 12px;
-color:var(--gold);
-font-weight:bold;
-text-align:center;
-min-width:112px;
-box-shadow:0 4px 14px #0003;
-}
+.wallet{border:1px solid #8c7443;background:linear-gradient(145deg,#39304e,#211d38);border-radius:18px;padding:9px 12px;color:var(--gold);font-weight:bold;text-align:center;min-width:112px;box-shadow:0 4px 14px #0003}
 .wallet-label{display:block;font-size:10px;letter-spacing:1px;margin-bottom:4px}
 .wallet-balance{display:block;font-size:15px}
 .wallet-hint{display:block;font-size:9px;color:#d0c5ec;margin-top:4px}
-
 .profile{margin:0 14px 18px;padding:12px;background:#ffffff0b;border:1px solid #ffffff14;border-radius:15px;display:flex;justify-content:space-between;align-items:center;gap:8px}
 .level{color:var(--gold);font-weight:bold}
 .profile small{color:var(--muted)}
@@ -128,15 +116,11 @@ main{max-width:760px;margin:auto;padding:0 12px}
 .slot-card.buy-slot{border-style:solid;border-color:var(--gold);background:linear-gradient(145deg,#302845,#211d38)}
 .slot-card.buy-slot .slot-icon{color:var(--green);font-size:32px}
 .slot-card:active{transform:scale(.98)}
-
-/* HUEVO EN INCUBACIÓN */
 .slot-card.incubating{width:100%;cursor:pointer;border-style:solid;border-color:#b995f5;background:linear-gradient(180deg,#36345a,#1b192d);box-shadow:0 7px 20px #08071480}
 .slot-card.incubating .slot-icon{font-size:75px;line-height:1;display:flex;align-items:center;justify-content:center;width:100%;height:145px;min-height:145px;background:linear-gradient(145deg,#b6a1ff,#4c4d9a,#e6a9ef);border-radius:10px}
 .incubation-progress{height:8px;width:100%;background:#17152d;border-radius:10px;overflow:hidden;margin-top:5px}
 .incubation-progress div{height:100%;background:linear-gradient(90deg,#00c99a,#ffd66b)}
 .incubation-counter{color:var(--gold)!important;font-weight:bold}
-
-/* ESTILOS DE BILLETERA */
 .wallet-modal-card{text-align:left}
 .wallet-hero{text-align:center;padding:10px 0 14px}
 .wallet-hero-icon{width:76px;height:76px;margin:0 auto 10px;border-radius:24px;display:grid;place-items:center;font-size:38px;background:linear-gradient(145deg,#453866,#211d38);border:1px solid #7862a4}
@@ -152,29 +136,12 @@ main{max-width:760px;margin:auto;padding:0 12px}
 .wallet-footnote{font-size:11px!important;line-height:1.5!important;color:#a9a5c5!important}
 .wallet-address{word-break:break-all;color:#a7f5cf}
 .wallet-back{width:100%;margin-top:10px}
-
-@media(min-width:600px){
-.picture{height:200px}
-.emoji-art{font-size:100px}
-.slot-card.incubating .slot-icon{height:200px;min-height:200px}
-}
-@media(max-width:380px){
-.brand h1{font-size:17px}
-.logo{width:40px;height:40px}
-.wallet{min-width:100px;padding:8px}
-.wallet-balance{font-size:13px}
-.shop-tab{font-size:9px}
-.shop-tab .tab-emoji{font-size:19px}
-.grid{gap:8px}
-.care{gap:7px}
-.care button{border-radius:17px}
-.care .circle{font-size:26px}
-.care span:not(.circle){font-size:9px}
-}
+@media(min-width:600px){.picture{height:200px}.emoji-art{font-size:100px}.slot-card.incubating .slot-icon{height:200px;min-height:200px}}
+@media(max-width:380px){.brand h1{font-size:17px}.logo{width:40px;height:40px}.wallet{min-width:100px;padding:8px}.wallet-balance{font-size:13px}.shop-tab{font-size:9px}.shop-tab .tab-emoji{font-size:19px}.grid{gap:8px}.care{gap:7px}.care button{border-radius:17px}.care .circle{font-size:26px}.care span:not(.circle){font-size:9px}}
 </style>
 </head>
-
 <body>
+
 <div id="portada" style="position:fixed;inset:0;z-index:9999;background:linear-gradient(180deg,#17152d,#493b76,#111321);display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;text-align:center">
 <h1 style="color:#f4cc70;font-size:32px;margin:0">MonsterWorld</h1>
 <p style="color:#d8caff">Tu mundo mágico te espera</p>
@@ -270,66 +237,43 @@ main{max-width:760px;margin:auto;padding:0 12px}
 <button id="nav-salon" onclick="showPage('salon')"><span class="ico">🏆</span><span class="lbl">SALÓN</span></button>
 </nav>
 
-<!-- BILLETERA MONSTERWORLD -->
 <div id="walletModal" class="care-modal hidden">
 <div class="care-modal-card wallet-modal-card">
 <button class="care-close" onclick="closeWallet()">✕</button>
-
 <div class="wallet-hero">
 <div class="wallet-hero-icon">💎</div>
 <h2>Billetera MonsterWorld</h2>
 <p>Administra tu conexión TON y tus operaciones.</p>
 </div>
-
 <div class="care-option">
 <div class="care-option-title">🪙 Saldo del juego</div>
 <p style="font-size:25px;color:#ffd66b;margin:8px 0"><strong><span id="walletCoins">100</span> monedas</strong></p>
 <p class="wallet-footnote">Estas monedas son virtuales y no representan TON ni dinero real.</p>
 </div>
-
-<div id="walletConnectionStatus" class="wallet-status">
-<span class="wallet-status-dot"></span>
-<strong>Estado:</strong> Billetera TON no conectada.
-</div>
-
-<button id="connectTonButton" class="primary" onclick="connectTonWallet()">
-🔗 VINCULAR BILLETERA TON
-</button>
-
+<div id="walletConnectionStatus" class="wallet-status"><span class="wallet-status-dot"></span><strong>Estado:</strong> Billetera TON no conectada.</div>
+<button id="connectTonButton" class="primary" onclick="connectTonWallet()">🔗 VINCULAR BILLETERA TON</button>
 <div id="walletAddressPanel" class="care-option hidden">
 <div class="care-option-title">✅ Billetera vinculada</div>
 <p id="walletAddress" class="wallet-address"></p>
 <button class="secondary" style="width:100%" onclick="disconnectTonWallet()">DESCONECTAR BILLETERA</button>
 </div>
-
 <div id="walletActions">
-<button class="wallet-action" onclick="openWalletAction('depositar')">
-<span class="wallet-action-icon">📥</span>
-<span><strong>Depositar</strong><small>Preparar un depósito de TON en MonsterWorld.</small></span>
-</button>
-
-<button class="wallet-action" onclick="openWalletAction('retirar')">
-<span class="wallet-action-icon">📤</span>
-<span><strong>Retirar</strong><small>Consultar las condiciones y preparar un retiro.</small></span>
-</button>
+<button class="wallet-action" onclick="openWalletAction('depositar')"><span class="wallet-action-icon">📥</span><span><strong>Depositar</strong><small>Preparar un depósito de TON en MonsterWorld.</small></span></button>
+<button class="wallet-action" onclick="openWalletAction('retirar')"><span class="wallet-action-icon">📤</span><span><strong>Retirar</strong><small>Consultar las condiciones y preparar un retiro.</small></span></button>
 </div>
-
 <p class="wallet-footnote" style="margin-top:14px">La conexión real requiere TON Connect. Los depósitos y retiros estarán disponibles después de implementar y verificar las transacciones de forma segura.</p>
 </div>
 </div>
 
-<!-- VENTANA DE DEPÓSITO Y RETIRO -->
 <div id="walletActionModal" class="care-modal hidden">
 <div class="care-modal-card">
 <button class="care-close" onclick="closeWalletAction()">✕</button>
 <h2 id="walletActionTitle">Operación TON</h2>
 <p id="walletActionDescription">Esta operación todavía no está disponible.</p>
-
 <div class="care-option">
 <div class="care-option-title" id="walletActionIcon">💎 Operación pendiente</div>
 <p id="walletActionInfo">No se realizará ninguna transacción.</p>
 </div>
-
 <button class="primary" onclick="walletActionPending()">CONTINUAR</button>
 <button class="secondary wallet-back" onclick="closeWalletAction()">VOLVER A LA BILLETERA</button>
 </div>
@@ -369,7 +313,6 @@ main{max-width:760px;margin:auto;padding:0 12px}
 <button class="care-close" onclick="closeIncubationMenu()">✕</button>
 <h2>🥚 Incubación mágica</h2>
 <p id="incubationModalSubtitle">Acelera el nacimiento de tu monstruo.</p>
-
 <div class="care-option" style="text-align:center">
 <div style="font-size:58px;margin:8px">🥚</div>
 <p>Tiempo restante:</p>
@@ -377,14 +320,12 @@ main{max-width:760px;margin:auto;padding:0 12px}
 <p id="incubationAdsProgress">Anuncios completados: 0 / 15</p>
 <div class="incubation-progress"><div id="incubationAdsBar" style="width:0%"></div></div>
 </div>
-
 <div class="care-option">
 <div class="care-option-title">📺 Opción 1: Ver anuncios</div>
 <div class="care-option-desc">Cada anuncio completado reduce 1 hora. Puedes reducir hasta 15 horas y quedarán 9 horas de incubación.</div>
 <button class="primary" id="incubationAdButton" onclick="watchIncubationAd()">VER ANUNCIO</button>
 <p id="incubationAdMessage">Los anuncios todavía no están conectados.</p>
 </div>
-
 <div class="care-option">
 <div class="care-option-title">💎 Opción 2: Nacimiento instantáneo con TON</div>
 <div class="care-option-desc">Termina la incubación inmediatamente. El precio se establecerá más adelante.</div>
@@ -395,6 +336,8 @@ main{max-width:760px;margin:auto;padding:0 12px}
 </div>
 
 <script>
+"use strict";
+
 const monsters=[
 {id:"bubu",name:"Bubu",art:'<img src="Imagenes/bubu.png" alt="Bubu" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'"><span class="emoji-art" style="display:none">👾</span>',price:0,desc:"Tu primer compañero",kind:"✨ MÁGICO",rate:500,rarity:"COMÚN",theme:"magic"},
 {id:"flama",name:"Flama",art:'<span class="emoji-art">🐲</span>',price:40,desc:"Un pequeño dragón",kind:"🔥 FUEGO",rate:1500,rarity:"POCO COMÚN",theme:"fire"},
@@ -417,7 +360,6 @@ if(!save.care)save.care={};
 if(!save.lastDaily)save.lastDaily="";
 if(typeof save.starterEggClaimed!=="boolean")save.starterEggClaimed=save.owned.includes("bubu");
 if(!save.trainerProgress)save.trainerProgress={level:1,xp:0};
-if(!save.monsterProgress)save.monsterProgress={};
 if(!save.inventory)save.inventory={eggs:[],care:{comer:{},banar:{},dormir:{}}};
 if(!Array.isArray(save.inventory.eggs))save.inventory.eggs=[];
 if(!save.inventory.care)save.inventory.care={comer:{},banar:{},dormir:{}};
@@ -431,6 +373,9 @@ if(!save.needs)save.needs={};
 if(!save.production)save.production={};
 if(!save.sleep)save.sleep={};
 if(!save.monsterSlots)save.monsterSlots={};
+if(!save.trainerProgress||typeof save.trainerProgress!=="object")save.trainerProgress={level:1,xp:0};
+if(typeof save.trainerProgress.level!=="number"||save.trainerProgress.level<1)save.trainerProgress.level=1;
+if(typeof save.trainerProgress.xp!=="number"||save.trainerProgress.xp<0)save.trainerProgress.xp=0;
 
 let migrationUsed=new Set();
 save.owned.forEach(id=>{
@@ -453,6 +398,12 @@ if(migrationUsed.size>save.slots.capacity)save.slots.capacity=migrationUsed.size
 const INCUBATION_TIME=24*60*60*1000;
 const MAX_INCUBATION_ADS=15;
 const INCUBATION_AD_TIME=60*60*1000;
+const NORMAL_EGG_PRICE=100;
+const CARE_HOURS=24;
+const CARE_TIME=CARE_HOURS*3600000;
+const NEED_INTERVAL=20*60000;
+const SPECIAL_SLEEP_TIME=4*3600000;
+const SPECIAL_BONUS_TIME=4*3600000;
 
 if(!save.incubation24hMigrated){
 const now=Date.now();
@@ -464,13 +415,12 @@ e.startedAt=now;e.finishAt=now+INCUBATION_TIME;
 });
 save.incubation24hMigrated=true;
 }
-
 save.incubating.forEach(e=>{
 if(typeof e.adsWatched!=="number")e.adsWatched=0;
 if(typeof e.adTimeReduced!=="number")e.adTimeReduced=0;
 });
-
 monsters.forEach(m=>{
+if(!save.monsterProgress)save.monsterProgress={};
 if(!save.monsterProgress[m.id])save.monsterProgress[m.id]={level:1,xp:0};
 if(!save.needs[m.id])save.needs[m.id]={comer:Date.now(),banar:Date.now(),dormir:Date.now()};
 ["comer","banar","dormir"].forEach(a=>{if(typeof save.needs[m.id][a]!=="number")save.needs[m.id][a]=Date.now();});
@@ -478,23 +428,14 @@ if(!save.needs[m.id])save.needs[m.id]={comer:Date.now(),banar:Date.now(),dormir:
 
 const rarityMultiplier={"COMÚN":1,"POCO COMÚN":1.5,"RARO":2,"ÉPICO":3,"LEGENDARIO":4};
 const rarityWeights={"COMÚN":60,"POCO COMÚN":28,"RARO":8,"ÉPICO":3,"LEGENDARIO":1};
-const NORMAL_EGG_PRICE=100,CARE_HOURS=24,CARE_TIME=CARE_HOURS*3600000,NEED_INTERVAL=20*60000;
-const SPECIAL_SLEEP_TIME=4*3600000;
-const SPECIAL_BONUS_TIME=4*3600000;
 
-/* ESTADO DE CONEXIÓN TON: NO SE SIMULA UNA CONEXIÓN REAL */
+/* BILLETERA TON: NO FINGE UNA CONEXIÓN REAL */
 let tonWalletConnected=false;
 let tonWalletAddress="";
 let currentWalletAction="";
 
-function openWallet(){
-renderWallet();
-document.getElementById("walletModal").classList.remove("hidden");
-}
-
-function closeWallet(){
-document.getElementById("walletModal").classList.add("hidden");
-}
+function openWallet(){renderWallet();document.getElementById("walletModal").classList.remove("hidden");}
+function closeWallet(){document.getElementById("walletModal").classList.add("hidden");}
 
 function renderWallet(){
 document.getElementById("walletCoins").textContent=Math.floor(save.coins);
@@ -502,7 +443,6 @@ const status=document.getElementById("walletConnectionStatus");
 const connectButton=document.getElementById("connectTonButton");
 const addressPanel=document.getElementById("walletAddressPanel");
 const actions=document.getElementById("walletActions");
-
 if(tonWalletConnected&&tonWalletAddress){
 status.innerHTML='<span class="wallet-status-dot" style="background:#00c99a"></span><strong>Estado:</strong> Billetera TON conectada.';
 connectButton.classList.add("hidden");
@@ -517,21 +457,15 @@ actions.classList.remove("hidden");
 }
 }
 
-/* BOTÓN PREPARADO PARA LA FUTURA INTEGRACIÓN TON CONNECT */
 function connectTonWallet(){
 notice("🔗 La conexión real con TON Connect todavía debe integrarse. No se ha conectado ninguna billetera.");
-document.getElementById("walletConnectionStatus").innerHTML=
-'<span class="wallet-status-dot"></span><strong>Conexión pendiente:</strong> falta configurar TON Connect y su manifiesto.';
+document.getElementById("walletConnectionStatus").innerHTML='<span class="wallet-status-dot"></span><strong>Conexión pendiente:</strong> falta configurar TON Connect y su manifiesto.';
 }
-
 function disconnectTonWallet(){
-tonWalletConnected=false;
-tonWalletAddress="";
-renderWallet();
+tonWalletConnected=false;tonWalletAddress="";renderWallet();
 notice("La billetera se ha desconectado de esta pantalla.");
 }
 
-/* VENTANAS DE DEPÓSITO Y RETIRO */
 function openWalletAction(action){
 currentWalletAction=action;
 const connected=tonWalletConnected&&Boolean(tonWalletAddress);
@@ -552,23 +486,15 @@ title.textContent="📤 Retirar";
 description.textContent="Prepara una solicitud de retiro.";
 icon.textContent="💎 Retiro de TON";
 info.textContent=connected
-"La cartera aparece conectada, pero todavía falta implementar el saldo retirable, las reglas y la verificación de los pagos."
+?"La cartera aparece conectada, pero todavía falta implementar el saldo retirable, las reglas y la verificación de los pagos."
 :"Primero debes conectar una billetera TON. Los retiros reales todavía no están habilitados.";
 }
-
 document.getElementById("walletActionModal").classList.remove("hidden");
 }
-
-function closeWalletAction(){
-document.getElementById("walletActionModal").classList.add("hidden");
-}
-
+function closeWalletAction(){document.getElementById("walletActionModal").classList.add("hidden");}
 function walletActionPending(){
-if(currentWalletAction==="depositar"){
-notice("📥 Los depósitos TON aún no están habilitados. No se realizó ninguna transacción.");
-}else if(currentWalletAction==="retirar"){
-notice("📤 Los retiros TON aún no están habilitados. No se realizó ninguna transacción.");
-}
+if(currentWalletAction==="depositar")notice("📥 Los depósitos TON aún no están habilitados. No se realizó ninguna transacción.");
+else if(currentWalletAction==="retirar")notice("📤 Los retiros TON aún no están habilitados. No se realizó ninguna transacción.");
 closeWalletAction();
 }
 
@@ -577,7 +503,6 @@ function persist(){try{localStorage.setItem("monsterWorldSave",JSON.stringify(sa
 function notice(t){document.getElementById("notice").textContent=t;}
 function getTrainerXPRequired(){return save.trainerProgress.level*100;}
 function xpMultiplier(){return save.xpBoostUntil&&Date.now()<save.xpBoostUntil?2:1;}
-
 function addTrainerXP(n){
 save.trainerProgress.xp+=n*xpMultiplier();
 while(save.trainerProgress.xp>=getTrainerXPRequired()){
@@ -588,7 +513,6 @@ function getMonsterLevel(id){return save.monsterProgress[id]?.level||1;}
 function getXPRequired(m){return Math.round(100*getMonsterLevel(m.id)*(rarityMultiplier[m.rarity]||1));}
 function getLevelPrice(m){return Math.round(200*getMonsterLevel(m.id)**2*(rarityMultiplier[m.rarity]||1));}
 function addMonsterXP(id,n){if(save.owned.includes(id))save.monsterProgress[id].xp+=n*xpMultiplier();}
-
 function formatTime(ms){
 let t=Math.max(0,Math.floor(ms/1000));
 let d=Math.floor(t/86400),h=Math.floor((t%86400)/3600),min=Math.floor((t%3600)/60),s=t%60;
@@ -596,7 +520,7 @@ if(d>0)return d+" d "+h+" h "+min+" min";
 return h+" h "+min+" min "+s+" s";
 }
 
-/* ESPACIOS FÍSICOS */
+/* ESPACIOS */
 function usedSlotIndexes(){
 const used=new Set();
 save.owned.forEach(id=>{const i=save.monsterSlots[id];if(Number.isInteger(i))used.add(i);});
@@ -611,21 +535,18 @@ for(let i=0;i<save.slots.capacity;i++)if(!used.has(i))return i;
 return -1;
 }
 function nextSlotPrice(){return Math.round(500*Math.pow(1.5,save.slots.capacity-1));}
-
 function buySlot(){
 const price=nextSlotPrice();
 if(save.coins<price){notice("Necesitas "+price+" monedas para comprar otro espacio.");return;}
 updateProduction();save.coins-=price;save.slots.capacity++;
 persist();render();notice("🏡 ¡Compraste un espacio permanente!");
 }
-
 function tapSlot(index){
 if(usedSlotIndexes().has(index))return;
 if(save.inventory.eggs.length){incubateEgg(save.inventory.eggs[0].id,index);return;}
 showPage("tienda");showShopCategory("huevos");
 notice("🥚 Compra un huevo y vuelve a tu espacio para incubarlo.");
 }
-
 function currentEggPrice(){return Math.round(NORMAL_EGG_PRICE*Math.pow(1.5,save.eggPurchases));}
 
 function openEgg(type){
@@ -647,7 +568,6 @@ updateProduction();save.coins-=price;save.eggPurchases++;
 save.inventory.eggs.push({id:Date.now()+"-"+Math.random().toString(36).slice(2),type:"normal",boughtAt:Date.now()});
 persist();render();notice("🥚 Huevo guardado en el inventario. Puedes incubarlo cuando tengas un espacio libre.");
 }
-
 function chooseRandomMonster(){
 const reserved=save.incubating.map(e=>e.monsterId);
 const available=monsters.filter(m=>!save.owned.includes(m.id)&&!reserved.includes(m.id));
@@ -656,7 +576,6 @@ let total=available.reduce((s,m)=>s+(rarityWeights[m.rarity]||1),0),roll=Math.ra
 for(const m of available){roll-=rarityWeights[m.rarity]||1;if(roll<0)return m;}
 return available[available.length-1];
 }
-
 function incubateEgg(eggId,slotIndex){
 const egg=save.inventory.eggs.find(e=>e.id===eggId);
 if(!egg)return;
@@ -670,22 +589,17 @@ save.incubating.push({id:egg.id,monsterId:m.id,slotIndex:slotIndex,startedAt:sta
 persist();render();notice("🥚✨ ¡Incubación iniciada en el espacio "+(slotIndex+1)+"! Tu huevo nacerá en 24 horas.");
 }
 
-/* VENTANA DE INCUBACIÓN */
+/* INCUBACIÓN */
 let selectedIncubationId=null;
-
 function openIncubationMenu(eggId){
-const egg=save.incubating.find(e=>e.id===eggId);
-if(!egg)return;
-selectedIncubationId=eggId;
-renderIncubationMenu();
+const egg=save.incubating.find(e=>e.id===eggId);if(!egg)return;
+selectedIncubationId=eggId;renderIncubationMenu();
 document.getElementById("incubationModal").classList.remove("hidden");
 }
-
 function closeIncubationMenu(){
 document.getElementById("incubationModal").classList.add("hidden");
 selectedIncubationId=null;
 }
-
 function renderIncubationMenu(){
 const egg=save.incubating.find(e=>e.id===selectedIncubationId);
 if(!egg){closeIncubationMenu();return;}
@@ -705,22 +619,18 @@ document.getElementById("incubationAdMessage").textContent=watched>=MAX_INCUBATI
 :"Cada anuncio confirmado reducirá una hora. La conexión con anuncios reales todavía está pendiente.";
 document.getElementById("incubationTonMessage").textContent="Precio pendiente. Este botón todavía no cobra ni acelera el nacimiento.";
 }
-
 function watchIncubationAd(){
 const egg=save.incubating.find(e=>e.id===selectedIncubationId);
 if(!egg){closeIncubationMenu();return;}
 if((Number(egg.adsWatched)||0)>=MAX_INCUBATION_ADS){
-notice("Ya completaste el máximo de 15 anuncios para este huevo.");
-renderIncubationMenu();return;
+notice("Ya completaste el máximo de 15 anuncios para este huevo.");renderIncubationMenu();return;
 }
 notice("📺 Los anuncios todavía no están conectados. No se descontó ninguna hora.");
 document.getElementById("incubationAdMessage").textContent="Los anuncios reales todavía no están conectados. No se descontó tiempo.";
 }
-
 function completeIncubationAdReward(eggId){
 const egg=save.incubating.find(e=>e.id===eggId);
-if(!egg)return false;
-if((Number(egg.adsWatched)||0)>=MAX_INCUBATION_ADS)return false;
+if(!egg||(Number(egg.adsWatched)||0)>=MAX_INCUBATION_ADS)return false;
 egg.adsWatched=(Number(egg.adsWatched)||0)+1;
 egg.adTimeReduced=(Number(egg.adTimeReduced)||0)+1;
 egg.finishAt-=INCUBATION_AD_TIME;
@@ -730,12 +640,10 @@ if(selectedIncubationId===eggId)renderIncubationMenu();
 notice("📺 ¡Anuncio confirmado! Se redujo 1 hora de incubación.");
 return true;
 }
-
 function incubationTonComingSoon(){
 document.getElementById("incubationTonMessage").textContent="💎 El pago en TON estará disponible cuando configuremos el precio y conectemos una cartera. No se realizó ningún cobro.";
 notice("💎 Los pagos en TON se activarán más adelante. No se realizó ningún cobro.");
 }
-
 function updateIncubations(){
 const now=Date.now(),done=save.incubating.filter(e=>now>=e.finishAt);
 if(!done.length)return;
@@ -762,7 +670,7 @@ save.xpBoostUntil=until+hours*3600000;
 persist();render();notice("⭐ Doble experiencia activada durante "+hours+" hora(s).");
 }
 
-/* PRODUCCIÓN: SE DETIENE MIENTRAS EL MONSTRUO ESTÁ DURMIENDO */
+/* PRODUCCIÓN: SE PAUSA DURANTE EL DESCANSO */
 function updateProduction(){
 const now=Date.now();
 monsters.forEach(m=>{
@@ -777,8 +685,7 @@ if(typeof p.caredUntil!=="number")p.caredUntil=now+CARE_TIME;
 if(typeof p.remainder!=="number")p.remainder=0;
 const sleep=save.sleep[m.id];
 if(sleep&&sleep.sleeping){p.lastAt=now;return;}
-const start=p.lastAt;
-const end=Math.min(now,p.caredUntil);
+const start=p.lastAt,end=Math.min(now,p.caredUntil);
 if(end>start){
 let earned=0;
 const bonusStart=sleep&&typeof sleep.bonusStartedAt==="number"?sleep.bonusStartedAt:0;
@@ -788,24 +695,19 @@ const normalBefore=Math.max(0,Math.min(end,bonusStart)-start);
 const bonusPart=Math.max(0,Math.min(end,bonusEnd)-Math.max(start,bonusStart));
 const normalAfter=Math.max(0,end-Math.max(start,bonusEnd));
 earned=m.rate*(normalBefore+normalAfter)/3600000+m.rate*1.25*bonusPart/3600000+p.remainder;
-}else{
-earned=m.rate*(end-start)/3600000+p.remainder;
-}
-const whole=Math.floor(earned);
-save.coins+=whole;
-p.remainder=earned-whole;
+}else{earned=m.rate*(end-start)/3600000+p.remainder;}
+const whole=Math.floor(earned);save.coins+=whole;p.remainder=earned-whole;
 }
 p.lastAt=now;
 if(now>=p.caredUntil)p.remainder=0;
 });
 }
-
 function resumeCare(id){
 const now=Date.now();
 save.production[id]={lastAt:now,caredUntil:now+CARE_TIME,remainder:0};
 }
 
-/* LAS BARRAS NO BAJAN MIENTRAS EL MONSTRUO ESTÁ DORMIDO */
+/* LAS ESTADÍSTICAS NO BAJAN DURANTE EL SUEÑO */
 function getNeedPercent(id,action){
 const now=Date.now();
 if(!save.needs[id])save.needs[id]={comer:now,banar:now,dormir:now};
@@ -816,8 +718,10 @@ return Math.max(0,100-Math.floor((effectiveNow-save.needs[id][action])/NEED_INTE
 }
 function getNeedState(id,action){return getNeedPercent(id,action);}
 
-/* INICIAR DESCANSO DE 4 HORAS */
+/* DORMIR 4 HORAS */
 function startSpecialSleep(id){
+const existing=save.sleep[id];
+if(existing&&existing.sleeping){notice("🌙 Este monstruo ya está durmiendo.");return;}
 updateProduction();
 const now=Date.now();
 if(!save.needs[id])save.needs[id]={comer:now,banar:now,dormir:now};
@@ -829,27 +733,35 @@ persist();render();
 notice("🌙 Tu monstruo está durmiendo. Su producción y sus estadísticas están pausadas durante 4 horas.");
 }
 
-/* DESPERTAR: REANUDA LA PRODUCCIÓN Y ACTIVA EL BONO */
+/* DESPERTAR DESPUÉS DE 4 HORAS */
 function wakeSpecialMonster(id){
 const s=save.sleep[id],now=Date.now();
 if(!s||!s.sleeping)return;
 if(now<s.until){notice("🌙 Tu monstruo todavía está durmiendo. Tiempo restante: "+formatTime(s.until-now));return;}
-updateProduction();
 const startedAt=typeof s.startedAt==="number"?s.startedAt:s.until-SPECIAL_SLEEP_TIME;
 const sleepDuration=Math.max(0,now-startedAt);
+
+/* La producción se mantiene pausada hasta este momento. */
 if(!save.needs[id])save.needs[id]={comer:now,banar:now,dormir:now};
 ["comer","banar","dormir"].forEach(a=>{
-if(typeof save.needs[id][a]!=="number")save.needs[id][a]=now;
+if(typeof save.needs[id][a]!=="number")save.needs[id][a]=startedAt;
 save.needs[id][a]+=sleepDuration;
 });
 if(save.production[id]){
 const p=save.production[id];
 if(p.caredUntil>startedAt)p.caredUntil+=sleepDuration;
 p.lastAt=now;p.remainder=0;
-}else{resumeCare(id);save.production[id].lastAt=now;}
-s.sleeping=false;s.wokenAt=now;s.bonusStartedAt=now;s.bonusUntil=now+SPECIAL_BONUS_TIME;
+}else{
+resumeCare(id);
+save.production[id].lastAt=now;
+}
+s.sleeping=false;
+s.wokenAt=now;
+s.bonusStartedAt=now;
+s.bonusUntil=now+SPECIAL_BONUS_TIME;
 persist();render();
-notice("⚡ ¡"+monsters.find(m=>m.id===id).name+" despertó! Producción +25 % durante 4 horas.");
+const m=monsters.find(x=>x.id===id);
+notice("⚡ ¡"+(m?m.name:"Tu monstruo")+" despertó! Producción +25 % durante 4 horas.");
 }
 
 function showPage(page){
@@ -895,10 +807,8 @@ document.getElementById("levelUpButton").disabled=!(p.xp>=req&&save.coins>=price
 document.getElementById("levelUpButton").textContent=p.xp>=req?"⭐ SUBIR AL NIVEL "+(p.level+1):"🔒 FALTAN "+Math.max(0,req-Math.floor(p.xp))+" XP";
 document.getElementById("levelMessage").textContent=p.xp<req?"Cuida a tu monstruo para conseguir experiencia.":save.coins<price?"Necesitas más monedas.":"¡Ya puedes subir de nivel!";
 }
-
 function levelUpMonster(){
-const m=monsters.find(x=>x.id===selectedLevelMonster);
-if(!m)return;
+const m=monsters.find(x=>x.id===selectedLevelMonster);if(!m)return;
 const p=save.monsterProgress[m.id],req=getXPRequired(m),price=getLevelPrice(m);
 if(p.xp<req||save.coins<price){notice("Necesitas la experiencia y las monedas necesarias.");return;}
 updateProduction();save.coins-=price;p.xp-=req;p.level++;
@@ -961,10 +871,8 @@ const have=getProductCount(action,p.name);
 return `<div class="list-item"><div><strong>${p.emoji} ${p.name}</strong><small>Recupera hasta ${p.recovery}% por unidad · En inventario: ${have}</small><small>Precio: ${p.price} monedas por unidad</small></div><button class="primary" style="max-width:112px" onclick="buyShopProduct('${action}','${p.name}')">COMPRAR</button></div>`;
 }).join("")+`<div class="section"><h3>🎒 Mi inventario</h3>${careProducts[action].map(p=>`<p>${p.emoji} ${p.name}: <strong>${getProductCount(action,p.name)}</strong></p>`).join("")}</div>`;
 }
-
 function buyShopProduct(action,name){
-const p=careProducts[action].find(x=>x.name===name);
-if(!p)return;
+const p=careProducts[action].find(x=>x.name===name);if(!p)return;
 if(save.coins<p.price){notice("No tienes suficientes monedas.");return;}
 updateProduction();save.coins-=p.price;
 save.inventory.care[action][p.name]=getProductCount(action,p.name)+1;
@@ -981,7 +889,6 @@ document.getElementById("careModalSubtitle").textContent=m.name+" · Cuidado act
 renderCareOptions();document.getElementById("careQuantity").value=1;
 document.getElementById("careModal").classList.remove("hidden");updateCareQuantity(1);
 }
-
 function renderCareOptions(){
 const action=careActionSelected,id=careMonsterSelected,list=careProducts[action]||[];
 let html=list.map((p,i)=>{
@@ -991,22 +898,21 @@ return `<div class="care-option"><label style="display:flex;align-items:center;g
 
 if(action==="dormir"){
 const s=save.sleep[id],now=Date.now();
-let sleepMessage="",buttonText="ACTIVAR DESCANSO";
+let sleepMessage="",buttonText="ACTIVAR DESCANSO",disabled="";
 if(s&&s.sleeping&&now<s.until){
 sleepMessage=`<small>Tiempo restante de descanso: ${formatTime(s.until-now)}. Las estadísticas y la producción están pausadas.</small>`;
-buttonText="DURMIENDO";
+buttonText="DURMIENDO";disabled="disabled";
 }else if(s&&s.sleeping&&now>=s.until){
 sleepMessage='<small style="color:#ffd66b">🌙 Ya descansó 4 horas. Despiértalo para reactivar su actividad.</small>';
 buttonText="DESPERTAR";
 }else if(s&&s.bonusUntil&&now<s.bonusUntil){
 sleepMessage='<small style="color:#a7f5cf">✨ Bono de producción +25 % · '+formatTime(s.bonusUntil-now)+' restantes.</small>';
-buttonText="BONO ACTIVO";
+buttonText="BONO ACTIVO";disabled="disabled";
 }
-html+=`<div class="care-option"><div class="care-option-title">🌙 Descanso especial gratuito</div><div class="care-option-desc">Duerme 4 horas sin producir ni perder estadísticas. Al despertar, obtiene +25 % de producción durante 4 horas.</div><button class="secondary" style="width:100%" onclick="useSpecialSleep()">${buttonText}</button>${sleepMessage}</div>`;
+html+=`<div class="care-option"><div class="care-option-title">🌙 Descanso especial gratuito</div><div class="care-option-desc">Duerme 4 horas sin producir ni perder estadísticas. Al despertar, obtiene +25 % de producción durante 4 horas.</div><button class="secondary" style="width:100%" ${disabled} onclick="useSpecialSleep()">${buttonText}</button>${sleepMessage}</div>`;
 }
 document.getElementById("careOptions").innerHTML=html||'<div class="empty">No hay productos disponibles.</div>';
 }
-
 function selectCareProduct(i){
 careProductSelected=i;
 const p=careProducts[careActionSelected]?.[i];
@@ -1017,7 +923,6 @@ document.getElementById("careQuantity").value=1;
 }
 renderCareOptions();updateCareQuantity(document.getElementById("careQuantity").value);
 }
-
 function updateCareQuantity(v){
 const p=careProducts[careActionSelected]?.[careProductSelected];
 const have=p?getProductCount(careActionSelected,p.name):0;
@@ -1033,16 +938,13 @@ document.getElementById("useCareButton").textContent=p&&have>0?"USAR "+q+" · "+
 document.getElementById("careAdButton").style.display=p&&p.ads>0?"block":"none";
 document.getElementById("careAdButton").textContent=p&&p.ads>0?"VER "+(p.ads*q)+" ANUNCIO(S)":"";
 }
-
 function closeCareMenu(){document.getElementById("careModal").classList.add("hidden");}
 function goToCareShop(){
 const action=careActionSelected;closeCareMenu();showPage("tienda");
 showShopCategory(action==="comer"?"alimentos":action==="banar"?"bano":"dormir");
 }
-
 function useSpecialSleep(){
-const id=careMonsterSelected;
-if(!id)return;
+const id=careMonsterSelected;if(!id)return;
 const s=save.sleep[id],now=Date.now();
 if(s&&s.sleeping){
 if(now<s.until){notice("🌙 Tu monstruo todavía está durmiendo. Tiempo restante: "+formatTime(s.until-now));return;}
@@ -1054,10 +956,10 @@ closeCareMenu();return;
 }
 startSpecialSleep(id);closeCareMenu();
 }
-
 function useCareProducts(){
 const action=careActionSelected,id=careMonsterSelected,p=careProducts[action]?.[careProductSelected];
 if(!p||!id)return;
+if(save.sleep[id]&&save.sleep[id].sleeping){notice("🌙 No puedes usar productos mientras tu monstruo duerme.");return;}
 const q=Number(document.getElementById("careQuantity").value)||1;
 const inv=save.inventory.care[action],have=getProductCount(action,p.name);
 if(have<q){notice("No tienes suficientes unidades de ese producto.");return;}
@@ -1084,22 +986,18 @@ document.getElementById("normalEggPrice").textContent=save.starterEggClaimed?cur
 document.getElementById("normalEggButton").textContent=save.starterEggClaimed?"🥚 COMPRAR HUEVO":"🎁 RECLAMAR HUEVO GRATIS";
 document.getElementById("normalEggButton").disabled=save.starterEggClaimed&&save.owned.length+save.incubating.length>=monsters.length;
 document.getElementById("eggOwnedCount").textContent=save.owned.length+" / "+monsters.length;
-
 document.getElementById("eggInventory").innerHTML=save.inventory.eggs.length?
 save.inventory.eggs.map(e=>`<div class="list-item"><div><strong>🥚 Huevo normal</strong><small>Guardado en tu inventario; no ocupa espacio.</small></div><button class="primary" style="max-width:110px" onclick="incubateEgg('${e.id}')">INCUBAR</button></div>`).join("")
 :'<div class="empty">No tienes huevos guardados. Compra uno en la tienda.</div>';
-
 document.getElementById("incubationList").innerHTML=save.incubating.length?
 save.incubating.map(e=>{
 const m=monsters.find(x=>x.id===e.monsterId);
 return `<div class="list-item"><div><strong>🥚 Huevo en incubación</strong><small>Espacio ${e.slotIndex+1} · Resultado: ${m?m.name:"misterioso"} · Tiempo restante: ${formatTime(e.finishAt-Date.now())}</small></div><button class="secondary" style="max-width:110px" onclick="openIncubationMenu('${e.id}')">VER OPCIONES</button></div>`;
 }).join("")
 :'<div class="empty">No hay huevos incubándose.</div>';
-
 renderProductShop("comer","foodShopList");
 renderProductShop("banar","bathShopList");
 renderProductShop("dormir","sleepShopList");
-
 const until=Number(save.xpBoostUntil)||0;
 document.getElementById("xpBoostStatus").innerHTML=until>Date.now()?
 '<div class="section"><p>⭐ DOBLE EXPERIENCIA ACTIVA · Tiempo restante: '+formatTime(until-Date.now())+'</p></div>':
@@ -1117,8 +1015,7 @@ const m=monsters.find(x=>x.id===egg.monsterId);
 const remaining=Math.max(0,egg.finishAt-Date.now());
 const progress=Math.max(0,Math.min(100,((INCUBATION_TIME-remaining)/INCUBATION_TIME)*100));
 html+=`<button class="slot-card incubating" style="width:100%" onclick="openIncubationMenu('${egg.id}')">
-<div class="slot-icon">🥚</div>
-<strong>${m?m.name:"Huevo mágico"}</strong>
+<div class="slot-icon">🥚</div><strong>${m?m.name:"Huevo mágico"}</strong>
 <small>Espacio ${i+1} · Toca para ver opciones</small>
 <div class="incubation-progress"><div style="width:${progress}%"></div></div>
 <small class="incubation-counter">Incubando: ${formatTime(remaining)}</small>
@@ -1151,10 +1048,10 @@ const today=new Date().toISOString().slice(0,10),claimed=save.lastDaily===today;
 document.getElementById("dailyButton").disabled=claimed;
 document.getElementById("dailyButton").textContent=claimed?"Premio diario reclamado":"Reclamar 20 monedas";
 document.getElementById("dailyStatus").textContent=claimed?"Ya reclamaste tu regalo de hoy.":"Recompensa virtual del juego; no es dinero real.";
-renderShop();
-renderWallet();
+renderShop();renderWallet();
 if(selectedLevelMonster)renderLevelMenu();
 if(selectedIncubationId&&!document.getElementById("incubationModal").classList.contains("hidden"))renderIncubationMenu();
+if(careMonsterSelected&&!document.getElementById("careModal").classList.contains("hidden"))renderCareOptions();
 }
 
 function claimDaily(){
@@ -1163,7 +1060,6 @@ if(save.lastDaily===today){notice("Ya reclamaste tu regalo diario.");return;}
 save.coins+=20;save.lastDaily=today;
 persist();render();notice("🎁 ¡Recibiste 20 monedas virtuales!");
 }
-
 function shareGame(){
 const url=window.location.href;
 if(navigator.share){
@@ -1173,18 +1069,25 @@ navigator.clipboard.writeText(url).then(()=>notice("Enlace copiado. ¡Compártel
 }else{notice("Copia el enlace de MonsterWorld desde tu navegador.");}
 }
 
+/* INICIALIZACIÓN */
 updateIncubations();
 updateProduction();
 persist();
 render();
 
+/* ACTUALIZACIÓN DEL JUEGO */
 setInterval(()=>{
 updateIncubations();
 updateProduction();
+
+/* Al completar las 4 horas, el botón de despertar queda disponible.
+   No se despierta automáticamente: el jugador decide cuándo pulsarlo. */
 persist();
 render();
+if(careMonsterSelected&&!document.getElementById("careModal").classList.contains("hidden"))renderCareOptions();
 },1000);
 
+/* PANTALLA DE CARGA */
 let progreso=0;
 const intervaloCarga=setInterval(()=>{
 progreso+=2;
