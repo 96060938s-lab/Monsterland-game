@@ -469,32 +469,49 @@ function render(){
  document.getElementById("dailyStatus").textContent=claimed?"Ya reclamaste tu regalo de hoy.":"Regalo virtual del juego; no es dinero real.";
 }
 
+
 function care(id,action){
  const m=monsters.find(x=>x.id===id);
  if(!m||!save.owned.includes(id))return;
- if(!save.care[id])save.care[id]={comer:0,banar:0,dormir:0};
+
+ if(!save.care[id]){
+  save.care[id]={comer:0,banar:0,dormir:0};
+ }
+
+ // Registrar la producción antes de renovar el cuidado.
+ updateProduction();
  save.care[id][action]=(save.care[id][action]||0)+1;
+
  const messages={
   comer:"🍪 ¡"+m.name+" ha comido! Está feliz.",
   banar:"🛁 ¡"+m.name+" está limpio y brillante!",
   dormir:"🌙 ¡"+m.name+" está descansando."
  };
-  updateProduction();
- save.coins-=m.price;
- save.owned.push(id);
+
  resumeCare(id);
  persist();
+ render();
+ notice(messages[action]);
+}
 
 function unlock(id){
  const m=monsters.find(x=>x.id===id);
  if(!m||save.owned.includes(id))return;
- if(save.coins<m.price){notice("No tienes suficientes monedas.");return;}
+
+ if(save.coins<m.price){
+  notice("No tienes suficientes monedas.");
+  return;
+ }
+
+ updateProduction();
  save.coins-=m.price;
  save.owned.push(id);
+ resumeCare(id);
  persist();
  showPage("monstruos");
  notice("🎉 ¡Desbloqueaste a "+m.name+"!");
 }
+
 
 function claimDaily(){
  const today=new Date().toISOString().slice(0,10);
