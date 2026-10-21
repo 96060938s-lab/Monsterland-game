@@ -517,6 +517,19 @@ function care(id,action){
  updateProduction();
  save.care[id][action]=(save.care[id][action]||0)+1;
 
+ if(!save.needs) save.needs = {};
+
+ if(!save.needs[id]){
+  const now = Date.now();
+  save.needs[id] = {
+  comer: now,
+  banar: now,
+  dormir: now
+ };
+ }
+
+ save.needs[id][action] = Date.now();
+
  const messages={
   comer:"🍪 ¡"+m.name+" ha comido! Está feliz.",
   banar:"🛁 ¡"+m.name+" está limpio y brillante!",
