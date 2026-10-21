@@ -395,6 +395,33 @@ main{max-width:760px;margin:auto;padding:0 12px}
  </button>
 </nav>
 
+<div id="careModal" class="care-modal hidden">
+ <div class="care-modal-card">
+  <button class="care-close" onclick="closeCareMenu()">✕</button>
+  <h2 id="careModalTitle">🍪 COMER</h2>
+  <p id="careModalSubtitle">Elige un producto para tu monstruo.</p>
+
+  <div id="careOptions"></div>
+
+  <div class="care-option">
+   <label for="careQuantity">¿Cuántas unidades quieres utilizar?</label>
+   <input
+    id="careQuantity"
+    class="care-quantity"
+    type="range"
+    min="1"
+    max="10"
+    value="1"
+    oninput="updateCareQuantity(this.value)"
+   >
+   <p>Cantidad: <strong id="careQuantityValue">1</strong></p>
+   <p>Total: <strong id="careTotal">0</strong> 🪙</p>
+   <button class="care-buy" onclick="buyCareProducts()">COMPRAR</button>
+   <button class="care-ad" onclick="watchCareAds()">VER ANUNCIOS</button>
+  </div>
+ </div>
+</div>
+
 <script>
 const monsters=[
  {id:"bubu",name:"Bubu",art:'<img src="Imagenes/bubu.png" alt="Bubu" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'"><span class="emoji-art" style="display:none">👾</span>',price:0,desc:"Tu primer compañero",kind:"✨ MÁGICO",rate:500,rarity:"COMÚN",theme:"magic"},
@@ -552,7 +579,7 @@ function monsterCard(m,owned){
    ${owned?`
    <div class="care">
    
-   <button onclick="care('${m.id}','comer')"><span class="circle" style="background:conic-gradient(#e9a54f ${comida}%,#29243b 0)">${"🍪"}</span><span>COMER</span></button>
+   <button onclick="openCareMenu('${m.id}','comer')"><span class="circle" style="background:conic-gradient(#e9a54f ${comida}%,#29243b 0)">${"🍪"}</span><span>COMER</span></button>
    <button onclick="care('${m.id}','banar')"><span class="circle" style="background:conic-gradient(#25cfe8 ${bano}%,#29243b 0)">🛁</span><span>BAÑAR</span></button>
    <button onclick="care('${m.id}','dormir')"><span class="circle" style="background:conic-gradient(#8c88ff ${sueno}%,#29243b 0)">🌙</span><span>DORMIR</span></button>
 
@@ -627,6 +654,150 @@ function care(id,action){
  persist();
  render();
  notice(messages[action]);
+}
+
+let careProductSelected = null;
+let careMonsterSelected = null;
+let careActionSelected = null;
+
+const careProducts = {
+ comer: [
+  {name:"Galleta mágica",price:10,recovery:6,ads:1},
+  {name:"Fruta encantada",price:25,recovery:17,ads:2},
+  {name:"Comida energética",price:50,recovery:44,ads:0},
+  {name:"Banquete real",price:100,recovery:100,ads:0}
+ ],
+ banar: [
+  {name:"Esponja simple",price:10,recovery:6,ads:1},
+  {name:"Jabón mágico",price:25,recovery:17,ads:2},
+  {name:"Champú brillante",price:50,recovery:44,ads:0},
+  {name:"Baño premium",price:100,recovery:100,ads:0}
+ ],
+ dormir: [
+  {name:"Descanso especial gratuito",price:0,recovery:100,ads:0,free:true},
+  {name:"Bebida suave",price:10,recovery:6,ads:1},
+  {name:"Bebida mediana",price:25,recovery:17,ads:2},
+  {name:"Bebida fuerte",price:50,recovery:44,ads:0},
+  {name:"Poción de sueño",price:100,recovery:100,ads:0}
+ ]
+};
+
+function openCareMenu(id,action){
+ if(!save.owned.includes(id))return;
+
+ careMonsterSelected=id;
+ careActionSelected=action;
+ careProductSelected=0;
+
+ const titles={
+  comer:"🍪 Alimentos",
+  banar:"🛁 Productos de baño",
+  dormir:"🌙 Productos de descanso"
+ };
+
+ document.getElementById("careModalTitle").textContent=titles[action];
+ document.getElementById("careModalSubtitle").textContent=
+  "Elige un producto para tu monstruo.";
+
+ const list=careProducts[action];
+ const container=document.getElementById("careOptions");
+
+ container.innerHTML=list.map((p,i)=>`
+  <div class="care-option"
+       style="border-color:${i===0?"#ffd66b":"#4b4168"}">
+   <label style="display:flex;align-items:center;gap:9px">
+    <input type="radio" name="careProduct"
+      ${i===0?"checked":""}
+      onchange="selectCareProduct(${i})">
+    <span class="care-option-title">${p.name}</span>
+    <span style="margin-left:auto;color:#ffd66b;white-space:nowrap">
+     ${p.free?"GRATIS":p.price+" 🪙"}
+    </span>
+   </label>
+   <div class="care-option-desc">
+    Recuperación: ${p.recovery}%
+    ${p.ads>0?" · "+p.ads+" anuncio(s) por unidad":""}
+   </div>
+  </div>
+ `).join("");
+
+ document.getElementById("careQuantity").value=1;
+ document.getElementById("careModal").classList.remove("hidden");
+
+ updateCareQuantity(1);
+}
+
+function selectCareProduct(index){
+ careProductSelected=index;
+ updateCareQuantity(document.getElementById("careQuantity").value);
+}
+
+function updateCareQuantity(value){
+ const quantity=Math.max(1,Math.min(10,Number(value)||1));
+ const p=careProducts[careActionSelected]?.[careProductSelected];
+
+ document.getElementById("careQuantityValue").textContent=quantity;
+ document.getElementById("careTotal").textContent=p?p.price*quantity:0;
+
+ const adButton=document.querySelector("#careModal .care-ad");
+ if(adButton){
+  adButton.style.display=p&&p.ads>0?"block":"none";
+  adButton.textContent=p&&p.ads>0
+   ?"VER "+(p.ads*quantity)+" ANUNCIO(S)"
+   :"";
+ }
+}
+
+function closeCareMenu(){
+ document.getElementById("careModal").classList.add("hidden");
+}
+
+function buyCareProducts(){
+ const list=careProducts[careActionSelected];
+ const p=list&&list[careProductSelected];
+ const quantity=Number(document.getElementById("careQuantity").value);
+
+ if(!p||!quantity)return;
+
+ const total=p.price*quantity;
+
+ if(save.coins<total){
+  notice("No tienes suficientes monedas.");
+  return;
+ }
+
+ updateProduction();
+ save.coins-=total;
+
+ if(!save.needs)save.needs={};
+ if(!save.needs[careMonsterSelected]){
+  const now=Date.now();
+  save.needs[careMonsterSelected]={
+   comer:now,banar:now,dormir:now
+  };
+ }
+
+ const need=careActionSelected;
+ const current=getNeedPercent(careMonsterSelected,need);
+ const restored=Math.min(100,current+p.recovery);
+ const steps=Math.floor((100-restored)/10);
+
+ save.needs[careMonsterSelected][need]=
+  Date.now()-steps*NEED_INTERVAL;
+
+ persist();
+ render();
+ closeCareMenu();
+ notice("¡Producto utilizado correctamente!");
+}
+
+function watchCareAds(){
+ const list=careProducts[careActionSelected];
+ const p=list&&list[careProductSelected];
+
+ if(!p||p.ads<=0)return;
+
+ notice("Los anuncios reales aún no están conectados. No se ha entregado ningún producto.");
 }
 
 function unlock(id){
