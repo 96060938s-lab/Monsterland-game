@@ -479,10 +479,11 @@ function care(id,action){
   banar:"🛁 ¡"+m.name+" está limpio y brillante!",
   dormir:"🌙 ¡"+m.name+" está descansando."
  };
+  updateProduction();
+ save.coins-=m.price;
+ save.owned.push(id);
+ resumeCare(id);
  persist();
- render();
- notice(messages[action]);
-}
 
 function unlock(id){
  const m=monsters.find(x=>x.id===id);
