@@ -416,8 +416,35 @@ function notice(text){
  document.getElementById("notice").textContent=text;
 }
 
+const NEED_INTERVAL = 20 * 60 * 1000;
+
+function getNeedPercent(id, action){
+ if(!save.needs) save.needs = {};
+
+ if(!save.needs[id]){
+  const now = Date.now();
+  save.needs[id] = {
+   comer: now,
+   banar: now,
+   dormir: now
+  };
+ }
+
+ if(typeof save.needs[id][action] !== "number"){
+  save.needs[id][action] = Date.now();
+ }
+
+ const elapsed = Date.now() - save.needs[id][action];
+ const steps = Math.floor(elapsed / NEED_INTERVAL);
+
+ return Math.max(0, 100 - steps * 10);
+}
+
 function monsterCard(m,owned){
  const c=save.care[m.id]||{comer:0,banar:0,dormir:0};
+ const comida = getNeedPercent(m.id,"comer");
+ const bano = getNeedPercent(m.id,"banar");
+ const sueno = getNeedPercent(m.id,"dormir");
  return `<article class="monster">
   <div class="picture ${m.theme}">
    ${m.art}
