@@ -447,4 +447,487 @@ const now=Date.now();
 monsters.forEach(m=>{
 if(!save.owned.includes(m.id))return;
 
-let p
+let p=save.production[m.id];
+if(!p){
+save.production[m.id]={lastAt:now,caredUntil:now+CARE_TIME,remainder:0};
+return;
+}
+if(typeof p.lastAt!=="number")p.lastAt=now;
+if(typeof p.caredUntil!=="number")p.caredUntil=now+CARE_TIME;
+if(typeof p.remainder!=="number")p.remainder=0;
+
+const sleep=save.sleep[m.id];
+
+/* Durante el descanso no se produce nada, incluso si ya pasaron 4 horas.
+   La actividad solo vuelve cuando el jugador pulsa DESPERTAR. */
+if(sleep&&sleep.sleeping){
+p.lastAt=now;
+return;
+}
+
+const start=p.lastAt;
+const end=Math.min(now,p.caredUntil);
+
+if(end>start){
+let earned=0;
+const bonusStart=sleep&&typeof sleep.bonusStartedAt==="number"?sleep.bonusStartedAt:0;
+const bonusEnd=sleep&&typeof sleep.bonusUntil==="number"?sleep.bonusUntil:0;
+
+if(bonusStart>0&&bonusEnd>bonusStart){
+const normalBefore=Math.max(0,Math.min(end,bonusStart)-start);
+const bonusPart=Math.max(0,Math.min(end,bonusEnd)-Math.max(start,bonusStart));
+const normalAfter=Math.max(0,end-Math.max(start,bonusEnd));
+earned=m.rate*(normalBefore+normalAfter)/3600000+
+m.rate*1.25*bonusPart/3600000+p.remainder;
+}else{
+earned=m.rate*(end-start)/3600000+p.remainder;
+}
+
+const whole=Math.floor(earned);
+save.coins+=whole;
+p.remainder=earned-whole;
+}
+p.lastAt=now;
+if(now>=p.caredUntil)p.remainder=0;
+});
+}
+
+function resumeCare(id){
+const now=Date.now();
+save.production[id]={lastAt:now,caredUntil:now+CARE_TIME,remainder:0};
+}
+
+/* LAS BARRAS NO BAJAN MIENTRAS EL MONSTRUO ESTÁ DORMIDO */
+function getNeedPercent(id,action){
+const now=Date.now();
+if(!save.needs[id])save.needs[id]={comer:now,banar:now,dormir:now};
+if(typeof save.needs[id][action]!=="number")save.needs[id][action]=now;
+const sleep=save.sleep[id];
+const effectiveNow=sleep&&sleep.sleeping&&typeof sleep.startedAt==="number"
+?Math.min(now,sleep.startedAt):now;
+return Math.max(0,100-Math.floor((effectiveNow-save.needs[id][action])/NEED_INTERVAL)*10);
+}
+function getNeedState(id,action){return getNeedPercent(id,action);}
+
+/* INICIAR DESCANSO DE 4 HORAS */
+function startSpecialSleep(id){
+updateProduction();
+const now=Date.now();
+
+if(!save.needs[id])save.needs[id]={comer:now,banar:now,dormir:now};
+
+save.sleep[id]={
+sleeping:true,
+startedAt:now,
+until:now+SPECIAL_SLEEP_TIME,
+bonusStartedAt:0,
+bonusUntil:0
+};
+
+if(save.production[id]){
+save.production[id].lastAt=now;
+save.production[id].remainder=0;
+}
+
+/* El descanso empieza con la barra de sueño completa.
+   Todas las barras quedan congeladas hasta despertar. */
+save.needs[id].dormir=now;
+
+addTrainerXP(5);
+addMonsterXP(id,5);
+persist();render();
+notice("🌙 Tu monstruo está durmiendo. Su producción y sus estadísticas están pausadas durante 4 horas.");
+}
+
+/* DESPERTAR: REANUDA LA PRODUCCIÓN Y ACTIVA EL BONO */
+function wakeSpecialMonster(id){
+const s=save.sleep[id],now=Date.now();
+if(!s||!s.sleeping)return;
+
+if(now<s.until){
+notice("🌙 Tu monstruo todavía está durmiendo. Tiempo restante: "+formatTime(s.until-now));
+return;
+}
+
+/* Actualiza la producción mientras aún figura dormido: así no gana
+   monedas por ningún momento del descanso. */
+updateProduction();
+
+const startedAt=typeof s.startedAt==="number"?s.startedAt:s.until-SPECIAL_SLEEP_TIME;
+const sleepDuration=Math.max(0,now-startedAt);
+
+/* Pausa también el deterioro de las necesidades y el tiempo de cuidado
+   durante todo el tiempo que estuvo dormido. */
+if(!save.needs[id])save.needs[id]={comer:now,banar:now,dormir:now};
+["comer","banar","dormir"].forEach(a=>{
+if(typeof save.needs[id][a]!=="number")save.needs[id][a]=now;
+save.needs[id][a]+=sleepDuration;
+});
+
+if(save.production[id]){
+const p=save.production[id];
+if(p.caredUntil>startedAt)p.caredUntil+=sleepDuration;
+p.lastAt=now;
+p.remainder=0;
+}else{
+resumeCare(id);
+save.production[id].lastAt=now;
+}
+
+/* El bono empieza al pulsar DESPERTAR, no al cerrar o abrir el juego. */
+s.sleeping=false;
+s.wokenAt=now;
+s.bonusStartedAt=now;
+s.bonusUntil=now+SPECIAL_BONUS_TIME;
+
+persist();render();
+notice("⚡ ¡"+monsters.find(m=>m.id===id).name+" despertó! Producción +25 % durante 4 horas.");
+}
+
+function showPage(page){
+["monstruos","tienda","premios","social","salon"].forEach(p=>{
+document.getElementById("page-"+p).classList.toggle("hidden",p!==page);
+document.getElementById("nav-"+p).classList.toggle("active",p===page);
+});
+render();window.scrollTo(0,0);
+}
+
+let shopCategory="huevos";
+function showShopCategory(c){
+shopCategory=c;
+["huevos","alimentos","bano","dormir","xp"].forEach(x=>{
+document.getElementById("shop-"+x).classList.toggle("hidden",x!==c);
+document.getElementById("shop-tab-"+x).classList.toggle("active",x===c);
+});
+renderShop();
+}
+
+let selectedLevelMonster=null;
+function openLevelMenu(id){
+if(!save.owned.includes(id))return;
+selectedLevelMonster=id;renderLevelMenu();
+document.getElementById("levelModal").classList.remove("hidden");
+}
+function closeLevelMenu(){
+document.getElementById("levelModal").classList.add("hidden");
+selectedLevelMonster=null;
+}
+function renderLevelMenu(){
+const m=monsters.find(x=>x.id===selectedLevelMonster);
+if(!m)return;
+const p=save.monsterProgress[m.id],req=getXPRequired(m),price=getLevelPrice(m);
+document.getElementById("levelTitle").textContent="⭐ "+m.name;
+document.getElementById("levelSubtitle").textContent="Mejora a tu compañero mágico.";
+document.getElementById("levelCurrent").textContent=p.level;
+document.getElementById("levelXP").textContent=Math.floor(p.xp)+" / "+req+" XP";
+document.getElementById("levelBar").style.width=Math.min(100,p.xp/req*100)+"%";
+document.getElementById("levelRarity").textContent=m.rarity;
+document.getElementById("levelPrice").textContent=price+" 🪙";
+document.getElementById("levelUpButton").disabled=!(p.xp>=req&&save.coins>=price);
+document.getElementById("levelUpButton").textContent=p.xp>=req?"⭐ SUBIR AL NIVEL "+(p.level+1):"🔒 FALTAN "+Math.max(0,req-Math.floor(p.xp))+" XP";
+document.getElementById("levelMessage").textContent=p.xp<req?"Cuida a tu monstruo para conseguir experiencia.":save.coins<price?"Necesitas más monedas.":"¡Ya puedes subir de nivel!";
+}
+
+function levelUpMonster(){
+const m=monsters.find(x=>x.id===selectedLevelMonster);
+if(!m)return;
+const p=save.monsterProgress[m.id],req=getXPRequired(m),price=getLevelPrice(m);
+if(p.xp<req||save.coins<price){notice("Necesitas la experiencia y las monedas necesarias.");return;}
+updateProduction();save.coins-=price;p.xp-=req;p.level++;
+persist();render();renderLevelMenu();notice("🎉 "+m.name+" subió al nivel "+p.level+"!");
+}
+
+function monsterCard(m){
+const sleep=save.sleep[m.id],now=Date.now();
+let state=m.desc;
+if(sleep&&sleep.sleeping&&now<sleep.until)state="🌙 Durmiendo · "+formatTime(sleep.until-now)+" restantes";
+else if(sleep&&sleep.sleeping&&now>=sleep.until)state="🌙 Descanso terminado · Pulsa DESPERTAR";
+else if(sleep&&sleep.bonusUntil&&now<sleep.bonusUntil)state="⚡ Bono +25 % activo · "+formatTime(sleep.bonusUntil-now);
+else if(sleep&&sleep.bonusUntil&&now>=sleep.bonusUntil)state="✨ Despierto";
+
+const needs=[["comer","🍎 Alimentación"],["banar","🛁 Baño"],["dormir","🌙 Descanso"]];
+return `<article class="monster">
+<div class="picture ${m.theme}">${m.art}
+<button class="level-tag" onclick="openLevelMenu('${m.id}')">Nv.${getMonsterLevel(m.id)} ⬆️</button>
+<span class="rarity ${m.rarity==="ÉPICO"?"epic":m.rarity==="LEGENDARIO"?"legendary":""}">${m.rarity}</span>
+</div>
+<div class="details">
+<h3>${m.name}</h3><div class="kind">${m.kind}</div>
+<div class="rate">⚡ +${(m.rate/1000).toFixed(1)}K/h</div>
+${needs.map(([a,label])=>`<div class="need-line">${label}: ${getNeedPercent(m.id,a)}%<div class="need-bar"><div style="width:${getNeedPercent(m.id,a)}%;background:${getNeedPercent(m.id,a)<30?"#ef687e":"#00c99a"}"></div></div></div>`).join("")}
+<div class="care">
+<button onclick="openCareMenu('${m.id}','comer')"><span class="circle">🍴</span><span>ALIMENTAR</span></button>
+<button onclick="openCareMenu('${m.id}','banar')"><span class="circle">💧</span><span>BAÑAR</span></button>
+<button onclick="openCareMenu('${m.id}','dormir')"><span class="circle">☾</span><span>DORMIR</span></button>
+</div>
+<p class="status">${state}</p>
+</div>
+</article>`;
+}
+
+const careProducts={
+comer:[
+{name:"Galleta mágica",price:10,recovery:6,ads:1,emoji:"🍪"},
+{name:"Fruta encantada",price:25,recovery:17,ads:2,emoji:"🍎"},
+{name:"Comida energética",price:50,recovery:44,ads:0,emoji:"🥗"},
+{name:"Banquete real",price:100,recovery:100,ads:0,emoji:"🍱"}
+],
+banar:[
+{name:"Esponja simple",price:10,recovery:6,ads:1,emoji:"🧽"},
+{name:"Jabón mágico",price:25,recovery:17,ads:2,emoji:"🧼"},
+{name:"Champú brillante",price:50,recovery:44,ads:0,emoji:"🧴"},
+{name:"Baño premium",price:100,recovery:100,ads:0,emoji:"🛁"}
+],
+dormir:[
+{name:"Bebida suave",price:10,recovery:6,ads:1,emoji:"🥛"},
+{name:"Bebida mediana",price:25,recovery:17,ads:2,emoji:"🧃"},
+{name:"Bebida fuerte",price:50,recovery:44,ads:0,emoji:"⚡"},
+{name:"Poción de sueño",price:100,recovery:100,ads:0,emoji:"🌙"}
+]
+};
+const categoryNames={comer:"🍪 Alimentos",banar:"🛁 Productos de baño",dormir:"🌙 Productos de descanso"};
+function getProductCount(action,name){return Number(save.inventory.care[action][name])||0;}
+
+function renderProductShop(action,target){
+document.getElementById(target).innerHTML=careProducts[action].map(p=>{
+const have=getProductCount(action,p.name);
+return `<div class="list-item"><div><strong>${p.emoji} ${p.name}</strong><small>Recupera hasta ${p.recovery}% por unidad · En inventario: ${have}</small><small>Precio: ${p.price} monedas por unidad</small></div><button class="primary" style="max-width:112px" onclick="buyShopProduct('${action}','${p.name}')">COMPRAR</button></div>`;
+}).join("")+`<div class="section"><h3>🎒 Mi inventario</h3>${careProducts[action].map(p=>`<p>${p.emoji} ${p.name}: <strong>${getProductCount(action,p.name)}</strong></p>`).join("")}</div>`;
+}
+
+function buyShopProduct(action,name){
+const p=careProducts[action].find(x=>x.name===name);
+if(!p)return;
+if(save.coins<p.price){notice("No tienes suficientes monedas.");return;}
+updateProduction();save.coins-=p.price;
+save.inventory.care[action][p.name]=getProductCount(action,p.name)+1;
+persist();render();notice("🎒 Compraste "+p.name+". Ahora tienes "+getProductCount(action,p.name)+".");
+}
+
+let careProductSelected=0,careMonsterSelected=null,careActionSelected=null;
+function openCareMenu(id,action){
+if(!save.owned.includes(id))return;
+careMonsterSelected=id;careActionSelected=action;careProductSelected=-1;
+const m=monsters.find(x=>x.id===id);
+document.getElementById("careModalTitle").textContent=categoryNames[action];
+document.getElementById("careModalSubtitle").textContent=m.name+" · Cuidado actual: "+getNeedPercent(id,action)+"%. Selecciona un producto que tengas.";
+renderCareOptions();document.getElementById("careQuantity").value=1;
+document.getElementById("careModal").classList.remove("hidden");updateCareQuantity(1);
+}
+
+function renderCareOptions(){
+const action=careActionSelected,id=careMonsterSelected,list=careProducts[action]||[];
+let html=list.map((p,i)=>{
+const have=getProductCount(action,p.name);
+return `<div class="care-option"><label style="display:flex;align-items:center;gap:8px"><input type="radio" name="careProduct" ${careProductSelected===i?"checked":""} onchange="selectCareProduct(${i})"><span class="care-option-title">${p.emoji} ${p.name}</span></label><div class="care-option-desc">Recuperación: ${p.recovery}% · Tienes: ${have}</div>${have>0?`<button class="secondary" style="width:100%" onclick="selectCareProduct(${i})">SELECCIONAR ${have} DISPONIBLE(S)</button>`:'<small style="color:#efb2bb">No tienes unidades. Puedes comprarlas en la tienda.</small>'}</div>`;
+}).join("");
+
+if(action==="dormir"){
+const s=save.sleep[id],now=Date.now();
+let sleepMessage="",buttonText="ACTIVAR DESCANSO";
+
+if(s&&s.sleeping&&now<s.until){
+sleepMessage=`<small>Tiempo restante de descanso: ${formatTime(s.until-now)}. Las estadísticas y la producción están pausadas.</small>`;
+buttonText="DURMIENDO";
+}else if(s&&s.sleeping&&now>=s.until){
+sleepMessage='<small style="color:#ffd66b">🌙 Ya descansó 4 horas. Despiértalo para reactivar su actividad.</small>';
+buttonText="DESPERTAR";
+}else if(s&&s.bonusUntil&&now<s.bonusUntil){
+sleepMessage='<small style="color:#a7f5cf">✨ Bono de producción +25 % · '+formatTime(s.bonusUntil-now)+' restantes.</small>';
+buttonText="BONO ACTIVO";
+}
+html+=`<div class="care-option"><div class="care-option-title">🌙 Descanso especial gratuito</div><div class="care-option-desc">Duerme 4 horas sin producir ni perder estadísticas. Al despertar, obtiene +25 % de producción durante 4 horas.</div><button class="secondary" style="width:100%" onclick="useSpecialSleep()">${buttonText}</button>${sleepMessage}</div>`;
+}
+document.getElementById("careOptions").innerHTML=html||'<div class="empty">No hay productos disponibles.</div>';
+}
+
+function selectCareProduct(i){
+careProductSelected=i;
+const p=careProducts[careActionSelected]?.[i];
+if(p){
+const have=getProductCount(careActionSelected,p.name);
+document.getElementById("careQuantity").max=Math.max(1,Math.min(10,have));
+document.getElementById("careQuantity").value=1;
+}
+renderCareOptions();updateCareQuantity(document.getElementById("careQuantity").value);
+}
+
+function updateCareQuantity(v){
+const p=careProducts[careActionSelected]?.[careProductSelected];
+const have=p?getProductCount(careActionSelected,p.name):0;
+const q=Math.max(1,Math.min(Number(v)||1,Math.max(1,Math.min(10,have))));
+document.getElementById("careQuantity").max=Math.max(1,Math.min(10,have));
+document.getElementById("careQuantity").value=q;
+document.getElementById("careQuantityValue").textContent=q;
+const current=careMonsterSelected?getNeedPercent(careMonsterSelected,careActionSelected):0;
+const restored=p?Math.min(100,current+p.recovery*q):current;
+document.getElementById("careTotal").textContent=p?(restored-current)+"% · quedará en "+restored+"%":"Selecciona un producto";
+document.getElementById("useCareButton").disabled=!p||have<1;
+document.getElementById("useCareButton").textContent=p&&have>0?"USAR "+q+" · "+p.name.toUpperCase():"SELECCIONA UN PRODUCTO";
+document.getElementById("careAdButton").style.display=p&&p.ads>0?"block":"none";
+document.getElementById("careAdButton").textContent=p&&p.ads>0?"VER "+(p.ads*q)+" ANUNCIO(S)":"";
+}
+
+function closeCareMenu(){document.getElementById("careModal").classList.add("hidden");}
+function goToCareShop(){
+const action=careActionSelected;closeCareMenu();showPage("tienda");
+showShopCategory(action==="comer"?"alimentos":action==="banar"?"bano":"dormir");
+}
+
+/* BOTÓN DORMIR / DESPERTAR */
+function useSpecialSleep(){
+const id=careMonsterSelected;
+if(!id)return;
+const s=save.sleep[id],now=Date.now();
+
+if(s&&s.sleeping){
+if(now<s.until){
+notice("🌙 Tu monstruo todavía está durmiendo. Tiempo restante: "+formatTime(s.until-now));
+return;
+}
+wakeSpecialMonster(id);
+closeCareMenu();
+return;
+}
+
+if(s&&s.bonusUntil&&now<s.bonusUntil){
+notice("⚡ ¡Tu monstruo está produciendo un 25 % más!");
+closeCareMenu();return;
+}
+
+startSpecialSleep(id);
+closeCareMenu();
+}
+
+function useCareProducts(){
+const action=careActionSelected,id=careMonsterSelected,p=careProducts[action]?.[careProductSelected];
+if(!p||!id)return;
+const q=Number(document.getElementById("careQuantity").value)||1;
+const inv=save.inventory.care[action],have=getProductCount(action,p.name);
+if(have<q){notice("No tienes suficientes unidades de ese producto.");return;}
+updateProduction();
+const current=getNeedPercent(id,action);
+inv[p.name]=have-q;if(inv[p.name]<=0)delete inv[p.name];
+const restored=Math.min(100,current+p.recovery*q);
+const intervals=Math.ceil((100-restored)/10);
+save.needs[id][action]=Date.now()-intervals*NEED_INTERVAL;
+addTrainerXP(5*q);addMonsterXP(id,5*q);
+if(save.production[id]){
+save.production[id].lastAt=Date.now();
+save.production[id].caredUntil=Date.now()+CARE_TIME;
+save.production[id].remainder=0;
+}else resumeCare(id);
+persist();render();closeCareMenu();
+notice("✨ "+p.name+": usaste "+q+" unidad(es). "+actionLabel(action)+" ahora está al "+getNeedPercent(id,action)+"%. +XP");
+}
+function actionLabel(a){return a==="comer"?"la alimentación":a==="banar"?"el baño":"el descanso";}
+function watchCareAds(){notice("Los anuncios reales todavía no están conectados. No se entregó ningún producto.");}
+
+function renderShop(){
+document.getElementById("normalEggPrice").textContent=save.starterEggClaimed?currentEggPrice()+" 🪙":"GRATIS";
+document.getElementById("normalEggButton").textContent=save.starterEggClaimed?"🥚 COMPRAR HUEVO":"🎁 RECLAMAR HUEVO GRATIS";
+document.getElementById("normalEggButton").disabled=save.starterEggClaimed&&save.owned.length+save.incubating.length>=monsters.length;
+document.getElementById("eggOwnedCount").textContent=save.owned.length+" / "+monsters.length;
+
+document.getElementById("eggInventory").innerHTML=save.inventory.eggs.length?
+save.inventory.eggs.map(e=>`<div class="list-item"><div><strong>🥚 Huevo normal</strong><small>Guardado en tu inventario; no ocupa espacio.</small></div><button class="primary" style="max-width:110px" onclick="incubateEgg('${e.id}')">INCUBAR</button></div>`).join("")
+:'<div class="empty">No tienes huevos guardados. Compra uno en la tienda.</div>';
+
+document.getElementById("incubationList").innerHTML=save.incubating.length?
+save.incubating.map(e=>{
+const m=monsters.find(x=>x.id===e.monsterId);
+return `<div class="list-item"><div><strong>🥚 Huevo en incubación</strong><small>Espacio ${e.slotIndex+1} · Resultado: ${m?m.name:"misterioso"} · Tiempo restante: ${formatTime(e.finishAt-Date.now())}</small></div><span>⏳</span></div>`;
+}).join("")
+:'<div class="empty">No hay huevos incubándose.</div>';
+
+renderProductShop("comer","foodShopList");
+renderProductShop("banar","bathShopList");
+renderProductShop("dormir","sleepShopList");
+
+const until=Number(save.xpBoostUntil)||0;
+document.getElementById("xpBoostStatus").innerHTML=until>Date.now()?
+'<div class="section"><p>⭐ DOBLE EXPERIENCIA ACTIVA · Tiempo restante: '+formatTime(until-Date.now())+'</p></div>':
+'<div class="section"><p>No tienes un potenciador activo.</p></div>';
+}
+
+function renderSlots(){
+let html="";
+for(let i=0;i<save.slots.capacity;i++){
+const monsterId=save.owned.find(id=>save.monsterSlots[id]===i);
+const egg=save.incubating.find(e=>e.slotIndex===i);
+if(monsterId){const m=monsters.find(x=>x.id===monsterId);if(m)html+=monsterCard(m);continue;}
+if(egg){
+const m=monsters.find(x=>x.id===egg.monsterId);
+html+=`<div class="slot-card"><div class="slot-icon">🥚</div><strong>${m?m.name:"Huevo mágico"}</strong><small>Espacio ${i+1}</small><small>Incubando: ${formatTime(egg.finishAt-Date.now())}</small></div>`;
+continue;
+}
+html+=`<button class="slot-card" style="width:100%" onclick="tapSlot(${i})"><div class="slot-icon">🥚</div><strong>Espacio ${i+1}</strong><small>${save.inventory.eggs.length?"Toca para incubar un huevo":"Espacio libre · Toca para ir a la tienda"}</small></button>`;
+}
+html+=`<button class="slot-card buy-slot" style="width:100%" onclick="buySlot()"><div class="slot-icon">➕</div><strong>Comprar espacio</strong><small>Nuevo espacio permanente</small><small>${nextSlotPrice()} monedas</small></button>`;
+document.getElementById("collection").innerHTML=html;
+}
+
+function render(){
+document.getElementById("coins").textContent=Math.floor(save.coins);
+document.getElementById("count").textContent=occupiedSlots()+" / "+save.slots.capacity;
+document.getElementById("slotText").textContent="Espacios ocupados: "+occupiedSlots()+" / "+save.slots.capacity;
+document.getElementById("hallSlots").textContent=save.slots.capacity;
+document.getElementById("prizeCount").textContent=save.owned.length;
+document.getElementById("hallCount").textContent=save.owned.length;
+document.getElementById("hallCoins").textContent=Math.floor(save.coins);
+document.getElementById("playerLevel").textContent=save.trainerProgress.level;
+document.getElementById("hallLevel").textContent=save.trainerProgress.level;
+const req=getTrainerXPRequired();
+document.getElementById("trainerXPText").textContent=Math.floor(save.trainerProgress.xp)+" / "+req+" XP";
+document.getElementById("hallTrainerXP").textContent=Math.floor(save.trainerProgress.xp)+" / "+req+" XP";
+document.getElementById("trainerXPBar").style.width=Math.min(100,save.trainerProgress.xp/req*100)+"%";
+renderSlots();
+const today=new Date().toISOString().slice(0,10),claimed=save.lastDaily===today;
+document.getElementById("dailyButton").disabled=claimed;
+document.getElementById("dailyButton").textContent=claimed?"Premio diario reclamado":"Reclamar 20 monedas";
+document.getElementById("dailyStatus").textContent=claimed?"Ya reclamaste tu regalo de hoy.":"Recompensa virtual del juego; no es dinero real.";
+renderShop();
+if(selectedLevelMonster)renderLevelMenu();
+}
+
+function claimDaily(){
+const today=new Date().toISOString().slice(0,10);
+if(save.lastDaily===today){notice("Ya reclamaste tu regalo diario.");return;}
+save.coins+=20;save.lastDaily=today;
+persist();render();notice("🎁 ¡Recibiste 20 monedas virtuales!");
+}
+
+function shareGame(){
+const url=window.location.href;
+if(navigator.share){
+navigator.share({title:"MonsterWorld",text:"¡Ven a descubrir mis monstruos!",url}).catch(()=>{});
+}else if(navigator.clipboard){
+navigator.clipboard.writeText(url).then(()=>notice("Enlace copiado. ¡Compártelo!")).catch(()=>notice("Copia el enlace desde tu navegador."));
+}else{notice("Copia el enlace de MonsterWorld desde tu navegador.");}
+}
+
+updateIncubations();
+updateProduction();
+persist();
+render();
+
+setInterval(()=>{
+updateIncubations();
+updateProduction();
+persist();
+render();
+},1000);
+
+let progreso=0;
+const intervaloCarga=setInterval(()=>{
+progreso+=2;
+document.getElementById("barraCarga").style.width=progreso+"%";
+document.getElementById("textoCarga").textContent="Cargando tu mundo... "+progreso+"%";
+if(progreso>=100){
+clearInterval(intervaloCarga);
+setTimeout(()=>{document.getElementById("portada").style.display="none";},400);
+}
+},60);
+</script>
+</body>
+</html>
