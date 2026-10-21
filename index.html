@@ -333,6 +333,70 @@ function persist(){
  }catch(e){}
 }
 
+const CARE_HOURS = 24;
+const CARE_TIME = CARE_HOURS * 60 * 60 * 1000;
+
+function updateProduction(){
+ const now = Date.now();
+
+ if(!save.production) save.production = {};
+
+ monsters.forEach(m => {
+  if(!save.owned.includes(m.id)) return;
+
+  let p = save.production[m.id];
+
+  // Preparar el registro de producción del monstruo.
+  if(!p){
+   save.production[m.id] = {
+    lastAt: now,
+    caredUntil: now + CARE_TIME,
+    remainder: 0
+   };
+   return;
+  }
+
+  // Recuperar registros antiguos incompletos.
+  if(typeof p.lastAt !== "number") p.lastAt = now;
+  if(typeof p.caredUntil !== "number"){
+   p.caredUntil = now + CARE_TIME;
+  }
+  if(typeof p.remainder !== "number") p.remainder = 0;
+
+  // Calcular cuánto tiempo estuvo cuidado.
+  const start = p.lastAt;
+  const end = Math.min(now, p.caredUntil);
+
+  if(end > start){
+   const earned =
+    m.rate * (end - start) / 3600000 + p.remainder;
+
+   const wholeCoins = Math.floor(earned);
+
+   save.coins += wholeCoins;
+   p.remainder = earned - wholeCoins;
+  }
+
+  // Evitar contar dos veces el mismo tiempo.
+  p.lastAt = now;
+
+  // Si se descuidó, no guardar fracciones para después.
+  if(now >= p.caredUntil){
+   p.remainder = 0;
+  }
+ });
+}
+function resumeCare(id){
+ const now = Date.now();
+
+ if(!save.production) save.production = {};
+
+ save.production[id] = {
+  lastAt: now,
+  caredUntil: now + CARE_TIME,
+  remainder: 0
+ };
+}
 function showPage(page){
  ["monstruos","tienda","premios","social","salon"].forEach(p=>{
   document.getElementById("page-"+p).classList.toggle("hidden",p!==page);
@@ -453,8 +517,16 @@ function shareGame(){
  }
 }
 
+updateProduction();
 persist();
 render();
+
+setInterval(() => {
+ updateProduction();
+ persist();
+ render();
+}, 60000);
+
 let progreso = 0;
 
 const intervaloCarga = setInterval(() => {
