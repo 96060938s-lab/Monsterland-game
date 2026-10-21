@@ -112,8 +112,27 @@ main{max-width:760px;margin:auto;padding:0 12px}
 .slot-card.buy-slot{border-style:solid;border-color:var(--gold);background:linear-gradient(145deg,#302845,#211d38)}
 .slot-card.buy-slot .slot-icon{color:var(--green);font-size:32px}
 .slot-card:active{transform:scale(.98)}
-@media(min-width:600px){.picture{height:200px}.emoji-art{font-size:100px}}
-@media(max-width:380px){.shop-tab{font-size:9px}.shop-tab .tab-emoji{font-size:19px}.grid{gap:8px}.care{gap:7px}.care button{border-radius:17px}.care .circle{font-size:26px}.care span:not(.circle){font-size:9px}}
+
+/* HUEVO EN INCUBACIÓN: MISMA ALTURA DE IMAGEN QUE EL MONSTRUO */
+.slot-card.incubating{width:100%;cursor:pointer;border-style:solid;border-color:#b995f5;background:linear-gradient(180deg,#36345a,#1b192d);box-shadow:0 7px 20px #08071480}
+.slot-card.incubating .slot-icon{font-size:75px;line-height:1;display:flex;align-items:center;justify-content:center;width:100%;height:145px;min-height:145px;background:linear-gradient(145deg,#b6a1ff,#4c4d9a,#e6a9ef);border-radius:10px}
+.incubation-progress{height:8px;width:100%;background:#17152d;border-radius:10px;overflow:hidden;margin-top:5px}
+.incubation-progress div{height:100%;background:linear-gradient(90deg,#00c99a,#ffd66b)}
+.incubation-counter{color:var(--gold)!important;font-weight:bold}
+@media(min-width:600px){
+.picture{height:200px}
+.emoji-art{font-size:100px}
+.slot-card.incubating .slot-icon{height:200px;min-height:200px}
+}
+@media(max-width:380px){
+.shop-tab{font-size:9px}
+.shop-tab .tab-emoji{font-size:19px}
+.grid{gap:8px}
+.care{gap:7px}
+.care button{border-radius:17px}
+.care .circle{font-size:26px}
+.care span:not(.circle){font-size:9px}
+}
 </style>
 </head>
 
@@ -238,6 +257,37 @@ main{max-width:760px;margin:auto;padding:0 12px}
 </div>
 </div>
 
+<!-- NUEVA VENTANA DE INCUBACIÓN -->
+<div id="incubationModal" class="care-modal hidden">
+<div class="care-modal-card">
+<button class="care-close" onclick="closeIncubationMenu()">✕</button>
+<h2>🥚 Incubación mágica</h2>
+<p id="incubationModalSubtitle">Acelera el nacimiento de tu monstruo.</p>
+
+<div class="care-option" style="text-align:center">
+<div style="font-size:58px;margin:8px">🥚</div>
+<p>Tiempo restante:</p>
+<h2 id="incubationTimeLeft" style="text-align:center;margin:8px 0">24 h</h2>
+<p id="incubationAdsProgress">Anuncios completados: 0 / 15</p>
+<div class="incubation-progress"><div id="incubationAdsBar" style="width:0%"></div></div>
+</div>
+
+<div class="care-option">
+<div class="care-option-title">📺 Opción 1: Ver anuncios</div>
+<div class="care-option-desc">Cada anuncio completado reduce 1 hora. Puedes reducir hasta 15 horas y quedarán 9 horas de incubación.</div>
+<button class="primary" id="incubationAdButton" onclick="watchIncubationAd()">VER ANUNCIO</button>
+<p id="incubationAdMessage">Los anuncios todavía no están conectados.</p>
+</div>
+
+<div class="care-option">
+<div class="care-option-title">💎 Opción 2: Nacimiento instantáneo con TON</div>
+<div class="care-option-desc">Termina la incubación inmediatamente. El precio se establecerá más adelante.</div>
+<button class="secondary" style="width:100%" onclick="incubationTonComingSoon()">HACER NACER CON TON</button>
+<p id="incubationTonMessage">Pago en TON próximamente. No se realizará ningún cobro.</p>
+</div>
+</div>
+</div>
+
 <script>
 const monsters=[
 {id:"bubu",name:"Bubu",art:'<img src="Imagenes/bubu.png" alt="Bubu" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'"><span class="emoji-art" style="display:none">👾</span>',price:0,desc:"Tu primer compañero",kind:"✨ MÁGICO",rate:500,rarity:"COMÚN",theme:"magic"},
@@ -295,6 +345,9 @@ migrationUsed.add(e.slotIndex);
 if(migrationUsed.size>save.slots.capacity)save.slots.capacity=migrationUsed.size;
 
 const INCUBATION_TIME=24*60*60*1000;
+const MAX_INCUBATION_ADS=15;
+const INCUBATION_AD_TIME=60*60*1000;
+
 if(!save.incubation24hMigrated){
 const now=Date.now();
 save.incubating.forEach(e=>{
@@ -305,6 +358,12 @@ e.startedAt=now;e.finishAt=now+INCUBATION_TIME;
 });
 save.incubation24hMigrated=true;
 }
+
+/* Preparar los contadores de anuncios de huevos que ya estaban incubando */
+save.incubating.forEach(e=>{
+if(typeof e.adsWatched!=="number")e.adsWatched=0;
+if(typeof e.adTimeReduced!=="number")e.adTimeReduced=0;
+});
 
 monsters.forEach(m=>{
 if(!save.monsterProgress[m.id])save.monsterProgress[m.id]={level:1,xp:0};
@@ -411,8 +470,85 @@ const m=chooseRandomMonster();
 if(!m){notice("Ya no quedan monstruos nuevos por descubrir.");return;}
 const startedAt=Date.now();
 save.inventory.eggs=save.inventory.eggs.filter(e=>e.id!==eggId);
-save.incubating.push({id:egg.id,monsterId:m.id,slotIndex:slotIndex,startedAt:startedAt,finishAt:startedAt+INCUBATION_TIME});
+save.incubating.push({id:egg.id,monsterId:m.id,slotIndex:slotIndex,startedAt:startedAt,finishAt:startedAt+INCUBATION_TIME,adsWatched:0,adTimeReduced:0});
 persist();render();notice("🥚✨ ¡Incubación iniciada en el espacio "+(slotIndex+1)+"! Tu huevo nacerá en 24 horas.");
+}
+
+/* VENTANA DE INCUBACIÓN */
+let selectedIncubationId=null;
+
+function openIncubationMenu(eggId){
+const egg=save.incubating.find(e=>e.id===eggId);
+if(!egg)return;
+selectedIncubationId=eggId;
+renderIncubationMenu();
+document.getElementById("incubationModal").classList.remove("hidden");
+}
+
+function closeIncubationMenu(){
+document.getElementById("incubationModal").classList.add("hidden");
+selectedIncubationId=null;
+}
+
+function renderIncubationMenu(){
+const egg=save.incubating.find(e=>e.id===selectedIncubationId);
+if(!egg){
+closeIncubationMenu();
+return;
+}
+const m=monsters.find(x=>x.id===egg.monsterId);
+const remaining=Math.max(0,egg.finishAt-Date.now());
+const watched=Math.min(MAX_INCUBATION_ADS,Number(egg.adsWatched)||0);
+const reduced=Math.min(MAX_INCUBATION_ADS,Number(egg.adTimeReduced)||0);
+
+document.getElementById("incubationModalSubtitle").textContent=(m?m.name:"Tu monstruo")+" · Espacio "+(egg.slotIndex+1);
+document.getElementById("incubationTimeLeft").textContent=formatTime(remaining);
+document.getElementById("incubationAdsProgress").textContent="Anuncios completados: "+watched+" / "+MAX_INCUBATION_ADS+" · Horas reducidas: "+reduced;
+document.getElementById("incubationAdsBar").style.width=(watched/MAX_INCUBATION_ADS*100)+"%";
+
+const adButton=document.getElementById("incubationAdButton");
+adButton.textContent=watched>=MAX_INCUBATION_ADS?"LÍMITE DE 15 ANUNCIOS ALCANZADO":"VER ANUNCIO";
+adButton.disabled=watched>=MAX_INCUBATION_ADS||remaining<=0;
+document.getElementById("incubationAdMessage").textContent=watched>=MAX_INCUBATION_ADS
+?"Ya usaste los 15 anuncios de este huevo. Si todavía queda tiempo, tendrás que esperar o usar el nacimiento con TON cuando esté disponible."
+:"Cada anuncio confirmado reducirá una hora. La conexión con anuncios reales todavía está pendiente.";
+document.getElementById("incubationTonMessage").textContent="Precio pendiente. Este botón todavía no cobra ni acelera el nacimiento.";
+}
+
+/* Este botón no descuenta horas hasta que conectemos y validemos anuncios reales. */
+function watchIncubationAd(){
+const egg=save.incubating.find(e=>e.id===selectedIncubationId);
+if(!egg){closeIncubationMenu();return;}
+if((Number(egg.adsWatched)||0)>=MAX_INCUBATION_ADS){
+notice("Ya completaste el máximo de 15 anuncios para este huevo.");
+renderIncubationMenu();
+return;
+}
+notice("📺 Los anuncios todavía no están conectados. No se descontó ninguna hora.");
+document.getElementById("incubationAdMessage").textContent="Los anuncios reales todavía no están conectados. No se descontó tiempo.";
+}
+
+/* Se llamará después de que el proveedor confirme que un anuncio se vio completo.
+   No se ejecuta desde el botón de prueba: evita entregar horas gratis sin validar. */
+function completeIncubationAdReward(eggId){
+const egg=save.incubating.find(e=>e.id===eggId);
+if(!egg)return false;
+if((Number(egg.adsWatched)||0)>=MAX_INCUBATION_ADS)return false;
+egg.adsWatched=(Number(egg.adsWatched)||0)+1;
+egg.adTimeReduced=(Number(egg.adTimeReduced)||0)+1;
+egg.finishAt-=INCUBATION_AD_TIME;
+if(egg.finishAt<Date.now())egg.finishAt=Date.now();
+persist();
+updateIncubations();
+render();
+if(selectedIncubationId===eggId)renderIncubationMenu();
+notice("📺 ¡Anuncio confirmado! Se redujo 1 hora de incubación.");
+return true;
+}
+
+function incubationTonComingSoon(){
+document.getElementById("incubationTonMessage").textContent="💎 El pago en TON estará disponible cuando configuremos el precio y conectemos una cartera. No se realizó ningún cobro.";
+notice("💎 Los pagos en TON se activarán más adelante. No se realizó ningún cobro.");
 }
 
 function updateIncubations(){
@@ -426,6 +562,7 @@ save.owned.push(m.id);save.monsterSlots[m.id]=e.slotIndex;
 save.monsterProgress[m.id]=save.monsterProgress[m.id]||{level:1,xp:0};
 resumeCare(m.id);save.lastHatched=m.name;
 }
+if(selectedIncubationId===e.id)closeIncubationMenu();
 });
 persist();
 if(save.lastHatched){notice("🎉 ¡El huevo eclosionó! Descubriste a "+save.lastHatched+".");save.lastHatched="";}
@@ -458,8 +595,6 @@ if(typeof p.remainder!=="number")p.remainder=0;
 
 const sleep=save.sleep[m.id];
 
-/* Durante el descanso no se produce nada, incluso si ya pasaron 4 horas.
-   La actividad solo vuelve cuando el jugador pulsa DESPERTAR. */
 if(sleep&&sleep.sleeping){
 p.lastAt=now;
 return;
@@ -529,8 +664,6 @@ save.production[id].lastAt=now;
 save.production[id].remainder=0;
 }
 
-/* El descanso empieza con la barra de sueño completa.
-   Todas las barras quedan congeladas hasta despertar. */
 save.needs[id].dormir=now;
 
 addTrainerXP(5);
@@ -549,15 +682,11 @@ notice("🌙 Tu monstruo todavía está durmiendo. Tiempo restante: "+formatTime
 return;
 }
 
-/* Actualiza la producción mientras aún figura dormido: así no gana
-   monedas por ningún momento del descanso. */
 updateProduction();
 
 const startedAt=typeof s.startedAt==="number"?s.startedAt:s.until-SPECIAL_SLEEP_TIME;
 const sleepDuration=Math.max(0,now-startedAt);
 
-/* Pausa también el deterioro de las necesidades y el tiempo de cuidado
-   durante todo el tiempo que estuvo dormido. */
 if(!save.needs[id])save.needs[id]={comer:now,banar:now,dormir:now};
 ["comer","banar","dormir"].forEach(a=>{
 if(typeof save.needs[id][a]!=="number")save.needs[id][a]=now;
@@ -574,7 +703,6 @@ resumeCare(id);
 save.production[id].lastAt=now;
 }
 
-/* El bono empieza al pulsar DESPERTAR, no al cerrar o abrir el juego. */
 s.sleeping=false;
 s.wokenAt=now;
 s.bonusStartedAt=now;
@@ -836,7 +964,7 @@ save.inventory.eggs.map(e=>`<div class="list-item"><div><strong>🥚 Huevo norma
 document.getElementById("incubationList").innerHTML=save.incubating.length?
 save.incubating.map(e=>{
 const m=monsters.find(x=>x.id===e.monsterId);
-return `<div class="list-item"><div><strong>🥚 Huevo en incubación</strong><small>Espacio ${e.slotIndex+1} · Resultado: ${m?m.name:"misterioso"} · Tiempo restante: ${formatTime(e.finishAt-Date.now())}</small></div><span>⏳</span></div>`;
+return `<div class="list-item"><div><strong>🥚 Huevo en incubación</strong><small>Espacio ${e.slotIndex+1} · Resultado: ${m?m.name:"misterioso"} · Tiempo restante: ${formatTime(e.finishAt-Date.now())}</small></div><button class="secondary" style="max-width:110px" onclick="openIncubationMenu('${e.id}')">VER OPCIONES</button></div>`;
 }).join("")
 :'<div class="empty">No hay huevos incubándose.</div>';
 
@@ -858,7 +986,16 @@ const egg=save.incubating.find(e=>e.slotIndex===i);
 if(monsterId){const m=monsters.find(x=>x.id===monsterId);if(m)html+=monsterCard(m);continue;}
 if(egg){
 const m=monsters.find(x=>x.id===egg.monsterId);
-html+=`<div class="slot-card"><div class="slot-icon">🥚</div><strong>${m?m.name:"Huevo mágico"}</strong><small>Espacio ${i+1}</small><small>Incubando: ${formatTime(egg.finishAt-Date.now())}</small></div>`;
+const remaining=Math.max(0,egg.finishAt-Date.now());
+const progress=Math.max(0,Math.min(100,((INCUBATION_TIME-remaining)/INCUBATION_TIME)*100));
+html+=`<button class="slot-card incubating" style="width:100%" onclick="openIncubationMenu('${egg.id}')">
+<div class="slot-icon">🥚</div>
+<strong>${m?m.name:"Huevo mágico"}</strong>
+<small>Espacio ${i+1} · Toca para ver opciones</small>
+<div class="incubation-progress"><div style="width:${progress}%"></div></div>
+<small class="incubation-counter">Incubando: ${formatTime(remaining)}</small>
+<small>📺 Anuncios: ${Math.min(MAX_INCUBATION_ADS,Number(egg.adsWatched)||0)} / ${MAX_INCUBATION_ADS}</small>
+</button>`;
 continue;
 }
 html+=`<button class="slot-card" style="width:100%" onclick="tapSlot(${i})"><div class="slot-icon">🥚</div><strong>Espacio ${i+1}</strong><small>${save.inventory.eggs.length?"Toca para incubar un huevo":"Espacio libre · Toca para ir a la tienda"}</small></button>`;
@@ -888,6 +1025,7 @@ document.getElementById("dailyButton").textContent=claimed?"Premio diario reclam
 document.getElementById("dailyStatus").textContent=claimed?"Ya reclamaste tu regalo de hoy.":"Recompensa virtual del juego; no es dinero real.";
 renderShop();
 if(selectedLevelMonster)renderLevelMenu();
+if(selectedIncubationId&&!document.getElementById("incubationModal").classList.contains("hidden"))renderIncubationMenu();
 }
 
 function claimDaily(){
