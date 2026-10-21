@@ -10,32 +10,48 @@
 *{box-sizing:border-box}
 :root{--bg:#17152d;--panel:#211d38;--gold:#ffd66b;--green:#00c99a;--text:#f8f5ff;--muted:#a9a5c5}
 body{margin:0;color:var(--text);font-family:Arial,sans-serif;background:radial-gradient(ellipse at 50% 0%,#493b76 0%,transparent 55%),linear-gradient(180deg,#17152d,#21182f,#111321);min-height:100vh;padding-bottom:110px}
-button{font:inherit;cursor:pointer}button:disabled{opacity:.5;cursor:default}
+button{font:inherit;cursor:pointer}
+button:disabled{opacity:.5;cursor:default}
 .hidden{display:none!important}
 .top{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:15px 12px 10px}
-.brand{display:flex;align-items:center;gap:9px}.logo{width:46px;height:46px;border:3px solid var(--gold);border-radius:50%;display:grid;place-items:center;font-size:25px;background:#33264e}
-.brand h1{font-size:20px;margin:0;color:var(--gold)}.brand small{display:block;color:#c9b9ff;margin-top:4px}
+.brand{display:flex;align-items:center;gap:9px}
+.logo{width:46px;height:46px;border:3px solid var(--gold);border-radius:50%;display:grid;place-items:center;font-size:25px;background:#33264e}
+.brand h1{font-size:20px;margin:0;color:var(--gold)}
+.brand small{display:block;color:#c9b9ff;margin-top:4px}
 .wallet{border:1px solid #8c7443;background:#28223d;border-radius:25px;padding:10px;color:var(--gold);font-weight:bold;white-space:nowrap}
 .profile{margin:0 14px 18px;padding:12px;background:#ffffff0b;border:1px solid #ffffff14;border-radius:15px;display:flex;justify-content:space-between;align-items:center;gap:8px}
-.level{color:var(--gold);font-weight:bold}.profile small{color:var(--muted)}
+.level{color:var(--gold);font-weight:bold}
+.profile small{color:var(--muted)}
 .trainer-progress{height:6px;background:#17152d;border-radius:10px;overflow:hidden;margin-top:7px;width:150px;max-width:42vw}
 .trainer-progress div{height:100%;width:0;background:linear-gradient(90deg,#00c99a,#ffd66b)}
 main{max-width:760px;margin:auto;padding:0 12px}
-.page-title{padding:0 4px 14px}.page-title h2{font-size:24px;margin:5px 0 8px}.page-title p{color:#c3bed9;font-size:13px;margin:0}
+.page-title{padding:0 4px 14px}
+.page-title h2{font-size:24px;margin:5px 0 8px}
+.page-title p{color:#c3bed9;font-size:13px;margin:0}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
 .monster,.egg-card,.boost-card{overflow:hidden;min-width:0;position:relative;background:linear-gradient(180deg,#36345a,#1b192d);border:1px solid #5d527d;border-radius:20px;box-shadow:0 7px 20px #08071480}
 .picture{height:145px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;background:linear-gradient(145deg,#b6a1ff,#4c4d9a,#e6a9ef)}
-.picture.plant{background:linear-gradient(145deg,#9bc77c,#477e79,#f0bd9d)}.picture.fire{background:linear-gradient(145deg,#ffbc69,#dc5a63,#552b68)}.picture.ghost{background:linear-gradient(145deg,#c7c5ff,#777fc7,#efc6ec)}.picture.ice{background:linear-gradient(145deg,#d7f8ff,#80b9e8,#b4a8f2)}.picture.ray{background:linear-gradient(145deg,#77ddeb,#5e6fba,#f6d5a7)}
-.picture img{width:100%;height:100%;object-fit:cover}.emoji-art{font-size:75px}
+.picture.plant{background:linear-gradient(145deg,#9bc77c,#477e79,#f0bd9d)}
+.picture.fire{background:linear-gradient(145deg,#ffbc69,#dc5a63,#552b68)}
+.picture.ghost{background:linear-gradient(145deg,#c7c5ff,#777fc7,#efc6ec)}
+.picture.ice{background:linear-gradient(145deg,#d7f8ff,#80b9e8,#b4a8f2)}
+.picture.ray{background:linear-gradient(145deg,#77ddeb,#5e6fba,#f6d5a7)}
+.picture img{width:100%;height:100%;object-fit:cover}
+.emoji-art{font-size:75px}
 .level-tag,.rarity{position:absolute;top:8px;border-radius:18px;padding:6px 8px;font-size:10px;font-weight:bold}
-.level-tag{left:7px;background:#073c38;color:#68ffd8;border:0}.rarity{right:7px;background:#08aa76;color:white}.rarity.epic{background:#9d36e8}.rarity.legendary{background:#c58c21}
-.details{padding:10px 9px 12px;text-align:center}.details h3{margin:0 0 8px;font-size:19px}
+.level-tag{left:7px;background:#073c38;color:#68ffd8;border:0}
+.rarity{right:7px;background:#08aa76;color:white}
+.rarity.epic{background:#9d36e8}
+.rarity.legendary{background:#c58c21}
+.details{padding:10px 9px 12px;text-align:center}
+.details h3{margin:0 0 8px;font-size:19px}
 .kind{display:inline-block;background:#37324a;border:1px solid #625776;padding:6px 7px;border-radius:20px;font-size:10px;font-weight:bold;margin-bottom:9px}
 .rate{color:var(--gold);font-size:11px;font-weight:bold;margin-bottom:10px}
 .care{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
 .care button{background:none;color:#d2cce9;border:0;padding:3px 0}
 .care .circle{display:grid;place-items:center;margin:auto auto 6px;width:43px;height:43px;border-radius:50%;border:2px solid #e9a54f;font-size:22px}
-.care button:nth-child(2) .circle{border-color:#25cfe8}.care button:nth-child(3) .circle{border-color:#8c88ff}
+.care button:nth-child(2) .circle{border-color:#25cfe8}
+.care button:nth-child(3) .circle{border-color:#8c88ff}
 .care span{font-size:10px;font-weight:bold}
 .need-line{font-size:11px;text-align:left;color:#ddd8f2;margin:8px 0}
 .need-bar{height:7px;background:#141221;border-radius:10px;overflow:hidden;margin-top:4px}
@@ -44,30 +60,40 @@ main{max-width:760px;margin:auto;padding:0 12px}
 .primary,.action-btn{width:100%;border:0;border-radius:12px;padding:11px 7px;background:linear-gradient(90deg,#ffe18a,#f5bd4f);color:#30213c;font-weight:bold}
 .secondary{background:#4a3b67;color:#ddd0ff;border:1px solid #776399;border-radius:12px;padding:10px;font-weight:bold}
 .section{background:#ffffff09;border:1px solid #ffffff15;border-radius:18px;padding:15px;margin-bottom:12px}
-.section h3{color:var(--gold);margin-top:0}.section p{color:#c5bfd9;font-size:13px;line-height:1.5}
+.section h3{color:var(--gold);margin-top:0}
+.section p{color:#c5bfd9;font-size:13px;line-height:1.5}
 .list-item{background:#302a49;border-radius:12px;padding:12px;margin:9px 0;display:flex;align-items:center;justify-content:space-between;gap:8px}
-.list-item strong{font-size:13px}.list-item small{display:block;color:var(--muted);margin-top:5px}
+.list-item strong{font-size:13px}
+.list-item small{display:block;color:var(--muted);margin-top:5px}
 .bottom-nav{position:fixed;z-index:10;bottom:8px;left:8px;right:8px;max-width:740px;margin:auto;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;padding:9px 5px;background:#171522f5;border:1px solid #ffffff17;border-radius:23px;box-shadow:0 0 25px #0008}
 .bottom-nav button{border:1px solid transparent;border-radius:15px;padding:9px 1px 7px;background:transparent;color:#858198;font-weight:bold;min-width:0}
-.bottom-nav .ico{display:block;font-size:23px;margin-bottom:6px}.bottom-nav .lbl{font-size:9px}
+.bottom-nav .ico{display:block;font-size:23px;margin-bottom:6px}
+.bottom-nav .lbl{font-size:9px}
 .bottom-nav button.active{border-color:var(--gold);color:var(--gold);background:#342b42}
-.notice{text-align:center;min-height:24px;color:#a7f5cf;font-size:12px;padding:8px 0}.empty{text-align:center;color:var(--muted);padding:18px 5px}
+.notice{text-align:center;min-height:24px;color:#a7f5cf;font-size:12px;padding:8px 0}
+.empty{text-align:center;color:var(--muted);padding:18px 5px}
 .shop-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;margin-bottom:14px}
 .shop-tab{min-width:0;border:1px solid #51456f;border-radius:12px;background:#211d38;color:#c9c2e2;padding:10px 2px;font-size:10px;font-weight:bold;line-height:1.4}
-.shop-tab .tab-emoji{display:block;font-size:22px;margin-bottom:5px}.shop-tab.active{background:#403452;color:var(--gold);border-color:var(--gold)}
+.shop-tab .tab-emoji{display:block;font-size:22px;margin-bottom:5px}
+.shop-tab.active{background:#403452;color:var(--gold);border-color:var(--gold)}
 .egg-card,.boost-card{text-align:center;padding:14px 9px}
 .egg-art{height:100px;display:grid;place-items:center}
 .egg{width:68px;height:88px;border-radius:48%;display:grid;place-items:center;font-size:36px;box-shadow:inset -9px -8px 15px #17152d44,0 8px 22px #0006}
-.egg.normal{background:linear-gradient(145deg,#f5e5ff,#a88cff,#6951b8)}.egg.golden{background:linear-gradient(145deg,#fff4a9,#ffcb45,#b97519)}.egg.celestial{background:linear-gradient(145deg,#e4ffff,#83e5ff,#8872ef)}
-.egg-card h3,.boost-card h3{color:#fff0b5;font-size:16px}.egg-card p,.boost-card p{font-size:12px;color:#c8c0e0;line-height:1.5;min-height:48px}
+.egg.normal{background:linear-gradient(145deg,#f5e5ff,#a88cff,#6951b8)}
+.egg.golden{background:linear-gradient(145deg,#fff4a9,#ffcb45,#b97519)}
+.egg.celestial{background:linear-gradient(145deg,#e4ffff,#83e5ff,#8872ef)}
+.egg-card h3,.boost-card h3{color:#fff0b5;font-size:16px}
+.egg-card p,.boost-card p{font-size:12px;color:#c8c0e0;line-height:1.5;min-height:48px}
 .egg-price,.boost-price{color:var(--gold);font-weight:bold;margin:10px 0;font-size:13px}
 .care-modal{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;padding:14px;background:#090814e8}
 .care-modal.hidden{display:none!important}
 .care-modal-card{width:100%;max-width:430px;max-height:88vh;overflow-y:auto;position:relative;background:var(--panel);border:1px solid #65558c;border-radius:22px;padding:18px}
-.care-modal-card h2{margin:0 35px 8px 0;color:var(--gold)}.care-modal-card p{color:var(--muted);font-size:13px}
+.care-modal-card h2{margin:0 35px 8px 0;color:var(--gold)}
+.care-modal-card p{color:var(--muted);font-size:13px}
 .care-close{position:absolute;right:12px;top:12px;border:0;border-radius:50%;width:36px;height:36px;background:#39314f;color:white;font-size:18px}
 .care-option{background:#302a49;border:1px solid #4b4168;border-radius:14px;padding:12px;margin-top:10px}
-.care-option-title{font-weight:bold;color:white}.care-option-desc{font-size:12px;color:var(--muted);margin:5px 0 10px}
+.care-option-title{font-weight:bold;color:white}
+.care-option-desc{font-size:12px;color:var(--muted);margin:5px 0 10px}
 .care-quantity{width:100%;accent-color:var(--green)}
 .level-xp-bar{height:13px;background:#17152d;border-radius:20px;overflow:hidden;border:1px solid #625776}
 .level-xp-bar div{height:100%;background:linear-gradient(90deg,#00c99a,#ffd66b)}
@@ -81,6 +107,7 @@ main{max-width:760px;margin:auto;padding:0 12px}
 </style>
 </head>
 <body>
+
 <div id="portada" style="position:fixed;inset:0;z-index:9999;background:linear-gradient(180deg,#17152d,#493b76,#111321);display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;text-align:center">
 <h1 style="color:#f4cc70;font-size:32px;margin:0">MonsterWorld</h1>
 <p style="color:#d8caff">Tu mundo mágico te espera</p>
@@ -93,6 +120,7 @@ main{max-width:760px;margin:auto;padding:0 12px}
 <div class="brand"><div class="logo">👾</div><div><h1>MonsterWorld</h1><small>Tu mundo mágico</small></div></div>
 <div class="wallet">🪙 <span id="coins">100</span></div>
 </div>
+
 <div class="profile">
 <div><div class="level">⭐ NIVEL <span id="playerLevel">1</span></div><small>Entrenador de monstruos</small><div class="trainer-progress"><div id="trainerXPBar"></div></div><small id="trainerXPText">0 / 100 XP</small></div>
 <div style="text-align:right"><strong id="count">0 / 1</strong><br><small>Espacios ocupados</small></div>
@@ -104,7 +132,6 @@ main{max-width:760px;margin:auto;padding:0 12px}
 <div class="section">
 <h3>🏡 Mi espacio</h3>
 <p id="slotText"></p><p id="slotPriceText"></p>
-<button class="primary" onclick="buySlot()">➕ COMPRAR ESPACIO</button>
 <div class="slot-grid" id="slotGrid"></div>
 </div>
 <div class="grid" id="collection"></div>
@@ -135,17 +162,35 @@ main{max-width:760px;margin:auto;padding:0 12px}
 <div id="shop-alimentos" class="hidden"><div class="page-title"><h2>🍎 Alimentos mágicos</h2><p>Compra comida para guardarla en tu inventario.</p></div><div id="foodShopList"></div></div>
 <div id="shop-bano" class="hidden"><div class="page-title"><h2>🛁 Productos de baño</h2><p>Compra productos y guárdalos para usarlos después.</p></div><div id="bathShopList"></div></div>
 <div id="shop-dormir" class="hidden"><div class="page-title"><h2>🌙 Descanso mágico</h2><p>Compra productos para guardar energía.</p></div><div id="sleepShopList"></div></div>
-<div id="shop-xp" class="hidden"><div class="page-title"><h2>⭐ Potenciadores de experiencia</h2><p>Duplica la experiencia durante un tiempo limitado.</p></div><div id="xpBoostStatus"></div>
+
+<div id="shop-xp" class="hidden">
+<div class="page-title"><h2>⭐ Potenciadores de experiencia</h2><p>Duplica la experiencia durante un tiempo limitado.</p></div>
+<div id="xpBoostStatus"></div>
 <div class="grid">
 <article class="boost-card"><div class="boost-icon">⚡</div><h3>Impulso rápido</h3><p>Doble experiencia durante 1 hora.</p><div class="boost-price">100 🪙</div><button class="primary" onclick="buyXPBoost(1,100)">ACTIVAR</button></article>
 <article class="boost-card"><div class="boost-icon">🌟</div><h3>Impulso superior</h3><p>Doble experiencia durante 2 horas.</p><div class="boost-price">180 🪙</div><button class="primary" onclick="buyXPBoost(2,180)">ACTIVAR</button></article>
 <article class="boost-card"><div class="boost-icon">💫</div><h3>Impulso celestial</h3><p>Doble experiencia durante 6 horas.</p><div class="boost-price">450 🪙</div><button class="primary" onclick="buyXPBoost(6,450)">ACTIVAR</button></article>
-</div></div>
+</div>
+</div>
 </section>
 
-<section id="page-premios" class="hidden"><div class="page-title"><h2>🎁 Premios</h2><p>Consigue monedas para tu aventura.</p></div><div class="section"><h3>🎁 Regalo diario</h3><p>Vuelve cada día para reclamar monedas virtuales.</p><button class="primary" id="dailyButton" onclick="claimDaily()">Reclamar 20 monedas</button><p id="dailyStatus"></p></div><div class="section"><h3>⭐ Tu progreso</h3><p>Monstruos desbloqueados: <strong id="prizeCount">0</strong></p></div></section>
-<section id="page-social" class="hidden"><div class="page-title"><h2>👥 Social</h2><p>Comparte tu aventura con tus amigos.</p></div><div class="section"><h3>🌎 Comparte MonsterWorld</h3><button class="primary" onclick="shareGame()">Compartir juego</button></div><div class="section"><h3>🤝 Próximamente</h3><p>Las funciones sociales necesitarán un servidor.</p></div></section>
-<section id="page-salon" class="hidden"><div class="page-title"><h2>🏆 Salón</h2><p>Tu rincón de logros y colección.</p></div><div class="section"><h3>👑 Mi entrenador</h3><p>Nivel: <strong id="hallLevel">1</strong></p><p>Experiencia: <strong id="hallTrainerXP">0 / 100 XP</strong></p><p>Monstruos: <strong id="hallCount">0</strong> de 8</p><p>Monedas: <strong id="hallCoins">100</strong></p><p>Espacios comprados: <strong id="hallSlots">1</strong></p></div></section>
+<section id="page-premios" class="hidden">
+<div class="page-title"><h2>🎁 Premios</h2><p>Consigue monedas para tu aventura.</p></div>
+<div class="section"><h3>🎁 Regalo diario</h3><p>Vuelve cada día para reclamar monedas virtuales.</p><button class="primary" id="dailyButton" onclick="claimDaily()">Reclamar 20 monedas</button><p id="dailyStatus"></p></div>
+<div class="section"><h3>⭐ Tu progreso</h3><p>Monstruos desbloqueados: <strong id="prizeCount">0</strong></p></div>
+</section>
+
+<section id="page-social" class="hidden">
+<div class="page-title"><h2>👥 Social</h2><p>Comparte tu aventura con tus amigos.</p></div>
+<div class="section"><h3>🌎 Comparte MonsterWorld</h3><button class="primary" onclick="shareGame()">Compartir juego</button></div>
+<div class="section"><h3>🤝 Próximamente</h3><p>Las funciones sociales necesitarán un servidor.</p></div>
+</section>
+
+<section id="page-salon" class="hidden">
+<div class="page-title"><h2>🏆 Salón</h2><p>Tu rincón de logros y colección.</p></div>
+<div class="section"><h3>👑 Mi entrenador</h3><p>Nivel: <strong id="hallLevel">1</strong></p><p>Experiencia: <strong id="hallTrainerXP">0 / 100 XP</strong></p><p>Monstruos: <strong id="hallCount">0</strong> de 8</p><p>Monedas: <strong id="hallCoins">100</strong></p><p>Espacios comprados: <strong id="hallSlots">1</strong></p></div>
+</section>
+
 <div id="notice" class="notice" aria-live="polite"></div>
 </main>
 
@@ -174,7 +219,21 @@ main{max-width:760px;margin:auto;padding:0 12px}
 </div>
 </div>
 
-<div id="levelModal" class="care-modal hidden"><div class="care-modal-card"><button class="care-close" onclick="closeLevelMenu()">✕</button><h2 id="levelTitle">⭐ Nivel</h2><p id="levelSubtitle"></p><div class="care-option"><p>Nivel actual: <strong id="levelCurrent">1</strong></p><p>Experiencia: <strong id="levelXP">0 / 100 XP</strong></p><div class="level-xp-bar"><div id="levelBar"></div></div><p>Rareza: <strong id="levelRarity">COMÚN</strong></p><p>Precio para subir: <strong id="levelPrice">200 🪙</strong></p><p id="levelMessage"></p><button id="levelUpButton" class="primary" onclick="levelUpMonster()">SUBIR DE NIVEL</button></div></div></div>
+<div id="levelModal" class="care-modal hidden">
+<div class="care-modal-card">
+<button class="care-close" onclick="closeLevelMenu()">✕</button>
+<h2 id="levelTitle">⭐ Nivel</h2><p id="levelSubtitle"></p>
+<div class="care-option">
+<p>Nivel actual: <strong id="levelCurrent">1</strong></p>
+<p>Experiencia: <strong id="levelXP">0 / 100 XP</strong></p>
+<div class="level-xp-bar"><div id="levelBar"></div></div>
+<p>Rareza: <strong id="levelRarity">COMÚN</strong></p>
+<p>Precio para subir: <strong id="levelPrice">200 🪙</strong></p>
+<p id="levelMessage"></p>
+<button id="levelUpButton" class="primary" onclick="levelUpMonster()">SUBIR DE NIVEL</button>
+</div>
+</div>
+</div>
 
 <script>
 const monsters=[
@@ -190,6 +249,7 @@ const monsters=[
 
 let save;
 try{save=JSON.parse(localStorage.getItem("monsterWorldSave"));}catch(e){save=null;}
+
 if(!save||typeof save.coins!=="number"||!Array.isArray(save.owned)){
 save={coins:100,owned:[],care:{},lastDaily:"",starterEggClaimed:false};
 }
@@ -206,10 +266,38 @@ if(!Array.isArray(save.incubating))save.incubating=[];
 if(!save.slots)save.slots={capacity:1};
 if(typeof save.slots.capacity!=="number"||save.slots.capacity<1)save.slots.capacity=1;
 if(typeof save.eggPurchases!=="number"||save.eggPurchases<0)save.eggPurchases=0;
+
 save.owned=[...new Set(save.owned.filter(id=>monsters.some(m=>m.id===id)))];
+
 if(!save.needs)save.needs={};
 if(!save.production)save.production={};
 if(!save.sleep)save.sleep={};
+
+/* NUEVO: asignación permanente de cada monstruo a un espacio. */
+if(!save.monsterSlots)save.monsterSlots={};
+let migrationUsed=new Set();
+
+save.owned.forEach(id=>{
+let slot=save.monsterSlots[id];
+if(!Number.isInteger(slot)||slot<0||migrationUsed.has(slot)){
+slot=0;
+while(migrationUsed.has(slot))slot++;
+save.monsterSlots[id]=slot;
+}
+migrationUsed.add(slot);
+});
+
+save.incubating.forEach(e=>{
+if(!Number.isInteger(e.slotIndex)||e.slotIndex<0||migrationUsed.has(e.slotIndex)){
+let slot=0;
+while(migrationUsed.has(slot))slot++;
+e.slotIndex=slot;
+}
+migrationUsed.add(e.slotIndex);
+});
+
+if(migrationUsed.size>save.slots.capacity)save.slots.capacity=migrationUsed.size;
+
 monsters.forEach(m=>{
 if(!save.monsterProgress[m.id])save.monsterProgress[m.id]={level:1,xp:0};
 if(!save.needs[m.id])save.needs[m.id]={comer:Date.now(),banar:Date.now(),dormir:Date.now()};
@@ -217,9 +305,11 @@ if(!save.needs[m.id])save.needs[m.id]={comer:Date.now(),banar:Date.now(),dormir:
 if(typeof save.needs[m.id][a]!=="number")save.needs[m.id][a]=Date.now();
 });
 });
+
 const rarityMultiplier={"COMÚN":1,"POCO COMÚN":1.5,"RARO":2,"ÉPICO":3,"LEGENDARIO":4};
 const rarityWeights={"COMÚN":60,"POCO COMÚN":28,"RARO":8,"ÉPICO":3,"LEGENDARIO":1};
 const NORMAL_EGG_PRICE=100,CARE_HOURS=24,CARE_TIME=CARE_HOURS*3600000,NEED_INTERVAL=20*60000;
+
 function persist(){try{localStorage.setItem("monsterWorldSave",JSON.stringify(save));}catch(e){}}
 function notice(t){document.getElementById("notice").textContent=t;}
 function getTrainerXPRequired(){return save.trainerProgress.level*100;}
@@ -231,34 +321,91 @@ function getLevelPrice(m){return Math.round(200*getMonsterLevel(m.id)**2*(rarity
 function addMonsterXP(id,n){if(save.owned.includes(id))save.monsterProgress[id].xp+=n*xpMultiplier();}
 function formatTime(ms){let t=Math.max(0,Math.floor(ms/1000));return Math.floor(t/3600)+" h "+Math.floor(t%3600/60)+" min "+t%60+" s";}
 
-/* Un huevo en incubación ocupa un espacio. Al nacer, lo reemplaza el monstruo. */
-function occupiedSlots(){return save.owned.length+save.incubating.length;}
+/* SISTEMA DE ESPACIOS FIJOS */
+function usedSlotIndexes(){
+const used=new Set();
+save.owned.forEach(id=>{
+const i=save.monsterSlots[id];
+if(Number.isInteger(i))used.add(i);
+});
+save.incubating.forEach(e=>{
+if(Number.isInteger(e.slotIndex))used.add(e.slotIndex);
+});
+return used;
+}
+function occupiedSlots(){return usedSlotIndexes().size;}
 function freeSlots(){return Math.max(0,save.slots.capacity-occupiedSlots());}
+function findFreeSlot(){
+const used=usedSlotIndexes();
+for(let i=0;i<save.slots.capacity;i++)if(!used.has(i))return i;
+return -1;
+}
 function nextSlotPrice(){return Math.round(500*Math.pow(1.5,save.slots.capacity-1));}
 function buySlot(){
 const price=nextSlotPrice();
 if(save.coins<price){notice("Necesitas "+price+" monedas para comprar otro espacio.");return;}
-updateProduction();save.coins-=price;save.slots.capacity++;
-persist();render();notice("🏡 ¡Compraste un espacio permanente! Ya aparece en Mi espacio.");
+updateProduction();
+save.coins-=price;
+save.slots.capacity++;
+persist();
+render();
+notice("🏡 ¡Compraste un espacio permanente!");
 }
+function tapSlot(index){
+if(usedSlotIndexes().has(index))return;
+if(save.inventory.eggs.length){
+incubateEgg(save.inventory.eggs[0].id,index);
+return;
+}
+showPage("tienda");
+showShopCategory("huevos");
+notice("🥚 Compra un huevo y vuelve a tu espacio para incubarlo.");
+}
+
 function currentEggPrice(){return Math.round(NORMAL_EGG_PRICE*Math.pow(1.5,save.eggPurchases));}
+
 function openEgg(type){
 if(type!=="normal")return;
+
 if(!save.starterEggClaimed){
 save.starterEggClaimed=true;
+
 if(!save.owned.includes("bubu")){
-if(freeSlots()<=0){save.slots.capacity++;}
-save.owned.push("bubu");save.monsterProgress.bubu=save.monsterProgress.bubu||{level:1,xp:0};resumeCare("bubu");
+let slot=findFreeSlot();
+if(slot<0){
+slot=save.slots.capacity;
+save.slots.capacity++;
 }
-persist();render();showPage("monstruos");notice("🥚✨ ¡Tu primer huevo eclosionó! ¡Bubu es tu compañero!");return;
+save.owned.push("bubu");
+save.monsterSlots.bubu=slot;
+save.monsterProgress.bubu=save.monsterProgress.bubu||{level:1,xp:0};
+resumeCare("bubu");
 }
-if(save.owned.length+save.incubating.length>=monsters.length){notice("Ya has descubierto todos los monstruos disponibles.");return;}
+
+persist();
+render();
+showPage("monstruos");
+notice("🥚✨ ¡Tu primer huevo eclosionó! ¡Bubu es tu compañero!");
+return;
+}
+
+if(save.owned.length+save.incubating.length>=monsters.length){
+notice("Ya has descubierto todos los monstruos disponibles.");
+return;
+}
+
 const price=currentEggPrice();
 if(save.coins<price){notice("Necesitas "+price+" monedas para comprar el próximo huevo.");return;}
-updateProduction();save.coins-=price;save.eggPurchases++;
+
+updateProduction();
+save.coins-=price;
+save.eggPurchases++;
 save.inventory.eggs.push({id:Date.now()+"-"+Math.random().toString(36).slice(2),type:"normal",boughtAt:Date.now()});
-persist();render();notice("🥚 Huevo guardado en el inventario. Puedes incubarlo cuando tengas un espacio libre.");
+persist();
+render();
+notice("🥚 Huevo guardado en el inventario. Puedes incubarlo cuando tengas un espacio libre.");
 }
+
 function chooseRandomMonster(){
 const reserved=save.incubating.map(e=>e.monsterId);
 const available=monsters.filter(m=>!save.owned.includes(m.id)&&!reserved.includes(m.id));
@@ -267,34 +414,62 @@ let total=available.reduce((s,m)=>s+(rarityWeights[m.rarity]||1),0),roll=Math.ra
 for(const m of available){roll-=rarityWeights[m.rarity]||1;if(roll<0)return m;}
 return available[available.length-1];
 }
-function incubateEgg(eggId){
-const egg=save.inventory.eggs.find(e=>e.id===eggId);if(!egg)return;
-if(freeSlots()<=0){notice("🏡 No tienes espacios libres. Compra otro espacio o libera uno.");return;}
-const m=chooseRandomMonster();if(!m){notice("Ya no quedan monstruos nuevos por descubrir.");return;}
-save.inventory.eggs=save.inventory.eggs.filter(e=>e.id!==eggId);
-save.incubating.push({id:egg.id,monsterId:m.id,finishAt:Date.now()+60000});
-persist();render();notice("🥚✨ ¡Incubación iniciada! Terminará en 1 minuto.");
+
+function incubateEgg(eggId,slotIndex){
+const egg=save.inventory.eggs.find(e=>e.id===eggId);
+if(!egg)return;
+
+if(slotIndex===undefined)slotIndex=findFreeSlot();
+if(slotIndex<0||slotIndex>=save.slots.capacity||usedSlotIndexes().has(slotIndex)){
+notice("🏡 No tienes espacios libres. Compra otro espacio.");
+return;
 }
+
+const m=chooseRandomMonster();
+if(!m){notice("Ya no quedan monstruos nuevos por descubrir.");return;}
+
+save.inventory.eggs=save.inventory.eggs.filter(e=>e.id!==eggId);
+save.incubating.push({id:egg.id,monsterId:m.id,slotIndex:slotIndex,finishAt:Date.now()+60000});
+persist();
+render();
+notice("🥚✨ ¡Incubación iniciada en el espacio "+(slotIndex+1)+"! Terminará en 1 minuto.");
+}
+
 function updateIncubations(){
-const now=Date.now(),done=save.incubating.filter(e=>now>=e.finishAt);if(!done.length)return;
+const now=Date.now();
+const done=save.incubating.filter(e=>now>=e.finishAt);
+if(!done.length)return;
+
 done.forEach(e=>{
 const m=monsters.find(x=>x.id===e.monsterId);
 save.incubating=save.incubating.filter(x=>x.id!==e.id);
 if(m&&!save.owned.includes(m.id)){
-save.owned.push(m.id);save.monsterProgress[m.id]=save.monsterProgress[m.id]||{level:1,xp:0};
-resumeCare(m.id);save.lastHatched=m.name;
+save.owned.push(m.id);
+save.monsterSlots[m.id]=e.slotIndex;
+save.monsterProgress[m.id]=save.monsterProgress[m.id]||{level:1,xp:0};
+resumeCare(m.id);
+save.lastHatched=m.name;
 }
 });
+
 persist();
-if(save.lastHatched){notice("🎉 ¡El huevo eclosionó! Descubriste a "+save.lastHatched+".");save.lastHatched="";}
+if(save.lastHatched){
+notice("🎉 ¡El huevo eclosionó! Descubriste a "+save.lastHatched+".");
+save.lastHatched="";
 }
-function buyXPBoost(hours,price){
-updateProduction();if(save.coins<price){notice("No tienes suficientes monedas.");return;}
-save.coins-=price;const now=Date.now(),until=save.xpBoostUntil>now?save.xpBoostUntil:now;
-save.xpBoostUntil=until+hours*3600000;persist();render();notice("⭐ Doble experiencia activada durante "+hours+" hora(s).");
 }
 
-/* La producción y los tiempos se actualizan por monstruo, no globalmente. */
+function buyXPBoost(hours,price){
+updateProduction();
+if(save.coins<price){notice("No tienes suficientes monedas.");return;}
+save.coins-=price;
+const now=Date.now(),until=save.xpBoostUntil>now?save.xpBoostUntil:now;
+save.xpBoostUntil=until+hours*3600000;
+persist();render();
+notice("⭐ Doble experiencia activada durante "+hours+" hora(s).");
+}
+
+/* Producción independiente de cada monstruo. */
 function updateProduction(){
 const now=Date.now();
 monsters.forEach(m=>{
@@ -315,9 +490,12 @@ const start=p.lastAt,end=Math.min(now,p.caredUntil);
 if(end>start){
 const bonus=sleep&&!sleep.sleeping&&sleep.bonusUntil&&now<sleep.bonusUntil;
 const earned=m.rate*(bonus?1.25:1)*(end-start)/3600000+p.remainder;
-const whole=Math.floor(earned);save.coins+=whole;p.remainder=earned-whole;
+const whole=Math.floor(earned);
+save.coins+=whole;
+p.remainder=earned-whole;
 }
-p.lastAt=now;if(now>=p.caredUntil)p.remainder=0;
+p.lastAt=now;
+if(now>=p.caredUntil)p.remainder=0;
 });
 }
 function resumeCare(id){
@@ -331,22 +509,26 @@ return Math.max(0,100-Math.floor((Date.now()-save.needs[id][action])/NEED_INTERV
 }
 function getNeedState(id,action){return getNeedPercent(id,action);}
 
-/* Cuidado especial de cuatro horas: solo afecta al monstruo seleccionado. */
 function startSpecialSleep(id){
-updateProduction();const now=Date.now();
+updateProduction();
+const now=Date.now();
 save.sleep[id]={sleeping:true,until:now+4*3600000,bonusUntil:0};
 if(save.production[id]){save.production[id].lastAt=now;save.production[id].remainder=0;}
 save.needs[id].dormir=now;
-addTrainerXP(5);addMonsterXP(id,5);persist();render();notice("🌙 Tu monstruo descansará 4 horas. +XP");
+addTrainerXP(5);addMonsterXP(id,5);
+persist();render();
+notice("🌙 Tu monstruo descansará 4 horas. +XP");
 }
 function wakeSpecialMonster(id){
-const s=save.sleep[id],now=Date.now();if(!s)return;
+const s=save.sleep[id],now=Date.now();
+if(!s)return;
 if(now<s.until){notice("🌙 Tu monstruo todavía está durmiendo.");return;}
 if(s.bonusUntil&&now<s.bonusUntil){notice("⚡ La bonificación del 25 % sigue activa.");return;}
 s.sleeping=false;s.bonusUntil=now+4*3600000;
 save.needs[id].dormir=now;
 if(save.production[id]){save.production[id].lastAt=now;save.production[id].remainder=0;}
-persist();render();notice("⚡ ¡Bono de producción +25 % durante 4 horas!");
+persist();render();
+notice("⚡ ¡Bono de producción +25 % durante 4 horas!");
 }
 
 function showPage(page){
@@ -354,7 +536,8 @@ function showPage(page){
 document.getElementById("page-"+p).classList.toggle("hidden",p!==page);
 document.getElementById("nav-"+p).classList.toggle("active",p===page);
 });
-render();window.scrollTo(0,0);
+render();
+window.scrollTo(0,0);
 }
 let shopCategory="huevos";
 function showShopCategory(c){
@@ -367,10 +550,19 @@ renderShop();
 }
 
 let selectedLevelMonster=null;
-function openLevelMenu(id){if(!save.owned.includes(id))return;selectedLevelMonster=id;renderLevelMenu();document.getElementById("levelModal").classList.remove("hidden");}
-function closeLevelMenu(){document.getElementById("levelModal").classList.add("hidden");selectedLevelMonster=null;}
+function openLevelMenu(id){
+if(!save.owned.includes(id))return;
+selectedLevelMonster=id;
+renderLevelMenu();
+document.getElementById("levelModal").classList.remove("hidden");
+}
+function closeLevelMenu(){
+document.getElementById("levelModal").classList.add("hidden");
+selectedLevelMonster=null;
+}
 function renderLevelMenu(){
-const m=monsters.find(x=>x.id===selectedLevelMonster);if(!m)return;
+const m=monsters.find(x=>x.id===selectedLevelMonster);
+if(!m)return;
 const p=save.monsterProgress[m.id],req=getXPRequired(m),price=getLevelPrice(m);
 document.getElementById("levelTitle").textContent="⭐ "+m.name;
 document.getElementById("levelSubtitle").textContent="Mejora a tu compañero mágico.";
@@ -384,14 +576,16 @@ document.getElementById("levelUpButton").textContent=p.xp>=req?"⭐ SUBIR AL NIV
 document.getElementById("levelMessage").textContent=p.xp<req?"Cuida a tu monstruo para conseguir experiencia.":save.coins<price?"Necesitas más monedas.":"¡Ya puedes subir de nivel!";
 }
 function levelUpMonster(){
-const m=monsters.find(x=>x.id===selectedLevelMonster);if(!m)return;
+const m=monsters.find(x=>x.id===selectedLevelMonster);
+if(!m)return;
 const p=save.monsterProgress[m.id],req=getXPRequired(m),price=getLevelPrice(m);
 if(p.xp<req||save.coins<price){notice("Necesitas la experiencia y las monedas necesarias.");return;}
-updateProduction();save.coins-=price;p.xp-=req;p.level++;
-persist();render();renderLevelMenu();notice("🎉 "+m.name+" subió al nivel "+p.level+"!");
+updateProduction();
+save.coins-=price;p.xp-=req;p.level++;
+persist();render();renderLevelMenu();
+notice("🎉 "+m.name+" subió al nivel "+p.level+"!");
 }
 
-/* Cada tarjeta tiene sus tres indicadores independientes. */
 function monsterCard(m){
 const sleep=save.sleep[m.id],now=Date.now();
 let state=m.desc;
@@ -406,7 +600,6 @@ ${needs.map(([a,label])=>`<div class="need-line">${label}: ${getNeedPercent(m.id
 <p class="status">${state}</p></div></article>`;
 }
 
-/* Productos de la tienda. Comprar solo suma unidades al inventario. */
 const careProducts={
 comer:[
 {name:"Galleta mágica",price:10,recovery:6,ads:1,emoji:"🍪"},
@@ -429,22 +622,24 @@ dormir:[
 };
 const categoryNames={comer:"🍪 Alimentos",banar:"🛁 Productos de baño",dormir:"🌙 Productos de descanso"};
 function getProductCount(action,name){return Number(save.inventory.care[action][name])||0;}
+
 function renderProductShop(action,target){
 document.getElementById(target).innerHTML=careProducts[action].map(p=>{
 const have=getProductCount(action,p.name);
 return `<div class="list-item"><div><strong>${p.emoji} ${p.name}</strong><small>Recupera hasta ${p.recovery}% por unidad · En inventario: ${have}</small><small>Precio: ${p.price} monedas por unidad</small></div><button class="primary" style="max-width:112px" onclick="buyShopProduct('${action}','${p.name}')">COMPRAR</button></div>`;
-}).join("")+
-`<div class="section"><h3>🎒 Mi inventario</h3>${careProducts[action].map(p=>`<p>${p.emoji} ${p.name}: <strong>${getProductCount(action,p.name)}</strong></p>`).join("")}</div>`;
+}).join("")+`<div class="section"><h3>🎒 Mi inventario</h3>${careProducts[action].map(p=>`<p>${p.emoji} ${p.name}: <strong>${getProductCount(action,p.name)}</strong></p>`).join("")}</div>`;
 }
 function buyShopProduct(action,name){
-const p=careProducts[action].find(x=>x.name===name);if(!p)return;
+const p=careProducts[action].find(x=>x.name===name);
+if(!p)return;
 if(save.coins<p.price){notice("No tienes suficientes monedas.");return;}
-updateProduction();save.coins-=p.price;
+updateProduction();
+save.coins-=p.price;
 save.inventory.care[action][p.name]=getProductCount(action,p.name)+1;
-persist();render();notice("🎒 Compraste "+p.name+". Ahora tienes "+getProductCount(action,p.name)+".");
+persist();render();
+notice("🎒 Compraste "+p.name+". Ahora tienes "+getProductCount(action,p.name)+".");
 }
 
-/* Menú de cuidado: aquí se usan productos existentes, no se compran. */
 let careProductSelected=0,careMonsterSelected=null,careActionSelected=null;
 function openCareMenu(id,action){
 if(!save.owned.includes(id))return;
@@ -478,7 +673,8 @@ const have=getProductCount(careActionSelected,p.name);
 document.getElementById("careQuantity").max=Math.max(1,Math.min(10,have));
 document.getElementById("careQuantity").value=1;
 }
-renderCareOptions();updateCareQuantity(document.getElementById("careQuantity").value);
+renderCareOptions();
+updateCareQuantity(document.getElementById("careQuantity").value);
 }
 function updateCareQuantity(v){
 const p=careProducts[careActionSelected]?.[careProductSelected];
@@ -497,16 +693,20 @@ document.getElementById("careAdButton").textContent=p&&p.ads>0?"VER "+(p.ads*q)+
 }
 function closeCareMenu(){document.getElementById("careModal").classList.add("hidden");}
 function goToCareShop(){
-const action=careActionSelected;closeCareMenu();showPage("tienda");
+const action=careActionSelected;
+closeCareMenu();
+showPage("tienda");
 showShopCategory(action==="comer"?"alimentos":action==="banar"?"bano":"dormir");
 }
 function useSpecialSleep(){
-const id=careMonsterSelected;if(!id)return;
+const id=careMonsterSelected;
+if(!id)return;
 const s=save.sleep[id],now=Date.now();
 if(s&&s.sleeping&&now<s.until){notice("🌙 Tu monstruo todavía está durmiendo.");return;}
 if(s&&s.bonusUntil&&now<s.bonusUntil){notice("⚡ La bonificación del 25 % sigue activa.");return;}
 if(s&&s.until&&now>=s.until&&!s.sleeping){wakeSpecialMonster(id);closeCareMenu();return;}
-startSpecialSleep(id);closeCareMenu();
+startSpecialSleep(id);
+closeCareMenu();
 }
 function useCareProducts(){
 const action=careActionSelected,id=careMonsterSelected,p=careProducts[action]?.[careProductSelected];
@@ -516,13 +716,13 @@ const inv=save.inventory.care[action],have=getProductCount(action,p.name);
 if(have<q){notice("No tienes suficientes unidades de ese producto.");return;}
 updateProduction();
 const current=getNeedPercent(id,action);
-inv[p.name]=have-q;if(inv[p.name]<=0)delete inv[p.name];
-/* Guardar la hora de referencia del cuidado solo para este monstruo y esta necesidad. */
+inv[p.name]=have-q;
+if(inv[p.name]<=0)delete inv[p.name];
 const restored=Math.min(100,current+p.recovery*q);
 const intervals=Math.ceil((100-restored)/10);
 save.needs[id][action]=Date.now()-intervals*NEED_INTERVAL;
-addTrainerXP(5*q);addMonsterXP(id,5*q);
-/* Reanudar la producción solo del monstruo atendido. */
+addTrainerXP(5*q);
+addMonsterXP(id,5*q);
 if(save.production[id]){
 save.production[id].lastAt=Date.now();
 save.production[id].caredUntil=Date.now()+CARE_TIME;
@@ -539,34 +739,51 @@ document.getElementById("normalEggPrice").textContent=save.starterEggClaimed?cur
 document.getElementById("normalEggButton").textContent=save.starterEggClaimed?"🥚 COMPRAR HUEVO":"🎁 RECLAMAR HUEVO GRATIS";
 document.getElementById("normalEggButton").disabled=save.starterEggClaimed&&save.owned.length+save.incubating.length>=monsters.length;
 document.getElementById("eggOwnedCount").textContent=save.owned.length+" / "+monsters.length;
-document.getElementById("eggInventory").innerHTML=save.inventory.eggs.length?save.inventory.eggs.map(e=>`<div class="list-item"><div><strong>🥚 Huevo normal</strong><small>Guardado en tu inventario; no ocupa espacio.</small></div><button class="primary" style="max-width:110px" onclick="incubateEgg('${e.id}')">INCUBAR</button></div>`).join(""):'<div class="empty">No tienes huevos guardados. Compra uno en la tienda.</div>';
-document.getElementById("incubationList").innerHTML=save.incubating.length?save.incubating.map(e=>{const m=monsters.find(x=>x.id===e.monsterId);return `<div class="list-item"><div><strong>🥚 Huevo en incubación</strong><small>Resultado: ${m?m.name:"misterioso"} · Tiempo: ${formatTime(e.finishAt-Date.now())}</small></div><span>⏳</span></div>`}).join(""):'<div class="empty">No hay huevos incubándose.</div>';
+
+document.getElementById("eggInventory").innerHTML=save.inventory.eggs.length?
+save.inventory.eggs.map(e=>`<div class="list-item"><div><strong>🥚 Huevo normal</strong><small>Guardado en tu inventario; no ocupa espacio.</small></div><button class="primary" style="max-width:110px" onclick="incubateEgg('${e.id}')">INCUBAR</button></div>`).join("")
+:'<div class="empty">No tienes huevos guardados. Compra uno en la tienda.</div>';
+
+document.getElementById("incubationList").innerHTML=save.incubating.length?
+save.incubating.map(e=>{const m=monsters.find(x=>x.id===e.monsterId);return `<div class="list-item"><div><strong>🥚 Huevo en incubación</strong><small>Espacio ${e.slotIndex+1} · Resultado: ${m?m.name:"misterioso"} · Tiempo: ${formatTime(e.finishAt-Date.now())}</small></div><span>⏳</span></div>`}).join("")
+:'<div class="empty">No hay huevos incubándose.</div>';
+
 renderProductShop("comer","foodShopList");
 renderProductShop("banar","bathShopList");
 renderProductShop("dormir","sleepShopList");
+
 const until=Number(save.xpBoostUntil)||0;
 document.getElementById("xpBoostStatus").innerHTML=until>Date.now()?'<div class="section"><p>⭐ DOBLE EXPERIENCIA ACTIVA · Tiempo restante: '+formatTime(until-Date.now())+'</p></div>':'<div class="section"><p>No tienes un potenciador activo.</p></div>';
 }
+
+/* Dibuja cada espacio físico. Los monstruos no cambian de posición. */
 function renderSlots(){
 let html="";
 for(let i=0;i<save.slots.capacity;i++){
-const incubating=save.incubating[i];
-/* Los espacios ocupados se representan primero con monstruos y después con huevos. */
 let content="";
-if(i<save.owned.length){
-const m=monsters.find(x=>x.id===save.owned[i]);
-content=`<div class="slot-icon">${m?m.name==="Bubu"?"👾":m.name==="Flama"?"🐲":m.name==="Musguito"?"🌱":m.name==="Fanty"?"👻":m.name==="Chispas"?"🦊":m.name==="Nevito"?"🐧":m.name==="Misterio"?"🧙":"🐉":"👾"}</div><strong>${m?m.name:"Monstruo"}</strong><small>Espacio ocupado</small>`;
-}else{
-const e=save.incubating[i-save.owned.length];
-if(e){
-const m=monsters.find(x=>x.id===e.monsterId);
-content=`<div class="slot-icon">🥚</div><strong>${m?m.name:"Huevo mágico"}</strong><small>Incubando: ${formatTime(e.finishAt-Date.now())}</small>`;
-}else{
-content=`<div class="slot-icon">🏡</div><strong>Espacio libre</strong><small>Ve a la tienda y pulsa INCUBAR en un huevo de tu inventario.</small>`;
-}
-}
+const monsterId=save.owned.find(id=>save.monsterSlots[id]===i);
+const egg=save.incubating.find(e=>e.slotIndex===i);
+
+if(monsterId){
+const m=monsters.find(x=>x.id===monsterId);
+const emojis={bubu:"👾",flama:"🐲",bosque:"🌱",fantasma:"👻",fuego:"🦊",hielo:"🐧",mago:"🧙",dragon:"🐉"};
+content=`<div class="slot-icon">${emojis[monsterId]||"👾"}</div><strong>${m?m.name:"Monstruo"}</strong><small>Espacio ${i+1} · Hogar permanente</small>`;
 html+=`<div class="slot-card">${content}</div>`;
+continue;
 }
+
+if(egg){
+const m=monsters.find(x=>x.id===egg.monsterId);
+content=`<div class="slot-icon">🥚</div><strong>${m?m.name:"Huevo mágico"}</strong><small>Espacio ${i+1} · Incubando: ${formatTime(egg.finishAt-Date.now())}</small>`;
+html+=`<div class="slot-card">${content}</div>`;
+continue;
+}
+
+html+=`<button class="slot-card" style="width:100%;color:inherit;cursor:pointer" onclick="tapSlot(${i})"><div class="slot-icon">🥚</div><strong>Espacio ${i+1}</strong><small>${save.inventory.eggs.length?"Toca para incubar un huevo":"Espacio libre · Toca para ir a la tienda"}</small></button>`;
+}
+
+html+=`<button class="slot-card" style="width:100%;color:inherit;cursor:pointer;border-style:solid;border-color:#ffd66b" onclick="buySlot()"><div class="slot-icon">➕</div><strong>Comprar espacio</strong><small>Espacio permanente · ${nextSlotPrice()} monedas</small></button>`;
+
 document.getElementById("slotGrid").innerHTML=html;
 }
 
@@ -587,6 +804,7 @@ document.getElementById("hallTrainerXP").textContent=Math.floor(save.trainerProg
 document.getElementById("trainerXPBar").style.width=Math.min(100,save.trainerProgress.xp/req*100)+"%";
 document.getElementById("collection").innerHTML=save.owned.length?monsters.filter(m=>save.owned.includes(m.id)).map(monsterCard).join(""):'<div class="empty" style="grid-column:1/-1">🥚 Entra en la tienda y reclama tu primer huevo gratis para conseguir a Bubu.</div>';
 renderSlots();
+
 const today=new Date().toISOString().slice(0,10),claimed=save.lastDaily===today;
 document.getElementById("dailyButton").disabled=claimed;
 document.getElementById("dailyButton").textContent=claimed?"Premio diario reclamado":"Reclamar 20 monedas";
@@ -594,10 +812,13 @@ document.getElementById("dailyStatus").textContent=claimed?"Ya reclamaste tu reg
 renderShop();
 if(selectedLevelMonster)renderLevelMenu();
 }
+
 function claimDaily(){
 const today=new Date().toISOString().slice(0,10);
 if(save.lastDaily===today){notice("Ya reclamaste tu regalo diario.");return;}
-save.coins+=20;save.lastDaily=today;persist();render();notice("🎁 ¡Recibiste 20 monedas virtuales!");
+save.coins+=20;save.lastDaily=today;
+persist();render();
+notice("🎁 ¡Recibiste 20 monedas virtuales!");
 }
 function shareGame(){
 const url=window.location.href;
@@ -606,15 +827,27 @@ else if(navigator.clipboard)navigator.clipboard.writeText(url).then(()=>notice("
 else notice("Copia el enlace de MonsterWorld desde tu navegador.");
 }
 
-/* Si ya había una incubación guardada, se conserva y continúa. */
-updateIncubations();updateProduction();persist();render();
-setInterval(()=>{updateIncubations();updateProduction();persist();render();},1000);
+updateIncubations();
+updateProduction();
+persist();
+render();
+
+setInterval(()=>{
+updateIncubations();
+updateProduction();
+persist();
+render();
+},1000);
+
 let progreso=0;
 const intervaloCarga=setInterval(()=>{
 progreso+=2;
 document.getElementById("barraCarga").style.width=progreso+"%";
 document.getElementById("textoCarga").textContent="Cargando tu mundo... "+progreso+"%";
-if(progreso>=100){clearInterval(intervaloCarga);setTimeout(()=>{document.getElementById("portada").style.display="none";},400);}
+if(progreso>=100){
+clearInterval(intervaloCarga);
+setTimeout(()=>{document.getElementById("portada").style.display="none";},400);
+}
 },60);
 </script>
 </body>
