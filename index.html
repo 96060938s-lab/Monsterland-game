@@ -18,7 +18,23 @@ button:disabled{opacity:.5;cursor:default}
 .logo{width:46px;height:46px;border:3px solid var(--gold);border-radius:50%;display:grid;place-items:center;font-size:25px;background:#33264e}
 .brand h1{font-size:20px;margin:0;color:var(--gold)}
 .brand small{display:block;color:#c9b9ff;margin-top:4px}
-.wallet{border:1px solid #8c7443;background:#28223d;border-radius:25px;padding:10px;color:var(--gold);font-weight:bold;white-space:nowrap}
+
+/* BILLETERA */
+.wallet{
+border:1px solid #8c7443;
+background:linear-gradient(145deg,#39304e,#211d38);
+border-radius:18px;
+padding:9px 12px;
+color:var(--gold);
+font-weight:bold;
+text-align:center;
+min-width:112px;
+box-shadow:0 4px 14px #0003;
+}
+.wallet-label{display:block;font-size:10px;letter-spacing:1px;margin-bottom:4px}
+.wallet-balance{display:block;font-size:15px}
+.wallet-hint{display:block;font-size:9px;color:#d0c5ec;margin-top:4px}
+
 .profile{margin:0 14px 18px;padding:12px;background:#ffffff0b;border:1px solid #ffffff14;border-radius:15px;display:flex;justify-content:space-between;align-items:center;gap:8px}
 .level{color:var(--gold);font-weight:bold}
 .profile small{color:var(--muted)}
@@ -113,18 +129,40 @@ main{max-width:760px;margin:auto;padding:0 12px}
 .slot-card.buy-slot .slot-icon{color:var(--green);font-size:32px}
 .slot-card:active{transform:scale(.98)}
 
-/* HUEVO EN INCUBACIÓN: MISMA ALTURA DE IMAGEN QUE EL MONSTRUO */
+/* HUEVO EN INCUBACIÓN */
 .slot-card.incubating{width:100%;cursor:pointer;border-style:solid;border-color:#b995f5;background:linear-gradient(180deg,#36345a,#1b192d);box-shadow:0 7px 20px #08071480}
 .slot-card.incubating .slot-icon{font-size:75px;line-height:1;display:flex;align-items:center;justify-content:center;width:100%;height:145px;min-height:145px;background:linear-gradient(145deg,#b6a1ff,#4c4d9a,#e6a9ef);border-radius:10px}
 .incubation-progress{height:8px;width:100%;background:#17152d;border-radius:10px;overflow:hidden;margin-top:5px}
 .incubation-progress div{height:100%;background:linear-gradient(90deg,#00c99a,#ffd66b)}
 .incubation-counter{color:var(--gold)!important;font-weight:bold}
+
+/* ESTILOS DE BILLETERA */
+.wallet-modal-card{text-align:left}
+.wallet-hero{text-align:center;padding:10px 0 14px}
+.wallet-hero-icon{width:76px;height:76px;margin:0 auto 10px;border-radius:24px;display:grid;place-items:center;font-size:38px;background:linear-gradient(145deg,#453866,#211d38);border:1px solid #7862a4}
+.wallet-hero h2{margin:0 0 7px!important;text-align:center}
+.wallet-hero p{text-align:center;margin:0}
+.wallet-status{padding:12px;border-radius:12px;background:#17152d;border:1px solid #51456f;margin:12px 0;font-size:12px;color:#d7ccef;line-height:1.5}
+.wallet-status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#e9b85a;margin-right:7px}
+.wallet-action{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:14px;background:#302a49;border:1px solid #62517f;border-radius:14px;color:white;margin-top:10px}
+.wallet-action-icon{width:46px;height:46px;flex-shrink:0;border-radius:14px;display:grid;place-items:center;font-size:25px;background:#211d38}
+.wallet-action strong{display:block;color:var(--gold);font-size:14px}
+.wallet-action small{display:block;color:var(--muted);font-size:11px;line-height:1.4;margin-top:5px}
+.wallet-action:active{transform:scale(.99)}
+.wallet-footnote{font-size:11px!important;line-height:1.5!important;color:#a9a5c5!important}
+.wallet-address{word-break:break-all;color:#a7f5cf}
+.wallet-back{width:100%;margin-top:10px}
+
 @media(min-width:600px){
 .picture{height:200px}
 .emoji-art{font-size:100px}
 .slot-card.incubating .slot-icon{height:200px;min-height:200px}
 }
 @media(max-width:380px){
+.brand h1{font-size:17px}
+.logo{width:40px;height:40px}
+.wallet{min-width:100px;padding:8px}
+.wallet-balance{font-size:13px}
 .shop-tab{font-size:9px}
 .shop-tab .tab-emoji{font-size:19px}
 .grid{gap:8px}
@@ -147,7 +185,11 @@ main{max-width:760px;margin:auto;padding:0 12px}
 
 <div class="top">
 <div class="brand"><div class="logo">👾</div><div><h1>MonsterWorld</h1><small>Tu mundo mágico</small></div></div>
-<div class="wallet">🪙 <span id="coins">100</span></div>
+<button class="wallet" onclick="openWallet()" aria-label="Abrir billetera MonsterWorld">
+<span class="wallet-label">💎 BILLETERA</span>
+<span class="wallet-balance">🪙 <span id="coins">100</span></span>
+<span class="wallet-hint">Toca para abrir</span>
+</button>
 </div>
 
 <div class="profile">
@@ -228,6 +270,71 @@ main{max-width:760px;margin:auto;padding:0 12px}
 <button id="nav-salon" onclick="showPage('salon')"><span class="ico">🏆</span><span class="lbl">SALÓN</span></button>
 </nav>
 
+<!-- BILLETERA MONSTERWORLD -->
+<div id="walletModal" class="care-modal hidden">
+<div class="care-modal-card wallet-modal-card">
+<button class="care-close" onclick="closeWallet()">✕</button>
+
+<div class="wallet-hero">
+<div class="wallet-hero-icon">💎</div>
+<h2>Billetera MonsterWorld</h2>
+<p>Administra tu conexión TON y tus operaciones.</p>
+</div>
+
+<div class="care-option">
+<div class="care-option-title">🪙 Saldo del juego</div>
+<p style="font-size:25px;color:#ffd66b;margin:8px 0"><strong><span id="walletCoins">100</span> monedas</strong></p>
+<p class="wallet-footnote">Estas monedas son virtuales y no representan TON ni dinero real.</p>
+</div>
+
+<div id="walletConnectionStatus" class="wallet-status">
+<span class="wallet-status-dot"></span>
+<strong>Estado:</strong> Billetera TON no conectada.
+</div>
+
+<button id="connectTonButton" class="primary" onclick="connectTonWallet()">
+🔗 VINCULAR BILLETERA TON
+</button>
+
+<div id="walletAddressPanel" class="care-option hidden">
+<div class="care-option-title">✅ Billetera vinculada</div>
+<p id="walletAddress" class="wallet-address"></p>
+<button class="secondary" style="width:100%" onclick="disconnectTonWallet()">DESCONECTAR BILLETERA</button>
+</div>
+
+<div id="walletActions">
+<button class="wallet-action" onclick="openWalletAction('depositar')">
+<span class="wallet-action-icon">📥</span>
+<span><strong>Depositar</strong><small>Preparar un depósito de TON en MonsterWorld.</small></span>
+</button>
+
+<button class="wallet-action" onclick="openWalletAction('retirar')">
+<span class="wallet-action-icon">📤</span>
+<span><strong>Retirar</strong><small>Consultar las condiciones y preparar un retiro.</small></span>
+</button>
+</div>
+
+<p class="wallet-footnote" style="margin-top:14px">La conexión real requiere TON Connect. Los depósitos y retiros estarán disponibles después de implementar y verificar las transacciones de forma segura.</p>
+</div>
+</div>
+
+<!-- VENTANA DE DEPÓSITO Y RETIRO -->
+<div id="walletActionModal" class="care-modal hidden">
+<div class="care-modal-card">
+<button class="care-close" onclick="closeWalletAction()">✕</button>
+<h2 id="walletActionTitle">Operación TON</h2>
+<p id="walletActionDescription">Esta operación todavía no está disponible.</p>
+
+<div class="care-option">
+<div class="care-option-title" id="walletActionIcon">💎 Operación pendiente</div>
+<p id="walletActionInfo">No se realizará ninguna transacción.</p>
+</div>
+
+<button class="primary" onclick="walletActionPending()">CONTINUAR</button>
+<button class="secondary wallet-back" onclick="closeWalletAction()">VOLVER A LA BILLETERA</button>
+</div>
+</div>
+
 <div id="careModal" class="care-modal hidden">
 <div class="care-modal-card">
 <button class="care-close" onclick="closeCareMenu()">✕</button>
@@ -257,7 +364,6 @@ main{max-width:760px;margin:auto;padding:0 12px}
 </div>
 </div>
 
-<!-- NUEVA VENTANA DE INCUBACIÓN -->
 <div id="incubationModal" class="care-modal hidden">
 <div class="care-modal-card">
 <button class="care-close" onclick="closeIncubationMenu()">✕</button>
@@ -359,7 +465,6 @@ e.startedAt=now;e.finishAt=now+INCUBATION_TIME;
 save.incubation24hMigrated=true;
 }
 
-/* Preparar los contadores de anuncios de huevos que ya estaban incubando */
 save.incubating.forEach(e=>{
 if(typeof e.adsWatched!=="number")e.adsWatched=0;
 if(typeof e.adTimeReduced!=="number")e.adTimeReduced=0;
@@ -377,6 +482,97 @@ const NORMAL_EGG_PRICE=100,CARE_HOURS=24,CARE_TIME=CARE_HOURS*3600000,NEED_INTER
 const SPECIAL_SLEEP_TIME=4*3600000;
 const SPECIAL_BONUS_TIME=4*3600000;
 
+/* ESTADO DE CONEXIÓN TON: NO SE SIMULA UNA CONEXIÓN REAL */
+let tonWalletConnected=false;
+let tonWalletAddress="";
+let currentWalletAction="";
+
+function openWallet(){
+renderWallet();
+document.getElementById("walletModal").classList.remove("hidden");
+}
+
+function closeWallet(){
+document.getElementById("walletModal").classList.add("hidden");
+}
+
+function renderWallet(){
+document.getElementById("walletCoins").textContent=Math.floor(save.coins);
+const status=document.getElementById("walletConnectionStatus");
+const connectButton=document.getElementById("connectTonButton");
+const addressPanel=document.getElementById("walletAddressPanel");
+const actions=document.getElementById("walletActions");
+
+if(tonWalletConnected&&tonWalletAddress){
+status.innerHTML='<span class="wallet-status-dot" style="background:#00c99a"></span><strong>Estado:</strong> Billetera TON conectada.';
+connectButton.classList.add("hidden");
+addressPanel.classList.remove("hidden");
+document.getElementById("walletAddress").textContent=tonWalletAddress;
+actions.classList.remove("hidden");
+}else{
+status.innerHTML='<span class="wallet-status-dot"></span><strong>Estado:</strong> Billetera TON no conectada.';
+connectButton.classList.remove("hidden");
+addressPanel.classList.add("hidden");
+actions.classList.remove("hidden");
+}
+}
+
+/* BOTÓN PREPARADO PARA LA FUTURA INTEGRACIÓN TON CONNECT */
+function connectTonWallet(){
+notice("🔗 La conexión real con TON Connect todavía debe integrarse. No se ha conectado ninguna billetera.");
+document.getElementById("walletConnectionStatus").innerHTML=
+'<span class="wallet-status-dot"></span><strong>Conexión pendiente:</strong> falta configurar TON Connect y su manifiesto.';
+}
+
+function disconnectTonWallet(){
+tonWalletConnected=false;
+tonWalletAddress="";
+renderWallet();
+notice("La billetera se ha desconectado de esta pantalla.");
+}
+
+/* VENTANAS DE DEPÓSITO Y RETIRO */
+function openWalletAction(action){
+currentWalletAction=action;
+const connected=tonWalletConnected&&Boolean(tonWalletAddress);
+const title=document.getElementById("walletActionTitle");
+const description=document.getElementById("walletActionDescription");
+const icon=document.getElementById("walletActionIcon");
+const info=document.getElementById("walletActionInfo");
+
+if(action==="depositar"){
+title.textContent="📥 Depositar TON";
+description.textContent="Prepara un depósito para MonsterWorld.";
+icon.textContent="💎 Depósito de TON";
+info.textContent=connected
+?"La cartera aparece conectada, pero todavía falta integrar la recepción y verificación segura de depósitos."
+:"Primero debes conectar una billetera TON. La conexión real todavía no está integrada.";
+}else{
+title.textContent="📤 Retirar";
+description.textContent="Prepara una solicitud de retiro.";
+icon.textContent="💎 Retiro de TON";
+info.textContent=connected
+"La cartera aparece conectada, pero todavía falta implementar el saldo retirable, las reglas y la verificación de los pagos."
+:"Primero debes conectar una billetera TON. Los retiros reales todavía no están habilitados.";
+}
+
+document.getElementById("walletActionModal").classList.remove("hidden");
+}
+
+function closeWalletAction(){
+document.getElementById("walletActionModal").classList.add("hidden");
+}
+
+function walletActionPending(){
+if(currentWalletAction==="depositar"){
+notice("📥 Los depósitos TON aún no están habilitados. No se realizó ninguna transacción.");
+}else if(currentWalletAction==="retirar"){
+notice("📤 Los retiros TON aún no están habilitados. No se realizó ninguna transacción.");
+}
+closeWalletAction();
+}
+
+/* FUNCIONES GENERALES */
 function persist(){try{localStorage.setItem("monsterWorldSave",JSON.stringify(save));}catch(e){}}
 function notice(t){document.getElementById("notice").textContent=t;}
 function getTrainerXPRequired(){return save.trainerProgress.level*100;}
@@ -492,20 +688,15 @@ selectedIncubationId=null;
 
 function renderIncubationMenu(){
 const egg=save.incubating.find(e=>e.id===selectedIncubationId);
-if(!egg){
-closeIncubationMenu();
-return;
-}
+if(!egg){closeIncubationMenu();return;}
 const m=monsters.find(x=>x.id===egg.monsterId);
 const remaining=Math.max(0,egg.finishAt-Date.now());
 const watched=Math.min(MAX_INCUBATION_ADS,Number(egg.adsWatched)||0);
 const reduced=Math.min(MAX_INCUBATION_ADS,Number(egg.adTimeReduced)||0);
-
 document.getElementById("incubationModalSubtitle").textContent=(m?m.name:"Tu monstruo")+" · Espacio "+(egg.slotIndex+1);
 document.getElementById("incubationTimeLeft").textContent=formatTime(remaining);
 document.getElementById("incubationAdsProgress").textContent="Anuncios completados: "+watched+" / "+MAX_INCUBATION_ADS+" · Horas reducidas: "+reduced;
 document.getElementById("incubationAdsBar").style.width=(watched/MAX_INCUBATION_ADS*100)+"%";
-
 const adButton=document.getElementById("incubationAdButton");
 adButton.textContent=watched>=MAX_INCUBATION_ADS?"LÍMITE DE 15 ANUNCIOS ALCANZADO":"VER ANUNCIO";
 adButton.disabled=watched>=MAX_INCUBATION_ADS||remaining<=0;
@@ -515,21 +706,17 @@ document.getElementById("incubationAdMessage").textContent=watched>=MAX_INCUBATI
 document.getElementById("incubationTonMessage").textContent="Precio pendiente. Este botón todavía no cobra ni acelera el nacimiento.";
 }
 
-/* Este botón no descuenta horas hasta que conectemos y validemos anuncios reales. */
 function watchIncubationAd(){
 const egg=save.incubating.find(e=>e.id===selectedIncubationId);
 if(!egg){closeIncubationMenu();return;}
 if((Number(egg.adsWatched)||0)>=MAX_INCUBATION_ADS){
 notice("Ya completaste el máximo de 15 anuncios para este huevo.");
-renderIncubationMenu();
-return;
+renderIncubationMenu();return;
 }
 notice("📺 Los anuncios todavía no están conectados. No se descontó ninguna hora.");
 document.getElementById("incubationAdMessage").textContent="Los anuncios reales todavía no están conectados. No se descontó tiempo.";
 }
 
-/* Se llamará después de que el proveedor confirme que un anuncio se vio completo.
-   No se ejecuta desde el botón de prueba: evita entregar horas gratis sin validar. */
 function completeIncubationAdReward(eggId){
 const egg=save.incubating.find(e=>e.id===eggId);
 if(!egg)return false;
@@ -538,9 +725,7 @@ egg.adsWatched=(Number(egg.adsWatched)||0)+1;
 egg.adTimeReduced=(Number(egg.adTimeReduced)||0)+1;
 egg.finishAt-=INCUBATION_AD_TIME;
 if(egg.finishAt<Date.now())egg.finishAt=Date.now();
-persist();
-updateIncubations();
-render();
+persist();updateIncubations();render();
 if(selectedIncubationId===eggId)renderIncubationMenu();
 notice("📺 ¡Anuncio confirmado! Se redujo 1 hora de incubación.");
 return true;
@@ -580,10 +765,8 @@ persist();render();notice("⭐ Doble experiencia activada durante "+hours+" hora
 /* PRODUCCIÓN: SE DETIENE MIENTRAS EL MONSTRUO ESTÁ DURMIENDO */
 function updateProduction(){
 const now=Date.now();
-
 monsters.forEach(m=>{
 if(!save.owned.includes(m.id))return;
-
 let p=save.production[m.id];
 if(!p){
 save.production[m.id]={lastAt:now,caredUntil:now+CARE_TIME,remainder:0};
@@ -592,32 +775,22 @@ return;
 if(typeof p.lastAt!=="number")p.lastAt=now;
 if(typeof p.caredUntil!=="number")p.caredUntil=now+CARE_TIME;
 if(typeof p.remainder!=="number")p.remainder=0;
-
 const sleep=save.sleep[m.id];
-
-if(sleep&&sleep.sleeping){
-p.lastAt=now;
-return;
-}
-
+if(sleep&&sleep.sleeping){p.lastAt=now;return;}
 const start=p.lastAt;
 const end=Math.min(now,p.caredUntil);
-
 if(end>start){
 let earned=0;
 const bonusStart=sleep&&typeof sleep.bonusStartedAt==="number"?sleep.bonusStartedAt:0;
 const bonusEnd=sleep&&typeof sleep.bonusUntil==="number"?sleep.bonusUntil:0;
-
 if(bonusStart>0&&bonusEnd>bonusStart){
 const normalBefore=Math.max(0,Math.min(end,bonusStart)-start);
 const bonusPart=Math.max(0,Math.min(end,bonusEnd)-Math.max(start,bonusStart));
 const normalAfter=Math.max(0,end-Math.max(start,bonusEnd));
-earned=m.rate*(normalBefore+normalAfter)/3600000+
-m.rate*1.25*bonusPart/3600000+p.remainder;
+earned=m.rate*(normalBefore+normalAfter)/3600000+m.rate*1.25*bonusPart/3600000+p.remainder;
 }else{
 earned=m.rate*(end-start)/3600000+p.remainder;
 }
-
 const whole=Math.floor(earned);
 save.coins+=whole;
 p.remainder=earned-whole;
@@ -638,8 +811,7 @@ const now=Date.now();
 if(!save.needs[id])save.needs[id]={comer:now,banar:now,dormir:now};
 if(typeof save.needs[id][action]!=="number")save.needs[id][action]=now;
 const sleep=save.sleep[id];
-const effectiveNow=sleep&&sleep.sleeping&&typeof sleep.startedAt==="number"
-?Math.min(now,sleep.startedAt):now;
+const effectiveNow=sleep&&sleep.sleeping&&typeof sleep.startedAt==="number"?Math.min(now,sleep.startedAt):now;
 return Math.max(0,100-Math.floor((effectiveNow-save.needs[id][action])/NEED_INTERVAL)*10);
 }
 function getNeedState(id,action){return getNeedPercent(id,action);}
@@ -648,26 +820,11 @@ function getNeedState(id,action){return getNeedPercent(id,action);}
 function startSpecialSleep(id){
 updateProduction();
 const now=Date.now();
-
 if(!save.needs[id])save.needs[id]={comer:now,banar:now,dormir:now};
-
-save.sleep[id]={
-sleeping:true,
-startedAt:now,
-until:now+SPECIAL_SLEEP_TIME,
-bonusStartedAt:0,
-bonusUntil:0
-};
-
-if(save.production[id]){
-save.production[id].lastAt=now;
-save.production[id].remainder=0;
-}
-
+save.sleep[id]={sleeping:true,startedAt:now,until:now+SPECIAL_SLEEP_TIME,bonusStartedAt:0,bonusUntil:0};
+if(save.production[id]){save.production[id].lastAt=now;save.production[id].remainder=0;}
 save.needs[id].dormir=now;
-
-addTrainerXP(5);
-addMonsterXP(id,5);
+addTrainerXP(5);addMonsterXP(id,5);
 persist();render();
 notice("🌙 Tu monstruo está durmiendo. Su producción y sus estadísticas están pausadas durante 4 horas.");
 }
@@ -676,38 +833,21 @@ notice("🌙 Tu monstruo está durmiendo. Su producción y sus estadísticas est
 function wakeSpecialMonster(id){
 const s=save.sleep[id],now=Date.now();
 if(!s||!s.sleeping)return;
-
-if(now<s.until){
-notice("🌙 Tu monstruo todavía está durmiendo. Tiempo restante: "+formatTime(s.until-now));
-return;
-}
-
+if(now<s.until){notice("🌙 Tu monstruo todavía está durmiendo. Tiempo restante: "+formatTime(s.until-now));return;}
 updateProduction();
-
 const startedAt=typeof s.startedAt==="number"?s.startedAt:s.until-SPECIAL_SLEEP_TIME;
 const sleepDuration=Math.max(0,now-startedAt);
-
 if(!save.needs[id])save.needs[id]={comer:now,banar:now,dormir:now};
 ["comer","banar","dormir"].forEach(a=>{
 if(typeof save.needs[id][a]!=="number")save.needs[id][a]=now;
 save.needs[id][a]+=sleepDuration;
 });
-
 if(save.production[id]){
 const p=save.production[id];
 if(p.caredUntil>startedAt)p.caredUntil+=sleepDuration;
-p.lastAt=now;
-p.remainder=0;
-}else{
-resumeCare(id);
-save.production[id].lastAt=now;
-}
-
-s.sleeping=false;
-s.wokenAt=now;
-s.bonusStartedAt=now;
-s.bonusUntil=now+SPECIAL_BONUS_TIME;
-
+p.lastAt=now;p.remainder=0;
+}else{resumeCare(id);save.production[id].lastAt=now;}
+s.sleeping=false;s.wokenAt=now;s.bonusStartedAt=now;s.bonusUntil=now+SPECIAL_BONUS_TIME;
 persist();render();
 notice("⚡ ¡"+monsters.find(m=>m.id===id).name+" despertó! Producción +25 % durante 4 horas.");
 }
@@ -772,7 +912,6 @@ if(sleep&&sleep.sleeping&&now<sleep.until)state="🌙 Durmiendo · "+formatTime(
 else if(sleep&&sleep.sleeping&&now>=sleep.until)state="🌙 Descanso terminado · Pulsa DESPERTAR";
 else if(sleep&&sleep.bonusUntil&&now<sleep.bonusUntil)state="⚡ Bono +25 % activo · "+formatTime(sleep.bonusUntil-now);
 else if(sleep&&sleep.bonusUntil&&now>=sleep.bonusUntil)state="✨ Despierto";
-
 const needs=[["comer","🍎 Alimentación"],["banar","🛁 Baño"],["dormir","🌙 Descanso"]];
 return `<article class="monster">
 <div class="picture ${m.theme}">${m.art}
@@ -853,7 +992,6 @@ return `<div class="care-option"><label style="display:flex;align-items:center;g
 if(action==="dormir"){
 const s=save.sleep[id],now=Date.now();
 let sleepMessage="",buttonText="ACTIVAR DESCANSO";
-
 if(s&&s.sleeping&&now<s.until){
 sleepMessage=`<small>Tiempo restante de descanso: ${formatTime(s.until-now)}. Las estadísticas y la producción están pausadas.</small>`;
 buttonText="DURMIENDO";
@@ -902,29 +1040,19 @@ const action=careActionSelected;closeCareMenu();showPage("tienda");
 showShopCategory(action==="comer"?"alimentos":action==="banar"?"bano":"dormir");
 }
 
-/* BOTÓN DORMIR / DESPERTAR */
 function useSpecialSleep(){
 const id=careMonsterSelected;
 if(!id)return;
 const s=save.sleep[id],now=Date.now();
-
 if(s&&s.sleeping){
-if(now<s.until){
-notice("🌙 Tu monstruo todavía está durmiendo. Tiempo restante: "+formatTime(s.until-now));
-return;
+if(now<s.until){notice("🌙 Tu monstruo todavía está durmiendo. Tiempo restante: "+formatTime(s.until-now));return;}
+wakeSpecialMonster(id);closeCareMenu();return;
 }
-wakeSpecialMonster(id);
-closeCareMenu();
-return;
-}
-
 if(s&&s.bonusUntil&&now<s.bonusUntil){
 notice("⚡ ¡Tu monstruo está produciendo un 25 % más!");
 closeCareMenu();return;
 }
-
-startSpecialSleep(id);
-closeCareMenu();
+startSpecialSleep(id);closeCareMenu();
 }
 
 function useCareProducts(){
@@ -1024,6 +1152,7 @@ document.getElementById("dailyButton").disabled=claimed;
 document.getElementById("dailyButton").textContent=claimed?"Premio diario reclamado":"Reclamar 20 monedas";
 document.getElementById("dailyStatus").textContent=claimed?"Ya reclamaste tu regalo de hoy.":"Recompensa virtual del juego; no es dinero real.";
 renderShop();
+renderWallet();
 if(selectedLevelMonster)renderLevelMenu();
 if(selectedIncubationId&&!document.getElementById("incubationModal").classList.contains("hidden"))renderIncubationMenu();
 }
