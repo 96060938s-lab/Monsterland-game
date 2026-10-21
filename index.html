@@ -112,10 +112,16 @@ main{max-width:760px;margin:auto;padding:0 12px}
 .care{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
 .care button{background:none;color:#bcb8d5;border:0;padding:3px 0}
 .care .circle{
- display:grid;place-items:center;margin:auto auto 6px;
- width:51px;height:51px;border-radius:50%;
- border:5px solid #e9a54f;background:#29243b;
+ display:grid;
+ place-items:center;
+ margin:auto auto 6px;
+ width:51px;
+ height:51px;
+ border-radius:50%;
+ border:5px solid #e9a54f;
+ background:conic-gradient(#e9a54f 100%,#29243b 0);
  font-size:23px;
+ transition:background .3s,border-color .3s;
 }
 .care button:nth-child(2) .circle{border-color:#25cfe8}
 .care button:nth-child(3) .circle{border-color:#8c88ff}
