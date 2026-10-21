@@ -96,15 +96,17 @@ main{max-width:760px;margin:auto;padding:0 12px}
 .care-quantity{width:100%;accent-color:var(--green)}
 .level-xp-bar{height:13px;background:#17152d;border-radius:20px;overflow:hidden;border:1px solid #625776}
 .level-xp-bar div{height:100%;background:linear-gradient(90deg,#00c99a,#ffd66b)}
-.slot-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:10px 0}
-.slot-card{min-height:110px;padding:12px 5px;border:1px dashed #766796;border-radius:15px;text-align:center;background:#211d38}
-.slot-card strong{display:block;color:var(--gold);font-size:12px;margin:6px 0}
-.slot-card small{display:block;color:var(--muted);font-size:11px}
+
+/* TARJETAS DE ESPACIOS EN LA MISMA CUADRÍCULA QUE LOS MONSTRUOS */
+.slot-card{min-width:0;min-height:145px;padding:12px 7px;border:1px dashed #766796;border-radius:15px;text-align:center;background:#211d38;color:var(--text);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;overflow-wrap:anywhere}
+.slot-card .slot-icon{font-size:38px}
+.slot-card strong{display:block;color:var(--gold);font-size:12px;margin:3px 0}
+.slot-card small{display:block;color:var(--muted);font-size:11px;line-height:1.4}
 .slot-card.buy-slot{border-style:solid;border-color:var(--gold);background:linear-gradient(145deg,#302845,#211d38)}
 .slot-card.buy-slot .slot-icon{color:var(--green);font-size:32px}
-.slot-card.buy-slot:active{transform:scale(.98)}
-@media(min-width:600px){.picture{height:200px}.emoji-art{font-size:100px}.details{padding:14px}.slot-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:380px){.shop-tab{font-size:9px}.shop-tab .tab-emoji{font-size:19px}.care .circle{width:38px;height:38px}}
+.slot-card:active{transform:scale(.98)}
+@media(min-width:600px){.picture{height:200px}.emoji-art{font-size:100px}}
+@media(max-width:380px){.shop-tab{font-size:9px}.shop-tab .tab-emoji{font-size:19px}.care .circle{width:38px;height:38px}.grid{gap:8px}}
 </style>
 </head>
 <body>
@@ -130,11 +132,9 @@ main{max-width:760px;margin:auto;padding:0 12px}
 <main>
 <section id="page-monstruos">
 <div class="page-title"><h2>Mis monstruos 👾</h2><p>Cuida, alimenta y haz crecer tus criaturas.</p></div>
-<div class="section">
-<h3>🏡 Mi espacio</h3>
-<p id="slotText"></p>
-<div class="slot-grid" id="slotGrid"></div>
-</div>
+<p id="slotText" style="color:#c5bfd9;font-size:12px;margin:0 3px 10px"></p>
+
+<!-- IMPORTANTE: UNA SOLA CUADRÍCULA PARA MONSTRUOS, HUEVOS, ESPACIOS Y COMPRA -->
 <div class="grid" id="collection"></div>
 </section>
 
@@ -273,11 +273,9 @@ save.owned=[...new Set(save.owned.filter(id=>monsters.some(m=>m.id===id)))];
 if(!save.needs)save.needs={};
 if(!save.production)save.production={};
 if(!save.sleep)save.sleep={};
-
-/* Asignación permanente de cada monstruo a un espacio físico. */
 if(!save.monsterSlots)save.monsterSlots={};
-let migrationUsed=new Set();
 
+let migrationUsed=new Set();
 save.owned.forEach(id=>{
 let slot=save.monsterSlots[id];
 if(!Number.isInteger(slot)||slot<0||migrationUsed.has(slot)){
@@ -296,17 +294,15 @@ e.slotIndex=slot;
 }
 migrationUsed.add(e.slotIndex);
 });
-
 if(migrationUsed.size>save.slots.capacity)save.slots.capacity=migrationUsed.size;
 
-/* Duración definitiva: 24 horas.
-   Los huevos que quedaron guardados con el temporizador de prueba se actualizan una sola vez. */
+/* Incubación de 24 horas y actualización única de huevos del temporizador anterior. */
 const INCUBATION_TIME=24*60*60*1000;
-
 if(!save.incubation24hMigrated){
 const now=Date.now();
 save.incubating.forEach(e=>{
-if(!e.startedAt){
+const oldDuration=Number(e.finishAt)-Number(e.startedAt);
+if(!e.startedAt||!e.finishAt||oldDuration<INCUBATION_TIME){
 e.startedAt=now;
 e.finishAt=now+INCUBATION_TIME;
 }
@@ -335,26 +331,19 @@ function getMonsterLevel(id){return save.monsterProgress[id]?.level||1;}
 function getXPRequired(m){return Math.round(100*getMonsterLevel(m.id)*(rarityMultiplier[m.rarity]||1));}
 function getLevelPrice(m){return Math.round(200*getMonsterLevel(m.id)**2*(rarityMultiplier[m.rarity]||1));}
 function addMonsterXP(id,n){if(save.owned.includes(id))save.monsterProgress[id].xp+=n*xpMultiplier();}
+
 function formatTime(ms){
 let t=Math.max(0,Math.floor(ms/1000));
-let d=Math.floor(t/86400);
-let h=Math.floor((t%86400)/3600);
-let min=Math.floor((t%3600)/60);
-let s=t%60;
+let d=Math.floor(t/86400),h=Math.floor((t%86400)/3600),min=Math.floor((t%3600)/60),s=t%60;
 if(d>0)return d+" d "+h+" h "+min+" min";
 return h+" h "+min+" min "+s+" s";
 }
 
-/* SISTEMA DE ESPACIOS FIJOS */
+/* ESPACIOS FÍSICOS */
 function usedSlotIndexes(){
 const used=new Set();
-save.owned.forEach(id=>{
-const i=save.monsterSlots[id];
-if(Number.isInteger(i))used.add(i);
-});
-save.incubating.forEach(e=>{
-if(Number.isInteger(e.slotIndex))used.add(e.slotIndex);
-});
+save.owned.forEach(id=>{const i=save.monsterSlots[id];if(Number.isInteger(i))used.add(i);});
+save.incubating.forEach(e=>{if(Number.isInteger(e.slotIndex))used.add(e.slotIndex);});
 return used;
 }
 function occupiedSlots(){return usedSlotIndexes().size;}
@@ -368,24 +357,17 @@ function nextSlotPrice(){return Math.round(500*Math.pow(1.5,save.slots.capacity-
 
 function buySlot(){
 const price=nextSlotPrice();
-if(save.coins<price){
-notice("Necesitas "+price+" monedas para comprar otro espacio.");
-return;
-}
+if(save.coins<price){notice("Necesitas "+price+" monedas para comprar otro espacio.");return;}
 updateProduction();
 save.coins-=price;
 save.slots.capacity++;
-persist();
-render();
+persist();render();
 notice("🏡 ¡Compraste un espacio permanente!");
 }
 
 function tapSlot(index){
 if(usedSlotIndexes().has(index))return;
-if(save.inventory.eggs.length){
-incubateEgg(save.inventory.eggs[0].id,index);
-return;
-}
+if(save.inventory.eggs.length){incubateEgg(save.inventory.eggs[0].id,index);return;}
 showPage("tienda");
 showShopCategory("huevos");
 notice("🥚 Compra un huevo y vuelve a tu espacio para incubarlo.");
@@ -395,50 +377,28 @@ function currentEggPrice(){return Math.round(NORMAL_EGG_PRICE*Math.pow(1.5,save.
 
 function openEgg(type){
 if(type!=="normal")return;
-
 if(!save.starterEggClaimed){
 save.starterEggClaimed=true;
-
 if(!save.owned.includes("bubu")){
 let slot=findFreeSlot();
-if(slot<0){
-slot=save.slots.capacity;
-save.slots.capacity++;
-}
+if(slot<0){slot=save.slots.capacity;save.slots.capacity++;}
 save.owned.push("bubu");
 save.monsterSlots.bubu=slot;
 save.monsterProgress.bubu=save.monsterProgress.bubu||{level:1,xp:0};
 resumeCare("bubu");
 }
-
-persist();
-render();
-showPage("monstruos");
+persist();render();showPage("monstruos");
 notice("🥚✨ ¡Tu primer huevo eclosionó! ¡Bubu es tu compañero!");
 return;
 }
-
-if(save.owned.length+save.incubating.length>=monsters.length){
-notice("Ya has descubierto todos los monstruos disponibles.");
-return;
-}
-
+if(save.owned.length+save.incubating.length>=monsters.length){notice("Ya has descubierto todos los monstruos disponibles.");return;}
 const price=currentEggPrice();
-if(save.coins<price){
-notice("Necesitas "+price+" monedas para comprar el próximo huevo.");
-return;
-}
-
+if(save.coins<price){notice("Necesitas "+price+" monedas para comprar el próximo huevo.");return;}
 updateProduction();
 save.coins-=price;
 save.eggPurchases++;
-save.inventory.eggs.push({
-id:Date.now()+"-"+Math.random().toString(36).slice(2),
-type:"normal",
-boughtAt:Date.now()
-});
-persist();
-render();
+save.inventory.eggs.push({id:Date.now()+"-"+Math.random().toString(36).slice(2),type:"normal",boughtAt:Date.now()});
+persist();render();
 notice("🥚 Huevo guardado en el inventario. Puedes incubarlo cuando tengas un espacio libre.");
 }
 
@@ -446,45 +406,24 @@ function chooseRandomMonster(){
 const reserved=save.incubating.map(e=>e.monsterId);
 const available=monsters.filter(m=>!save.owned.includes(m.id)&&!reserved.includes(m.id));
 if(!available.length)return null;
-let total=available.reduce((s,m)=>s+(rarityWeights[m.rarity]||1),0);
-let roll=Math.random()*total;
-for(const m of available){
-roll-=rarityWeights[m.rarity]||1;
-if(roll<0)return m;
-}
+let total=available.reduce((s,m)=>s+(rarityWeights[m.rarity]||1),0),roll=Math.random()*total;
+for(const m of available){roll-=rarityWeights[m.rarity]||1;if(roll<0)return m;}
 return available[available.length-1];
 }
 
 function incubateEgg(eggId,slotIndex){
 const egg=save.inventory.eggs.find(e=>e.id===eggId);
 if(!egg)return;
-
 if(slotIndex===undefined)slotIndex=findFreeSlot();
-
 if(slotIndex<0||slotIndex>=save.slots.capacity||usedSlotIndexes().has(slotIndex)){
-notice("🏡 No tienes espacios libres. Compra otro espacio.");
-return;
+notice("🏡 No tienes espacios libres. Compra otro espacio.");return;
 }
-
 const m=chooseRandomMonster();
-if(!m){
-notice("Ya no quedan monstruos nuevos por descubrir.");
-return;
-}
-
+if(!m){notice("Ya no quedan monstruos nuevos por descubrir.");return;}
 const startedAt=Date.now();
-
 save.inventory.eggs=save.inventory.eggs.filter(e=>e.id!==eggId);
-save.incubating.push({
-id:egg.id,
-monsterId:m.id,
-slotIndex:slotIndex,
-startedAt:startedAt,
-finishAt:startedAt+INCUBATION_TIME
-});
-
-persist();
-render();
+save.incubating.push({id:egg.id,monsterId:m.id,slotIndex:slotIndex,startedAt:startedAt,finishAt:startedAt+INCUBATION_TIME});
+persist();render();
 notice("🥚✨ ¡Incubación iniciada en el espacio "+(slotIndex+1)+"! Tu huevo nacerá en 24 horas.");
 }
 
@@ -492,28 +431,19 @@ function updateIncubations(){
 const now=Date.now();
 const done=save.incubating.filter(e=>now>=e.finishAt);
 if(!done.length)return;
-
 done.forEach(e=>{
 const m=monsters.find(x=>x.id===e.monsterId);
 save.incubating=save.incubating.filter(x=>x.id!==e.id);
-
 if(m&&!save.owned.includes(m.id)){
 save.owned.push(m.id);
-
-/* El monstruo conserva exactamente el espacio que ocupaba su huevo. */
 save.monsterSlots[m.id]=e.slotIndex;
-
 save.monsterProgress[m.id]=save.monsterProgress[m.id]||{level:1,xp:0};
 resumeCare(m.id);
 save.lastHatched=m.name;
 }
 });
-
 persist();
-if(save.lastHatched){
-notice("🎉 ¡El huevo eclosionó! Descubriste a "+save.lastHatched+".");
-save.lastHatched="";
-}
+if(save.lastHatched){notice("🎉 ¡El huevo eclosionó! Descubriste a "+save.lastHatched+".");save.lastHatched="";}
 }
 
 function buyXPBoost(hours,price){
@@ -526,16 +456,12 @@ persist();render();
 notice("⭐ Doble experiencia activada durante "+hours+" hora(s).");
 }
 
-/* Producción independiente de cada monstruo. */
 function updateProduction(){
 const now=Date.now();
 monsters.forEach(m=>{
 if(!save.owned.includes(m.id))return;
 let p=save.production[m.id];
-if(!p){
-save.production[m.id]={lastAt:now,caredUntil:now+CARE_TIME,remainder:0};
-return;
-}
+if(!p){save.production[m.id]={lastAt:now,caredUntil:now+CARE_TIME,remainder:0};return;}
 if(typeof p.lastAt!=="number")p.lastAt=now;
 if(typeof p.caredUntil!=="number")p.caredUntil=now+CARE_TIME;
 if(typeof p.remainder!=="number")p.remainder=0;
@@ -551,8 +477,7 @@ if(end>start){
 const bonus=sleep&&!sleep.sleeping&&sleep.bonusUntil&&now<sleep.bonusUntil;
 const earned=m.rate*(bonus?1.25:1)*(end-start)/3600000+p.remainder;
 const whole=Math.floor(earned);
-save.coins+=whole;
-p.remainder=earned-whole;
+save.coins+=whole;p.remainder=earned-whole;
 }
 p.lastAt=now;
 if(now>=p.caredUntil)p.remainder=0;
@@ -563,7 +488,6 @@ function resumeCare(id){
 const now=Date.now();
 save.production[id]={lastAt:now,caredUntil:now+CARE_TIME,remainder:0};
 }
-
 function getNeedPercent(id,action){
 if(!save.needs[id])save.needs[id]={comer:Date.now(),banar:Date.now(),dormir:Date.now()};
 if(typeof save.needs[id][action]!=="number")save.needs[id][action]=Date.now();
@@ -575,29 +499,20 @@ function startSpecialSleep(id){
 updateProduction();
 const now=Date.now();
 save.sleep[id]={sleeping:true,until:now+4*3600000,bonusUntil:0};
-if(save.production[id]){
-save.production[id].lastAt=now;
-save.production[id].remainder=0;
-}
+if(save.production[id]){save.production[id].lastAt=now;save.production[id].remainder=0;}
 save.needs[id].dormir=now;
-addTrainerXP(5);
-addMonsterXP(id,5);
+addTrainerXP(5);addMonsterXP(id,5);
 persist();render();
 notice("🌙 Tu monstruo descansará 4 horas. +XP");
 }
-
 function wakeSpecialMonster(id){
 const s=save.sleep[id],now=Date.now();
 if(!s)return;
 if(now<s.until){notice("🌙 Tu monstruo todavía está durmiendo.");return;}
 if(s.bonusUntil&&now<s.bonusUntil){notice("⚡ La bonificación del 25 % sigue activa.");return;}
-s.sleeping=false;
-s.bonusUntil=now+4*3600000;
+s.sleeping=false;s.bonusUntil=now+4*3600000;
 save.needs[id].dormir=now;
-if(save.production[id]){
-save.production[id].lastAt=now;
-save.production[id].remainder=0;
-}
+if(save.production[id]){save.production[id].lastAt=now;save.production[id].remainder=0;}
 persist();render();
 notice("⚡ ¡Bono de producción +25 % durante 4 horas!");
 }
@@ -607,8 +522,7 @@ function showPage(page){
 document.getElementById("page-"+p).classList.toggle("hidden",p!==page);
 document.getElementById("nav-"+p).classList.toggle("active",p===page);
 });
-render();
-window.scrollTo(0,0);
+render();window.scrollTo(0,0);
 }
 
 let shopCategory="huevos";
@@ -622,11 +536,9 @@ renderShop();
 }
 
 let selectedLevelMonster=null;
-
 function openLevelMenu(id){
 if(!save.owned.includes(id))return;
-selectedLevelMonster=id;
-renderLevelMenu();
+selectedLevelMonster=id;renderLevelMenu();
 document.getElementById("levelModal").classList.remove("hidden");
 }
 function closeLevelMenu(){
@@ -653,10 +565,7 @@ const m=monsters.find(x=>x.id===selectedLevelMonster);
 if(!m)return;
 const p=save.monsterProgress[m.id],req=getXPRequired(m),price=getLevelPrice(m);
 if(p.xp<req||save.coins<price){notice("Necesitas la experiencia y las monedas necesarias.");return;}
-updateProduction();
-save.coins-=price;
-p.xp-=req;
-p.level++;
+updateProduction();save.coins-=price;p.xp-=req;p.level++;
 persist();render();renderLevelMenu();
 notice("🎉 "+m.name+" subió al nivel "+p.level+"!");
 }
@@ -710,20 +619,16 @@ function buyShopProduct(action,name){
 const p=careProducts[action].find(x=>x.name===name);
 if(!p)return;
 if(save.coins<p.price){notice("No tienes suficientes monedas.");return;}
-updateProduction();
-save.coins-=p.price;
+updateProduction();save.coins-=p.price;
 save.inventory.care[action][p.name]=getProductCount(action,p.name)+1;
 persist();render();
 notice("🎒 Compraste "+p.name+". Ahora tienes "+getProductCount(action,p.name)+".");
 }
 
 let careProductSelected=0,careMonsterSelected=null,careActionSelected=null;
-
 function openCareMenu(id,action){
 if(!save.owned.includes(id))return;
-careMonsterSelected=id;
-careActionSelected=action;
-careProductSelected=-1;
+careMonsterSelected=id;careActionSelected=action;careProductSelected=-1;
 const m=monsters.find(x=>x.id===id);
 document.getElementById("careModalTitle").textContent=categoryNames[action];
 document.getElementById("careModalSubtitle").textContent=m.name+" · Cuidado actual: "+getNeedPercent(id,action)+"%. Selecciona un producto que tengas.";
@@ -740,7 +645,6 @@ let html=list.map((p,i)=>{
 const have=getProductCount(action,p.name);
 return `<div class="care-option"><label style="display:flex;align-items:center;gap:8px"><input type="radio" name="careProduct" ${careProductSelected===i?"checked":""} onchange="selectCareProduct(${i})"><span class="care-option-title">${p.emoji} ${p.name}</span></label><div class="care-option-desc">Recuperación: ${p.recovery}% · Tienes: ${have}</div>${have>0?`<button class="secondary" style="width:100%" onclick="selectCareProduct(${i})">SELECCIONAR ${have} DISPONIBLE(S)</button>`:'<small style="color:#efb2bb">No tienes unidades. Puedes comprarlas en la tienda.</small>'}</div>`;
 }).join("");
-
 if(action==="dormir"){
 const s=save.sleep[id],now=Date.now();
 html+=`<div class="care-option"><div class="care-option-title">🌙 Descanso especial gratuito</div><div class="care-option-desc">Duerme 4 horas. Después puedes recibir una bonificación de producción del 25 % durante 4 horas.</div><button class="secondary" style="width:100%" onclick="useSpecialSleep()">ACTIVAR DESCANSO</button>${s&&s.sleeping?`<small>Tiempo restante: ${formatTime(s.until-now)}</small>`:""}</div>`;
@@ -775,16 +679,11 @@ document.getElementById("useCareButton").textContent=p&&have>0?"USAR "+q+" · "+
 document.getElementById("careAdButton").style.display=p&&p.ads>0?"block":"none";
 document.getElementById("careAdButton").textContent=p&&p.ads>0?"VER "+(p.ads*q)+" ANUNCIO(S)":"";
 }
-
 function closeCareMenu(){document.getElementById("careModal").classList.add("hidden");}
-
 function goToCareShop(){
-const action=careActionSelected;
-closeCareMenu();
-showPage("tienda");
+const action=careActionSelected;closeCareMenu();showPage("tienda");
 showShopCategory(action==="comer"?"alimentos":action==="banar"?"bano":"dormir");
 }
-
 function useSpecialSleep(){
 const id=careMonsterSelected;
 if(!id)return;
@@ -792,10 +691,8 @@ const s=save.sleep[id],now=Date.now();
 if(s&&s.sleeping&&now<s.until){notice("🌙 Tu monstruo todavía está durmiendo.");return;}
 if(s&&s.bonusUntil&&now<s.bonusUntil){notice("⚡ La bonificación del 25 % sigue activa.");return;}
 if(s&&s.until&&now>=s.until&&!s.sleeping){wakeSpecialMonster(id);closeCareMenu();return;}
-startSpecialSleep(id);
-closeCareMenu();
+startSpecialSleep(id);closeCareMenu();
 }
-
 function useCareProducts(){
 const action=careActionSelected,id=careMonsterSelected,p=careProducts[action]?.[careProductSelected];
 if(!p||!id)return;
@@ -804,13 +701,11 @@ const inv=save.inventory.care[action],have=getProductCount(action,p.name);
 if(have<q){notice("No tienes suficientes unidades de ese producto.");return;}
 updateProduction();
 const current=getNeedPercent(id,action);
-inv[p.name]=have-q;
-if(inv[p.name]<=0)delete inv[p.name];
+inv[p.name]=have-q;if(inv[p.name]<=0)delete inv[p.name];
 const restored=Math.min(100,current+p.recovery*q);
 const intervals=Math.ceil((100-restored)/10);
 save.needs[id][action]=Date.now()-intervals*NEED_INTERVAL;
-addTrainerXP(5*q);
-addMonsterXP(id,5*q);
+addTrainerXP(5*q);addMonsterXP(id,5*q);
 if(save.production[id]){
 save.production[id].lastAt=Date.now();
 save.production[id].caredUntil=Date.now()+CARE_TIME;
@@ -819,7 +714,6 @@ save.production[id].remainder=0;
 persist();render();closeCareMenu();
 notice("✨ "+p.name+": usaste "+q+" unidad(es). "+actionLabel(action)+" ahora está al "+getNeedPercent(id,action)+"%. +XP");
 }
-
 function actionLabel(a){return a==="comer"?"la alimentación":a==="banar"?"el baño":"el descanso";}
 function watchCareAds(){notice("Los anuncios reales todavía no están conectados. No se entregó ningún producto.");}
 
@@ -828,54 +722,43 @@ document.getElementById("normalEggPrice").textContent=save.starterEggClaimed?cur
 document.getElementById("normalEggButton").textContent=save.starterEggClaimed?"🥚 COMPRAR HUEVO":"🎁 RECLAMAR HUEVO GRATIS";
 document.getElementById("normalEggButton").disabled=save.starterEggClaimed&&save.owned.length+save.incubating.length>=monsters.length;
 document.getElementById("eggOwnedCount").textContent=save.owned.length+" / "+monsters.length;
-
 document.getElementById("eggInventory").innerHTML=save.inventory.eggs.length?
 save.inventory.eggs.map(e=>`<div class="list-item"><div><strong>🥚 Huevo normal</strong><small>Guardado en tu inventario; no ocupa espacio.</small></div><button class="primary" style="max-width:110px" onclick="incubateEgg('${e.id}')">INCUBAR</button></div>`).join("")
 :'<div class="empty">No tienes huevos guardados. Compra uno en la tienda.</div>';
-
 document.getElementById("incubationList").innerHTML=save.incubating.length?
 save.incubating.map(e=>{
 const m=monsters.find(x=>x.id===e.monsterId);
 return `<div class="list-item"><div><strong>🥚 Huevo en incubación</strong><small>Espacio ${e.slotIndex+1} · Resultado: ${m?m.name:"misterioso"} · Tiempo restante: ${formatTime(e.finishAt-Date.now())}</small></div><span>⏳</span></div>`;
 }).join("")
 :'<div class="empty">No hay huevos incubándose.</div>';
-
 renderProductShop("comer","foodShopList");
 renderProductShop("banar","bathShopList");
 renderProductShop("dormir","sleepShopList");
-
 const until=Number(save.xpBoostUntil)||0;
 document.getElementById("xpBoostStatus").innerHTML=until>Date.now()?'<div class="section"><p>⭐ DOBLE EXPERIENCIA ACTIVA · Tiempo restante: '+formatTime(until-Date.now())+'</p></div>':'<div class="section"><p>No tienes un potenciador activo.</p></div>';
 }
 
-/* Cada espacio conserva su posición. La compra aparece como la siguiente tarjeta de la cuadrícula. */
+/* UNA SOLA CUADRÍCULA: monstruos y tarjetas de espacios lado a lado */
 function renderSlots(){
 let html="";
-
 for(let i=0;i<save.slots.capacity;i++){
 const monsterId=save.owned.find(id=>save.monsterSlots[id]===i);
 const egg=save.incubating.find(e=>e.slotIndex===i);
 
 if(monsterId){
 const m=monsters.find(x=>x.id===monsterId);
-const emojis={bubu:"👾",flama:"🐲",bosque:"🌱",fantasma:"👻",fuego:"🦊",hielo:"🐧",mago:"🧙",dragon:"🐉"};
-html+=`<div class="slot-card"><div class="slot-icon">${emojis[monsterId]||"👾"}</div><strong>${m?m.name:"Monstruo"}</strong><small>Espacio ${i+1} · Hogar permanente</small></div>`;
+if(m)html+=monsterCard(m);
 continue;
 }
-
 if(egg){
 const m=monsters.find(x=>x.id===egg.monsterId);
-html+=`<div class="slot-card"><div class="slot-icon">🥚</div><strong>${m?m.name:"Huevo mágico"}</strong><small>Espacio ${i+1} · Incubando: ${formatTime(egg.finishAt-Date.now())}</small></div>`;
+html+=`<div class="slot-card"><div class="slot-icon">🥚</div><strong>${m?m.name:"Huevo mágico"}</strong><small>Espacio ${i+1}</small><small>Incubando: ${formatTime(egg.finishAt-Date.now())}</small></div>`;
 continue;
 }
-
-html+=`<button class="slot-card" style="width:100%;color:inherit;cursor:pointer" onclick="tapSlot(${i})"><div class="slot-icon">🥚</div><strong>Espacio ${i+1}</strong><small>${save.inventory.eggs.length?"Toca para incubar un huevo":"Espacio libre · Toca para ir a la tienda"}</small></button>`;
+html+=`<button class="slot-card" style="width:100%" onclick="tapSlot(${i})"><div class="slot-icon">🥚</div><strong>Espacio ${i+1}</strong><small>${save.inventory.eggs.length?"Toca para incubar un huevo":"Espacio libre · Toca para ir a la tienda"}</small></button>`;
 }
-
-/* Esta tarjeta no cuenta como espacio comprado ni ocupado. */
-html+=`<button class="slot-card buy-slot" style="width:100%;color:inherit;cursor:pointer" onclick="buySlot()"><div class="slot-icon">➕</div><strong>Comprar espacio</strong><small>Nuevo espacio permanente</small><small>${nextSlotPrice()} monedas</small></button>`;
-
-document.getElementById("slotGrid").innerHTML=html;
+html+=`<button class="slot-card buy-slot" style="width:100%" onclick="buySlot()"><div class="slot-icon">➕</div><strong>Comprar espacio</strong><small>Nuevo espacio permanente</small><small>${nextSlotPrice()} monedas</small></button>`;
+document.getElementById("collection").innerHTML=html;
 }
 
 function render(){
@@ -888,23 +771,15 @@ document.getElementById("hallCount").textContent=save.owned.length;
 document.getElementById("hallCoins").textContent=Math.floor(save.coins);
 document.getElementById("playerLevel").textContent=save.trainerProgress.level;
 document.getElementById("hallLevel").textContent=save.trainerProgress.level;
-
 const req=getTrainerXPRequired();
 document.getElementById("trainerXPText").textContent=Math.floor(save.trainerProgress.xp)+" / "+req+" XP";
 document.getElementById("hallTrainerXP").textContent=Math.floor(save.trainerProgress.xp)+" / "+req+" XP";
 document.getElementById("trainerXPBar").style.width=Math.min(100,save.trainerProgress.xp/req*100)+"%";
-
-document.getElementById("collection").innerHTML=save.owned.length?
-monsters.filter(m=>save.owned.includes(m.id)).map(monsterCard).join("")
-:'<div class="empty" style="grid-column:1/-1">🥚 Entra en la tienda y reclama tu primer huevo gratis para conseguir a Bubu.</div>';
-
 renderSlots();
-
 const today=new Date().toISOString().slice(0,10),claimed=save.lastDaily===today;
 document.getElementById("dailyButton").disabled=claimed;
 document.getElementById("dailyButton").textContent=claimed?"Premio diario reclamado":"Reclamar 20 monedas";
 document.getElementById("dailyStatus").textContent=claimed?"Ya reclamaste tu regalo de hoy.":"Recompensa virtual del juego; no es dinero real.";
-
 renderShop();
 if(selectedLevelMonster)renderLevelMenu();
 }
@@ -912,12 +787,9 @@ if(selectedLevelMonster)renderLevelMenu();
 function claimDaily(){
 const today=new Date().toISOString().slice(0,10);
 if(save.lastDaily===today){notice("Ya reclamaste tu regalo diario.");return;}
-save.coins+=20;
-save.lastDaily=today;
-persist();render();
-notice("🎁 ¡Recibiste 20 monedas virtuales!");
+save.coins+=20;save.lastDaily=today;
+persist();render();notice("🎁 ¡Recibiste 20 monedas virtuales!");
 }
-
 function shareGame(){
 const url=window.location.href;
 if(navigator.share)navigator.share({title:"MonsterWorld",text:"¡Ven a descubrir mis monstruos!",url}).catch(()=>{});
