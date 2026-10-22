@@ -1000,7 +1000,7 @@ return `<article class="monster">
 </div>
 <div class="details">
 <h3>${m.name}</h3><div class="kind">${m.kind}</div>
-<div class="rate">⚡ +${(m.rate/1000).toFixed(1)}K/h</div>
+<div class="rate">⚡ +${(getMonsterProduction(m)/1000).toFixed(3)}K/h</div>
 ${needs.map(([a,label])=>`<div class="need-line">${label}: ${getNeedPercent(m.id,a)}%<div class="need-bar"><div style="width:${getNeedPercent(m.id,a)}%;background:${getNeedPercent(m.id,a)<30?"#ef687e":"#00c99a"}"></div></div></div>`).join("")}
 <div class="care">
 <button onclick="openCareMenu('${m.id}','comer')"><span class="circle">🍴</span><span>COMER</span></button>
