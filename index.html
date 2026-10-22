@@ -703,38 +703,86 @@ save.xpBoostUntil=until+hours*3600000;
 persist();render();notice("⭐ Doble experiencia activada durante "+hours+" hora(s).");
 }
 
-/* PRODUCCIÓN: SE PAUSA DURANTE EL DESCANSO */
+
+/* PRODUCTIVIDAD ALEATORIA GUARDADA POR MONSTRUO */
 function updateProduction(){
-const now=Date.now();
-monsters.forEach(m=>{
-if(!save.owned.includes(m.id))return;
-let p=save.production[m.id];
-if(!p){
-save.production[m.id]={lastAt:now,caredUntil:now+CARE_TIME,remainder:0};
-return;
+  const now=Date.now();
+
+  monsters.forEach(m=>{
+    if(!save.owned.includes(m.id))return;
+
+    let p=save.production[m.id];
+
+    if(!p){
+      p=save.production[m.id]={
+        lastAt:now,
+        caredUntil:now+CARE_TIME,
+        remainder:0
+      };
+    }
+
+    /* Asignar la productividad una sola vez */
+    if(typeof p.baseRate!=="number"){
+      p.baseRate=m.rarity==="COMÚN"
+        ? Math.floor(Math.random()*301)+800
+        : m.rate;
+    }
+
+    if(typeof p.lastAt!=="number")p.lastAt=now;
+    if(typeof p.caredUntil!=="number")p.caredUntil=now+CARE_TIME;
+    if(typeof p.remainder!=="number")p.remainder=0;
+
+    const sleep=save.sleep[m.id];
+
+    /* No producir mientras está descansando */
+    if(sleep&&sleep.sleeping){
+      p.lastAt=now;
+      return;
+    }
+
+    const start=p.lastAt;
+    const end=Math.min(now,p.caredUntil);
+    const rate=p.baseRate;
+
+    if(end>start){
+      let earned=0;
+
+      const bonusStart=sleep&&typeof sleep.bonusStartedAt==="number"
+        ? sleep.bonusStartedAt:0;
+      const bonusEnd=sleep&&typeof sleep.bonusUntil==="number"
+        ? sleep.bonusUntil:0;
+
+      if(bonusStart>0&&bonusEnd>bonusStart){
+        const normalBefore=Math.max(
+          0,Math.min(end,bonusStart)-start
+        );
+        const bonusPart=Math.max(
+          0,Math.min(end,bonusEnd)-Math.max(start,bonusStart)
+        );
+        const normalAfter=Math.max(
+          0,end-Math.max(start,bonusEnd)
+        );
+
+        earned=rate*(normalBefore+normalAfter)/3600000
+          +rate*1.25*bonusPart/3600000
+          +p.remainder;
+      }else{
+        earned=rate*(end-start)/3600000+p.remainder;
+      }
+
+      const whole=Math.floor(earned);
+      save.coins+=whole;
+      p.remainder=earned-whole;
+    }
+
+    p.lastAt=now;
+
+    if(now>=p.caredUntil)p.remainder=0;
+  });
+
+  persist();
 }
-if(typeof p.lastAt!=="number")p.lastAt=now;
-if(typeof p.caredUntil!=="number")p.caredUntil=now+CARE_TIME;
-if(typeof p.remainder!=="number")p.remainder=0;
-const sleep=save.sleep[m.id];
-if(sleep&&sleep.sleeping){p.lastAt=now;return;}
-const start=p.lastAt,end=Math.min(now,p.caredUntil);
-if(end>start){
-let earned=0;
-const bonusStart=sleep&&typeof sleep.bonusStartedAt==="number"?sleep.bonusStartedAt:0;
-const bonusEnd=sleep&&typeof sleep.bonusUntil==="number"?sleep.bonusUntil:0;
-if(bonusStart>0&&bonusEnd>bonusStart){
-const normalBefore=Math.max(0,Math.min(end,bonusStart)-start);
-const bonusPart=Math.max(0,Math.min(end,bonusEnd)-Math.max(start,bonusStart));
-const normalAfter=Math.max(0,end-Math.max(start,bonusEnd));
-earned=m.rate*(normalBefore+normalAfter)/3600000+m.rate*1.25*bonusPart/3600000+p.remainder;
-}else{earned=m.rate*(end-start)/3600000+p.remainder;}
-const whole=Math.floor(earned);save.coins+=whole;p.remainder=earned-whole;
-}
-p.lastAt=now;
-if(now>=p.caredUntil)p.remainder=0;
-});
-}
+
 function resumeCare(id){
 const now=Date.now();
 save.production[id]={lastAt:now,caredUntil:now+CARE_TIME,remainder:0};
