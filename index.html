@@ -143,12 +143,15 @@ main{max-width:760px;margin:auto;padding:0 12px}
 </head>
 <body>
 
-<div id="portada" style="position:fixed;inset:0;z-index:9999;background:linear-gradient(180deg,#17152d,#493b76,#111321);display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;text-align:center">
-<h1 style="color:#f4cc70;font-size:32px;margin:0">MonsterWorld</h1>
-<p style="color:#d8caff">Tu mundo mágico te espera</p>
-<div style="font-size:45px;margin:20px">🔥 👾 🌱</div>
-<div style="width:75%;max-width:280px;height:14px;background:#30264b;border:1px solid #f4cc70;border-radius:20px;overflow:hidden"><div id="barraCarga" style="width:0%;height:100%;background:linear-gradient(90deg,#a56cff,#f4cc70)"></div></div>
-<p id="textoCarga" style="color:#f4cc70">Cargando tu mundo... 0%</p>
+
+<div id="portada" style="position:fixed;inset:0;z-index:9999;background:url('Portada.png') center center / cover no-repeat;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:12%;box-sizing:border-box">
+
+  <div style="width:75%;max-width:280px;height:16px;background:#172b27;border:1px solid #00ff88;border-radius:20px;overflow:hidden;box-shadow:0 0 12px #00ff8844">
+
+    <div id="barraCarga" style="width:0%;height:100%;background:repeating-linear-gradient(90deg,#00ff88 0px,#00ff88 10px,#00b86b 10px,#00b86b 14px);box-shadow:0 0 10px #00ff88;transition:width 0.25s ease"></div>
+
+  </div>
+
 </div>
 
 <div class="top">
