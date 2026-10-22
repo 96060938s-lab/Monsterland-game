@@ -866,7 +866,7 @@ return `<article class="monster">
 <div class="rate">⚡ +${(m.rate/1000).toFixed(1)}K/h</div>
 ${needs.map(([a,label])=>`<div class="need-line">${label}: ${getNeedPercent(m.id,a)}%<div class="need-bar"><div style="width:${getNeedPercent(m.id,a)}%;background:${getNeedPercent(m.id,a)<30?"#ef687e":"#00c99a"}"></div></div></div>`).join("")}
 <div class="care">
-<button onclick="openCareMenu('${m.id}','comer')"><span class="circle">🍴</span><span>ALIMENTAR</span></button>
+<button onclick="openCareMenu('${m.id}','comer')"><span class="circle">🍴</span><span>COMER</span></button>
 <button onclick="openCareMenu('${m.id}','banar')"><span class="circle">💧</span><span>BAÑAR</span></button>
 <button onclick="openCareMenu('${m.id}','dormir')"><span class="circle">☾</span><span>DORMIR</span></button>
 </div>
