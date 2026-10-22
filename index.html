@@ -1055,37 +1055,71 @@ function grantCareProductFromAd(){
 } 
 function actionLabel(a){return a==="comer"?"la alimentación":a==="banar"?"el baño":"el descanso";}
 
+
 async function watchCareAds(){
+  const action = careActionSelected;
+  const index = careProductSelected;
+  const p = careProducts[action]?.[index];
+
+  if(!p){
+    notice("Primero marca el producto que deseas recibir.");
+    return;
+  }
+
   if(!window.Adsgram){
     notice("Adsgram no se ha cargado. Recarga el juego e inténtalo de nuevo.");
     return;
   }
 
-  if(
-    typeof careProductSelected === "undefined" ||
-    !careProductSelected
-  ){
-    notice("Primero marca el producto que deseas recibir.");
-    return;
-  }
+  const quantity = Math.max(
+    1,
+    Math.min(
+      10,
+      Number(document.getElementById("careQuantity").value) || 1
+    )
+  );
+
+  const adsRequired = Math.max(1, (Number(p.ads) || 1) * quantity);
+  const button = document.getElementById("careAdButton");
+
+  if(button) button.disabled = true;
 
   try{
-    const controller = window.Adsgram.init({
-      blockId: "55520"
-    });
+    for(let i = 0; i < adsRequired; i++){
+      const controller = window.Adsgram.init({
+        blockId: "55520"
+      });
 
-    const result = await controller.show();
+      const result = await controller.show();
 
-    if(result && result.done === true){
-      notice("Anuncio completado. Procesando el producto seleccionado.");
-      // La entrega se conectará con la función existente
-      // que aplica el producto al monstruo seleccionado.
-    }else{
-      notice("El anuncio no se completó. No se entregó ningún producto.");
+      if(!result || result.done !== true){
+        notice("El anuncio no se completó. No se entregó el producto.");
+        return;
+      }
     }
+
+    if(!save.inventory || !save.inventory.care){
+      notice("No se encontró el inventario. No se entregó el producto.");
+      return;
+    }
+
+    if(!save.inventory.care[action]){
+      save.inventory.care[action] = {};
+    }
+
+    const inventory = save.inventory.care[action];
+
+    inventory[p.name] = (Number(inventory[p.name]) || 0) + quantity;
+
+    persist();
+    render();
+
+    notice("🎁 ¡Recibiste " + quantity + " unidad(es) de " + p.name + "!");
   }catch(error){
     console.error("Error de Adsgram:", error);
-    notice("No se completó el anuncio. No se entregó ningún producto.");
+    notice("No se completó el proceso. No se entregó ningún producto.");
+  }finally{
+    if(button) button.disabled = false;
   }
 }
 
