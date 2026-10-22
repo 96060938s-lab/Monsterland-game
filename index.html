@@ -512,6 +512,18 @@ save.trainerProgress.xp-=getTrainerXPRequired();save.trainerProgress.level++;
 }
 }
 function getMonsterLevel(id){return save.monsterProgress[id]?.level||1;}
+
+function getMonsterProduction(m){
+  const nivel = getMonsterLevel(m.id);
+  let produccion = m.rate;
+
+  for(let i = 2; i <= nivel; i++){
+    produccion *= i <= 5 ? 1.10 : 1.22;
+  }
+
+  return Math.floor(produccion);
+}
+
 function getXPRequired(m){return Math.round(100*getMonsterLevel(m.id)*(rarityMultiplier[m.rarity]||1));}
 function getLevelPrice(m){return Math.round(200*getMonsterLevel(m.id)**2*(rarityMultiplier[m.rarity]||1));}
 function addMonsterXP(id,n){if(save.owned.includes(id))save.monsterProgress[id].xp+=n*xpMultiplier();}
