@@ -1010,6 +1010,49 @@ save.production[id].remainder=0;
 persist();render();closeCareMenu();
 notice("✨ "+p.name+": usaste "+q+" unidad(es). "+actionLabel(action)+" ahora está al "+getNeedPercent(id,action)+"%. +XP");
 }
+ 
+function grantCareProductFromAd(){
+  const action = careActionSelected;
+  const id = careMonsterSelected;
+  const p = careProducts[action]?.[careProductSelected];
+
+  if(!p || !id){
+    notice("Selecciona un monstruo y un producto primero.");
+    return;
+  }
+
+  if(save.sleep[id] && save.sleep[id].sleeping){
+    notice("🌙 No puedes usar productos mientras tu monstruo duerme.");
+    return;
+  }
+
+  const q = Number(document.getElementById("careQuantity").value) || 1;
+
+  updateProduction();
+
+  const current = getNeedPercent(id, action);
+  const restored = Math.min(100, current + p.recovery * q);
+  const intervals = Math.ceil((100 - restored) / 10);
+
+  save.needs[id][action] = Date.now() - intervals * NEED_INTERVAL;
+
+  addTrainerXP(5 * q);
+  addMonsterXP(id, 5 * q);
+
+  if(save.production[id]){
+    save.production[id].lastAt = Date.now();
+    save.production[id].caredUntil = Date.now() + CARE_TIME;
+    save.production[id].remainder = 0;
+  }else{
+    resumeCare(id);
+  }
+
+  persist();
+  render();
+  closeCareMenu();
+
+  notice("🎁 Anuncio completado: recibiste " + q + " unidad(es) de " + p.name + ".");
+} 
 function actionLabel(a){return a==="comer"?"la alimentación":a==="banar"?"el baño":"el descanso";}
 
 async function watchCareAds(){
