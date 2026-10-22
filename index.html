@@ -470,13 +470,13 @@ const connectButton=document.getElementById("connectTonButton");
 const addressPanel=document.getElementById("walletAddressPanel");
 const actions=document.getElementById("walletActions");
 if(tonWalletConnected&&tonWalletAddress){
-status.innerHTML='<span class="wallet-status-dot" style="background:#00c99a"></span><strong>Estado:</strong> Billetera TON conectada.';
+status.innerHTML='<span class="wallet-status-dot" style="background:#00c99a"></span><strong>Estado:</strong> Billetera  conectada.';
 connectButton.classList.add("hidden");
 addressPanel.classList.remove("hidden");
 document.getElementById("walletAddress").textContent=tonWalletAddress;
 actions.classList.remove("hidden");
 }else{
-status.innerHTML='<span class="wallet-status-dot"></span><strong>Estado:</strong> Billetera TON no conectada.';
+status.innerHTML='<span class="wallet-status-dot"></span><strong>Estado:</strong> Billetera no conectada.';
 connectButton.classList.remove("hidden");
 addressPanel.classList.add("hidden");
 actions.classList.remove("hidden");
