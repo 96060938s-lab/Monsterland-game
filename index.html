@@ -1011,7 +1011,40 @@ persist();render();closeCareMenu();
 notice("✨ "+p.name+": usaste "+q+" unidad(es). "+actionLabel(action)+" ahora está al "+getNeedPercent(id,action)+"%. +XP");
 }
 function actionLabel(a){return a==="comer"?"la alimentación":a==="banar"?"el baño":"el descanso";}
-function watchCareAds(){notice("Los anuncios reales todavía no están conectados. No se entregó ningún producto.");}
+
+async function watchCareAds(){
+  if(!window.Adsgram){
+    notice("Adsgram no se ha cargado. Recarga el juego e inténtalo de nuevo.");
+    return;
+  }
+
+  if(
+    typeof careProductSelected === "undefined" ||
+    !careProductSelected
+  ){
+    notice("Primero marca el producto que deseas recibir.");
+    return;
+  }
+
+  try{
+    const controller = window.Adsgram.init({
+      blockId: "55520"
+    });
+
+    const result = await controller.show();
+
+    if(result && result.done === true){
+      notice("Anuncio completado. Procesando el producto seleccionado.");
+      // La entrega se conectará con la función existente
+      // que aplica el producto al monstruo seleccionado.
+    }else{
+      notice("El anuncio no se completó. No se entregó ningún producto.");
+    }
+  }catch(error){
+    console.error("Error de Adsgram:", error);
+    notice("No se completó el anuncio. No se entregó ningún producto.");
+  }
+}
 
 function renderShop(){
 document.getElementById("normalEggPrice").textContent=save.starterEggClaimed?currentEggPrice()+" 🪙":"GRATIS";
