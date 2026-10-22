@@ -888,13 +888,33 @@ document.getElementById("levelUpButton").disabled=!(p.xp>=req&&save.coins>=price
 document.getElementById("levelUpButton").textContent=p.xp>=req?"⭐ SUBIR AL NIVEL "+(p.level+1):"🔒 FALTAN "+Math.max(0,req-Math.floor(p.xp))+" XP";
 document.getElementById("levelMessage").textContent=p.xp<req?"Cuida a tu monstruo para conseguir experiencia.":save.coins<price?"Necesitas más monedas.":"¡Ya puedes subir de nivel!";
 }
+
 function levelUpMonster(){
-const m=monsters.find(x=>x.id===selectedLevelMonster);if(!m)return;
-const p=save.monsterProgress[m.id],req=getXPRequired(m),price=getLevelPrice(m);
-if(p.xp<req||save.coins<price){notice("Necesitas la experiencia y las monedas necesarias.");return;}
-updateProduction();save.coins-=price;p.xp-=req;p.level++;
-persist();render();renderLevelMenu();notice("🎉 "+m.name+" subió al nivel "+p.level+"!");
+  const m = monsters.find(x => x.id === selectedLevelMonster);
+  if(!m) return;
+
+  const p = save.monsterProgress[m.id];
+  const req = getXPRequired(m);
+  const price = getLevelPrice(m);
+
+  if(p.xp < req || save.coins < price){
+    notice("Necesitas la experiencia y las monedas necesarias.");
+    return;
+  }
+
+  updateProduction();
+
+  save.coins -= price;
+  p.xp -= req;
+  p.level++;
+
+  persist();
+  render();
+  renderLevelMenu();
+
+  notice("🎉 " + m.name + " subió al nivel " + p.level + "!");
 }
+
 
 function monsterCard(m){
 const sleep=save.sleep[m.id],now=Date.now();
