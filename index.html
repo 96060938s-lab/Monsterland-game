@@ -1232,17 +1232,36 @@ render();
 if(careMonsterSelected&&!document.getElementById("careModal").classList.contains("hidden"))renderCareOptions();
 },1000);
 
+
 /* PANTALLA DE CARGA */
-let progreso=0;
-const intervaloCarga=setInterval(()=>{
-progreso+=2;
-document.getElementById("barraCarga").style.width=progreso+"%";
-document.getElementById("textoCarga").textContent="Cargando tu mundo... "+progreso+"%";
-if(progreso>=100){
-clearInterval(intervaloCarga);
-setTimeout(()=>{document.getElementById("portada").style.display="none";},400);
-}
-},60);
+let progreso = 0;
+
+const intervaloCarga = setInterval(() => {
+  progreso += 2;
+
+  const barra = document.getElementById("barraCarga");
+  const texto = document.getElementById("textoCarga");
+  const portada = document.getElementById("portada");
+
+  if (barra) {
+    barra.style.width = progreso + "%";
+  }
+
+  if (texto) {
+    texto.textContent = "Cargando tu mundo... " + progreso + "%";
+  }
+
+  if (progreso >= 100) {
+    clearInterval(intervaloCarga);
+
+    setTimeout(() => {
+      if (portada) {
+        portada.style.display = "none";
+      }
+    }, 400);
+  }
+}, 50);
+
 </script>
 </body>
 </html>
