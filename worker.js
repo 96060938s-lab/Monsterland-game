@@ -37,9 +37,14 @@ export default {
       }, 501);
     }
 
-    return respond({
-      ok: false,
-      message: "Ruta no encontrada"
-    }, 404);
+    
+    if (url.pathname.startsWith("/api/")) {
+      return respond({
+        ok: false,
+        message: "Ruta no encontrada"
+      }, 404);
+    }
+
+    return env.ASSETS.fetch(request);
   }
 };
