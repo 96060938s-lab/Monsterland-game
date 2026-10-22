@@ -297,18 +297,42 @@ main{max-width:760px;margin:auto;padding:0 12px}
 </div>
 </div>
 
+
 <div id="levelModal" class="care-modal hidden">
-<div class="care-modal-card">
-<button class="care-close" onclick="closeLevelMenu()">✕</button>
-<h2 id="levelTitle">⭐ Nivel</h2><p id="levelSubtitle"></p>
-<div class="care-option">
-<p>Nivel actual: <strong id="levelCurrent">1</strong></p><p>Experiencia: <strong id="levelXP">0 / 100 XP</strong></p>
-<div class="level-xp-bar"><div id="levelBar"></div></div>
-<p>Rareza: <strong id="levelRarity">COMÚN</strong></p><p>Precio para subir: <strong id="levelPrice">200 🪙</strong></p><p id="levelMessage"></p>
-<button id="levelUpButton" class="primary" onclick="levelUpMonster()">SUBIR DE NIVEL</button>
+  <div class="care-modal-card">
+    <button class="care-close" onclick="closeLevelMenu()">✕</button>
+
+    <h2 id="levelTitle">⭐ Nivel</h2>
+    <p id="levelSubtitle"></p>
+
+    <div class="care-option">
+      <p>Nivel actual: <strong id="levelCurrent">1</strong></p>
+      <p>Experiencia: <strong id="levelXP">0 / 100 XP</strong></p>
+
+      <div class="level-xp-bar">
+        <div id="levelBar"></div>
+      </div>
+
+      <p>Rareza: <strong id="levelRarity">COMÚN</strong></p>
+
+      <p>Producción actual:
+        <strong id="levelProductionCurrent">900 monedas/hora</strong>
+      </p>
+
+      <p>Producción después de mejorar:
+        <strong id="levelProductionNext">990 monedas/hora</strong>
+      </p>
+
+      <p>Precio para subir: <strong id="levelPrice">200 🪙</strong></p>
+      <p id="levelMessage"></p>
+
+      <button id="levelUpButton" class="primary" onclick="levelUpMonster()">
+        SUBIR DE NIVEL
+      </button>
+    </div>
+  </div>
 </div>
-</div>
-</div>
+
 
 <div id="incubationModal" class="care-modal hidden">
 <div class="care-modal-card">
