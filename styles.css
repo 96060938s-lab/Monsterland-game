@@ -657,3 +657,38 @@ body:has(#hatchArea:not(.hidden)) #gameInterface {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+
+/* MONEDERO COMPACTO MONSTERWORLD */
+
+.wallet,
+.billetera {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  gap: 6px;
+  width: auto;
+  max-width: max-content;
+  min-height: 34px;
+  margin-left: auto;
+  padding: 5px 10px;
+  border: 1px solid #b89a4b;
+  border-radius: 22px;
+  background: #211d38;
+  box-shadow: 0 2px 8px #00000030;
+}
+
+/* Cantidad de monedas */
+#coins {
+  color: #ffd66b;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* Evitar que el monedero se estire */
+.wallet,
+.billetera {
+  flex: 0 0 auto;
+}
