@@ -1,69 +1,202 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#17152d" />
-  <title>MonsterWorld</title>
-  <link rel="stylesheet" href="./styles.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#17152d">
+<title>MonsterWorld</title>
+<link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-  <div id="portada" aria-live="polite">
-    <div class="loading-content">
-      <div id="loadingCopy" class="loading-copy">Despertando monstruos...</div>
-      <div class="loading-bar">
-        <div id="barraCarga" class="loading-bar-fill"></div>
+
+<div id="portada">
+  <h1 style="color:#f4cc70;margin:0">MonsterWorld</h1>
+  <p class="portada-sub">Tu mundo mágico te espera</p>
+  <div class="intro-art">🔥　🌿　💧</div>
+  <div class="loadbar"><div id="barraCarga"></div></div>
+  <p id="textoCarga" style="color:#f4cc70">Cargando tu mundo... 0%</p>
+</div>
+
+<div class="top">
+  <div class="brand">
+    <div class="logo">👾</div>
+    <div><h1>MonsterWorld</h1><small>Tu mundo mágico</small></div>
+  </div>
+  <div class="wallet">🪙 <span id="coins">100</span></div>
+</div>
+
+<div class="profile">
+  <div>
+    <div class="level">⭐ NIVEL <span id="playerLevel">1</span></div>
+    <small>Entrenador de monstruos</small>
+    <div class="trainer-progress"><div id="trainerXPBar"></div></div>
+    <small id="trainerXPText">0 / 100 XP</small>
+  </div>
+  <div style="text-align:right">
+    <strong id="count">0 / 8</strong><br>
+    <small>Monstruos + huevos ocupando espacio</small>
+  </div>
+</div>
+
+<main>
+  <section id="page-monstruos">
+    <div class="page-title">
+      <h2>Mis monstruos 👾</h2>
+      <p>Cuida, alimenta y haz crecer tus criaturas.</p>
+    </div>
+    <div class="section">
+      <h3>🏠 Espacios compartidos</h3>
+      <p id="spaceText"></p>
+      <button class="primary" onclick="buySpace()">➕ Comprar un espacio extra</button>
+      <p id="spacePrice"></p>
+    </div>
+    <div class="section">
+      <h3>🥚 Incubación</h3>
+      <p>Los huevos en incubación ocupan un espacio. Cuando nacen, el monstruo ocupa ese mismo espacio.</p>
+      <div id="incubationList"></div>
+    </div>
+    <div class="grid" id="collection"></div>
+  </section>
+
+  <section id="page-tienda" class="hidden">
+    <div class="page-title">
+      <h2>🛒 Tienda mágica</h2>
+      <p>Compra huevos, productos de cuidado y potenciadores.</p>
+    </div>
+
+    <div class="shop-tabs">
+      <button class="shop-tab active" id="shop-tab-huevos" onclick="showShopCategory('huevos')"><span class="tab-emoji">🥚</span>HUEVOS</button>
+      <button class="shop-tab" id="shop-tab-alimentos" onclick="showShopCategory('alimentos')"><span class="tab-emoji">🍎</span>ALIMENTOS</button>
+      <button class="shop-tab" id="shop-tab-bano" onclick="showShopCategory('bano')"><span class="tab-emoji">🛁</span>BAÑO</button>
+      <button class="shop-tab" id="shop-tab-dormir" onclick="showShopCategory('dormir')"><span class="tab-emoji">🌙</span>DORMIR</button>
+      <button class="shop-tab" id="shop-tab-xp" onclick="showShopCategory('xp')"><span class="tab-emoji">⭐</span>XP DOBLE</button>
+    </div>
+
+    <div id="shop-huevos">
+      <div class="section">
+        <h3>🥚 Inventario de huevos</h3>
+        <p id="eggInventoryText"></p>
+        <div id="eggInventory"></div>
+      </div>
+      <div class="grid">
+        <article class="egg-card">
+          <div class="egg-art"><div class="egg">✨</div></div>
+          <h3>Huevo normal</h3>
+          <p>El primer huevo es gratis y Bubu nace al tocarlo. Los siguientes se guardan y puedes incubarlos cuando quieras.</p>
+          <div class="egg-price" id="normalEggPrice">GRATIS</div>
+          <button class="egg-button" id="normalEggButton" onclick="buyEgg()">🥚 OBTENER HUEVO</button>
+        </article>
+        <article class="egg-card">
+          <div class="egg-art"><div class="egg" style="background:linear-gradient(145deg,#fff4a9,#ffcb45 50%,#b97519)">👑</div></div>
+          <h3>Huevo dorado</h3>
+          <p>Reservado para una futura versión con pagos y recompensas especiales.</p>
+          <div class="egg-price">PAGO CON TON · FUTURO</div>
+          <button class="egg-button secondary" disabled>🔒 PRÓXIMAMENTE</button>
+        </article>
+        <article class="egg-card">
+          <div class="egg-art"><div class="egg" style="background:linear-gradient(145deg,#e4ffff,#83e5ff 42%,#8872ef)">🌌</div></div>
+          <h3>Huevo celestial</h3>
+          <p>Una categoría superior pendiente de habilitar.</p>
+          <div class="egg-price">PAGO CON TON · FUTURO</div>
+          <button class="egg-button secondary" disabled>🔒 PRÓXIMAMENTE</button>
+        </article>
       </div>
     </div>
+
+    <div id="shop-alimentos" class="hidden">
+      <div class="page-title"><h2>🍎 Alimentos mágicos</h2><p>Compra productos para guardarlos en tu inventario. Descuentos por cantidad.</p></div>
+      <div id="foodShopList"></div>
+    </div>
+
+    <div id="shop-bano" class="hidden">
+      <div class="page-title"><h2>🛁 Productos de baño</h2><p>Compra y guarda productos para limpiar a tus compañeros.</p></div>
+      <div id="bathShopList"></div>
+    </div>
+
+    <div id="shop-dormir" class="hidden">
+      <div class="page-title"><h2>🌙 Descanso mágico</h2><p>Compra productos de descanso para usarlos después. El descanso especial es gratuito.</p></div>
+      <div id="sleepShopList"></div>
+    </div>
+
+    <div id="shop-xp" class="hidden">
+      <div class="page-title"><h2>⭐ Potenciadores de experiencia</h2><p>Duplica la experiencia que ganas durante un tiempo limitado.</p></div>
+      <div id="xpBoostStatus"></div>
+      <div class="grid">
+        <article class="boost-card">
+          <div class="intro-art">⚡</div><h3>Impulso rápido</h3>
+          <p>Doble experiencia durante 1 hora.</p><div class="boost-price">100 🪙</div>
+          <button class="egg-button" onclick="buyXPBoost(1,100)">ACTIVAR · 1 HORA</button>
+        </article>
+        <article class="boost-card">
+          <div class="intro-art">🌟</div><h3>Impulso superior</h3>
+          <p>Doble experiencia durante 2 horas.</p><div class="boost-price">180 🪙</div>
+          <button class="egg-button" onclick="buyXPBoost(2,180)">ACTIVAR · 2 HORAS</button>
+        </article>
+        <article class="boost-card">
+          <div class="intro-art">💫</div><h3>Impulso celestial</h3>
+          <p>Doble experiencia durante 6 horas.</p><div class="boost-price">450 🪙</div>
+          <button class="egg-button" onclick="buyXPBoost(6,450)">ACTIVAR · 6 HORAS</button>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="page-premios" class="hidden">
+    <div class="page-title"><h2>🎁 Premios</h2><p>Consigue monedas para tu aventura.</p></div>
+    <div class="section">
+      <h3>🎁 Regalo diario</h3>
+      <p>Vuelve cada día para reclamar monedas virtuales.</p>
+      <button class="primary" id="dailyButton" onclick="claimDaily()">Reclamar 20 monedas</button>
+      <p id="dailyStatus"></p>
+    </div>
+  </section>
+
+  <section id="page-social" class="hidden">
+    <div class="page-title"><h2>👥 Social</h2><p>Comparte tu aventura.</p></div>
+    <div class="section">
+      <h3>🌎 Comparte MonsterWorld</h3>
+      <p>Invita a tus amigos a conocer tu colección.</p>
+      <button class="primary" onclick="shareGame()">Compartir juego</button>
+    </div>
+    <div class="section"><h3>🤝 Próximamente</h3><p>La visita a otros jugadores necesitará un servidor.</p></div>
+  </section>
+
+  <section id="page-salon" class="hidden">
+    <div class="page-title"><h2>🏆 Salón</h2><p>Tu rincón de logros y colección.</p></div>
+    <div class="section">
+      <h3>👑 Mi entrenador</h3>
+      <p>Nivel actual: <strong id="hallLevel">1</strong></p>
+      <p>Experiencia: <strong id="hallTrainerXP">0 / 100 XP</strong></p>
+      <p>Monstruos descubiertos: <strong id="hallCount">0</strong> de 8.</p>
+      <p>Monedas actuales: <strong id="hallCoins">100</strong>.</p>
+    </div>
+  </section>
+
+  <div id="notice" class="notice" aria-live="polite"></div>
+</main>
+
+<nav class="bottom-nav">
+  <button class="active" id="nav-monstruos" onclick="showPage('monstruos')"><span class="ico">🐾</span><span class="lbl">MONSTRUOS</span></button>
+  <button id="nav-tienda" onclick="showPage('tienda')"><span class="ico">🏪</span><span class="lbl">TIENDA</span></button>
+  <button id="nav-premios" onclick="showPage('premios')"><span class="ico">🎁</span><span class="lbl">PREMIOS</span></button>
+  <button id="nav-social" onclick="showPage('social')"><span class="ico">👥</span><span class="lbl">SOCIAL</span></button>
+  <button id="nav-salon" onclick="showPage('salon')"><span class="ico">🏆</span><span class="lbl">SALÓN</span></button>
+</nav>
+
+<div id="careModal" class="care-modal hidden">
+  <div class="care-modal-card">
+    <button class="care-close" onclick="closeCareMenu()">✕</button>
+    <h2 id="careModalTitle">Cuidado</h2>
+    <p id="careModalSubtitle"></p>
+    <div id="careOptions"></div>
   </div>
+</div>
 
-  <div id="app">
-    <header class="topbar">
-      <div class="brand">
-        <div class="logo">👾</div>
-        <div>
-          <h1>MonsterWorld</h1>
-          <small>Tu mundo mágico</small>
-        </div>
-      </div>
-
-      <button class="wallet-button" id="walletButton" type="button">
-        <span class="wallet-label">💎 BILLETERA</span>
-        <span class="wallet-balance">🪙 <span id="coins">100</span></span>
-      </button>
-    </header>
-
-    <section class="profile-panel">
-      <div>
-        <div class="level">⭐ NIVEL <span id="playerLevel">1</span></div>
-        <small>Entrenador de monstruos</small>
-      </div>
-      <div class="profile-summary">
-        <strong id="slotCounter">1 / 1</strong>
-        <small>Espacios ocupados</small>
-      </div>
-    </section>
-
-    <div id="starterEggHolder"></div>
-
-    <main>
-      <section id="page-monstruos">
-        <div class="page-title">
-          <h2>Mis monstruos 👾</h2>
-          <p>Cuida, alimenta y haz crecer tus criaturas.</p>
-        </div>
-        <div id="collection" class="monster-grid"></div>
-      </section>
-
-      <section id="page-tienda" class="hidden">
-        <h2>Tienda</h2>
-        <div id="shop"></div>
-      </section>
-    </main>
-
-    <div id="notice" class="notice"></div>
-  </div>
-
-  <script type="module" src="./js/app.js"></script>
+<script src="./js/state.js"></script>
+<script src="./js/save.js"></script>
+<script src="./js/monsters.js"></script>
+<script src="./js/ui.js"></script>
+<script src="./js/app.js"></script>
 </body>
 </html>
