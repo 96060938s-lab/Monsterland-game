@@ -16,7 +16,6 @@ function mwEscapeHTML(value) {
 function mwCreateMonsterCard(monster, state, mode = "collection") {
   const owned = (state.owned || []).includes(monster.id);
   const level = Math.max(1, Number(monster.level) || 1);
-
   const production = mwGetMonsterProduction(monster, level);
 
   const shopButton = `
@@ -91,7 +90,6 @@ function mwCreateMonsterCard(monster, state, mode = "collection") {
   `;
 }
 
-
 function mwRenderMonsterCards(container, state, mode = "collection") {
   if (!container) {
     console.error(
@@ -119,15 +117,15 @@ function mwRenderMonsterCards(container, state, mode = "collection") {
       class="monster-card extra-space"
       id="addMonsterSpace"
       aria-label="Comprar espacio adicional"
+      title="Comprar espacio adicional"
       onclick="mwBuyMonsterSpace()"
     >
-      <span style="font-size:56px;">＋</span>
+      <span class="extra-space-symbol">＋</span>
     </button>
   `;
 
   container.innerHTML = monsterCards + extraSpace;
 }
-
 
 function mwBindMonsterActions(container, onAction) {
   if (!container || typeof onAction !== "function") {
