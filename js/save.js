@@ -3,8 +3,17 @@ export function defaultSave() {
     version: 1,
     coins: 100,
     owned: [],
+    petNames: {},
     inventory: {
-      eggs: [],
+      eggs: [
+        {
+          id: "starter-gift-egg",
+          type: "common",
+          gift: true,
+          hatchProgress: 0,
+          status: "sealed"
+        }
+      ],
       food: [],
       bath: [],
       sleep: []
@@ -62,6 +71,8 @@ export function migrateSave(save) {
       ...(save.slots || {})
     },
     monsterProgress: save.monsterProgress || {},
-    incubating: Array.isArray(save.incubating) ? save.incubating : []
+    petNames: save.petNames || {},
+    incubating: Array.isArray(save.incubating) ? save.incubating : [],
+    starterEggClaimed: Boolean(save.starterEggClaimed)
   };
 }
