@@ -760,3 +760,243 @@ body:has(#hatchArea:not(.hidden)) #gameInterface {
   background: #ffffff08 !important;
   transform: scale(0.97);
 }
+
+/* ========================================
+   MONSTERWORLD - NUEVO DISEÑO DE TARJETA
+   ======================================== */
+
+/* TARJETA ÚNICA CON DOS PARTES */
+
+.monster-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid #383151;
+  border-radius: 18px;
+  background: var(--panel);
+  text-align: center;
+}
+
+/* PARTE SUPERIOR: MONSTRUO, NIVEL Y RAREZA */
+
+.monster-card-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 12px 10px 14px;
+  background: #2c2748;
+}
+
+.monster-card-top-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  width: 100%;
+}
+
+.monster-level {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 8px;
+  border: 1px solid #51456e;
+  border-radius: 20px;
+  color: var(--gold);
+  font-size: 10px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.monster-card-top .badge {
+  max-width: 60%;
+  padding: 5px 8px;
+  font-size: 10px;
+}
+
+.monster-card .monster-image {
+  width: 100%;
+  height: 140px;
+  max-height: 140px;
+  margin: 0 auto;
+  object-fit: contain;
+}
+
+.monster-card .monster-name {
+  width: 100%;
+  margin: 0;
+  color: var(--gold);
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+/* PARTE INFERIOR: TIPO, POTENCIA Y CUIDADOS */
+
+.monster-card-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  padding: 12px 10px;
+  border-top: 1px solid #51456e;
+  background: var(--panel);
+}
+
+.monster-card-stats {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  text-align: left;
+}
+
+.monster-type,
+.monster-power {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  min-width: 0;
+}
+
+.monster-power {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.monster-stat-label {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.7px;
+}
+
+.monster-stat-value {
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.monster-power-value {
+  color: var(--gold);
+  font-size: clamp(14px, 3.8vw, 19px);
+  font-weight: 900;
+  line-height: 1.2;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* BOTONES DE CUIDADO: ICONO TRANSPARENTE Y NOMBRE DEBAJO */
+
+.monster-care-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: 6px;
+  width: 100%;
+}
+
+.monster-care-actions button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  width: 100%;
+  min-width: 0;
+  min-height: 64px;
+  margin: 0;
+  padding: 5px 2px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent !important;
+  box-shadow: none;
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.monster-care-actions .care-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid currentColor;
+  border-radius: 12px;
+  background: transparent;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.monster-care-actions .care-label {
+  display: block;
+  color: var(--text);
+  font-size: 11px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.monster-care-actions button:nth-child(1) {
+  color: #00c99a;
+}
+
+.monster-care-actions button:nth-child(2) {
+  color: #64b5ff;
+}
+
+.monster-care-actions button:nth-child(3) {
+  color: #b69aff;
+}
+
+.monster-care-actions button:active {
+  background: #ffffff08 !important;
+  transform: scale(0.97);
+}
+
+/* BOTÓN DE COMPRA EN LA TIENDA */
+
+.monster-card-bottom > button {
+  width: 100%;
+  margin: 0;
+}
+
+/* AJUSTES PARA PANTALLAS PEQUEÑAS */
+
+@media (max-width: 360px) {
+  .monster-card-top {
+    padding: 9px 7px 11px;
+  }
+
+  .monster-card .monster-image {
+    height: 115px;
+    max-height: 115px;
+  }
+
+  .monster-card-bottom {
+    gap: 10px;
+    padding: 10px 7px;
+  }
+
+  .monster-stat-value {
+    font-size: 11px;
+  }
+
+  .monster-care-actions {
+    gap: 2px;
+  }
+
+  .monster-care-actions .care-icon {
+    width: 35px;
+    height: 35px;
+    font-size: 20px;
+  }
+}
