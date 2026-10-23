@@ -1,114 +1,136 @@
 
-const MW_MONSTERS = [
+export const monsters = [
   {
-    id: "criatura_magica",
-    image: "Imagenes/misterio.png",
-    kind: "✨ MAGIA",
-    theme: "magic"
+    id: "flama",
+    species: "Flama",
+    img: "Imagenes/flama.png"
   },
   {
-    id: "criatura_fuego",
-    image: "Imagenes/flama.png",
-    kind: "🔥 FUEGO",
-    theme: "fire"
+    id: "bosque",
+    species: "Musguito",
+    img: "Imagenes/bosque.png"
   },
   {
-    id: "criatura_planta",
-    image: "Imagenes/musguito.png",
-    kind: "🌿 PLANTA",
-    theme: "plant"
+    id: "fantasma",
+    species: "Fanty",
+    img: "Imagenes/fantasma.png"
   },
   {
-    id: "criatura_espiritu",
-    image: "Imagenes/fanty.png",
-    kind: "👻 ESPÍRITU",
-    theme: "spirit"
+    id: "fuego",
+    species: "Chispas",
+    img: "Imagenes/fuego.png"
   },
   {
-    id: "criatura_hielo",
-    image: "Imagenes/nevito.png",
-    kind: "❄️ HIELO",
-    theme: "ice"
+    id: "hielo",
+    species: "Nevito",
+    img: "Imagenes/hielo.png"
   },
   {
-    id: "criatura_rayo",
-    image: "Imagenes/dracon.png",
-    kind: "⚡ RAYO",
-    theme: "lightning"
+    id: "mago",
+    species: "Misterio",
+    img: "Imagenes/mago.png"
+  },
+  {
+    id: "dragon",
+    species: "Dracón",
+    img: "Imagenes/dragon.png"
   }
 ];
 
-const MW_RARITY_PROBABILITIES = [
-  { rarity: "COMÚN", chance: 60, minProduction: 800, maxProduction: 1100 },
-  { rarity: "POCO COMÚN", chance: 28, minProduction: 1200, maxProduction: 1800 },
-  { rarity: "RARO", chance: 8, minProduction: 2000, maxProduction: 3000 },
-  { rarity: "ÉPICO", chance: 3, minProduction: 3500, maxProduction: 4500 },
-  { rarity: "LEGENDARIO", chance: 1, minProduction: 5000, maxProduction: 7000 }
+export const rarities = [
+  {
+    name: "COMÚN",
+    chance: 70,
+    minRate: 800,
+    maxRate: 1100
+  },
+  {
+    name: "POCO COMÚN",
+    chance: 20,
+    minRate: 1100,
+    maxRate: 1800
+  },
+  {
+    name: "ÉPICO",
+    chance: 8,
+    minRate: 1800,
+    maxRate: 3500
+  },
+  {
+    name: "LEGENDARIO",
+    chance: 2,
+    minRate: 3500,
+    maxRate: 6000
+  }
 ];
 
-function mwGetMonster(id) {
-  return MW_MONSTERS.find(monster => monster.id === id) || null;
+export const monsterTypes = [
+  { name: "FUEGO", emoji: "🔥" },
+  { name: "HIELO", emoji: "❄️" },
+  { name: "PLANTA", emoji: "🌿" },
+  { name: "MAGIA", emoji: "✨" },
+  { name: "ESPÍRITU", emoji: "👻" },
+  { name: "RAYO", emoji: "⚡" }
+];
+
+function randomItem(items) {
+  return items[Math.floor(Math.random() * items.length)];
 }
 
-
-function mwGetOwnedMonsters(state) {
-  return (state.owned || [])
-    .map(id => {
-      const saved = state.monsters?.[id];
-
-      if (saved && typeof saved === "object") {
-        return { ...saved, id };
-      }
-
-      const species = mwGetMonster(id);
-      return species || null;
-    })
-    .filter(Boolean);
+function randomNumber(min, max) {
+  return Math.floor(
+    Math.random() * (max - min + 1)
+  ) + min;
 }
 
-function mwRollMonster() {
-  const species = MW_MONSTERS[
-    Math.floor(Math.random() * MW_MONSTERS.length)
-  ];
+export function randomRarity() {
+  const roll = Math.random() * 100;
+  let accumulated = 0;
 
-  let roll = Math.random() * 100;
-  let selectedRarity = MW_RARITY_PROBABILITIES[0];
+  for (const rarity of rarities) {
+    accumulated += rarity.chance;
 
-  for (const rarity of MW_RARITY_PROBABILITIES) {
-    roll -= rarity.chance;
-
-    if (roll < 0) {
-      selectedRarity = rarity;
-      break;
+    if (roll < accumulated) {
+      return rarity;
     }
   }
 
-  const baseProduction = Math.floor(
-    selectedRarity.minProduction +
-    Math.random() * (
-      selectedRarity.maxProduction -
-      selectedRarity.minProduction + 1
-    )
-  );
+  return rarities[0];
+}
+
+export function createRandomMonster() {
+  const species = randomItem(monsters);
+  const rarity = randomRarity();
+  const type = randomItem(monsterTypes);
 
   return {
-    ...species,
-    id: `${species.id}_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+    id: `monster-${Date.now()}-${Math.floor(
+      Math.random() * 1000000
+    )}`,
+
+    speciesId: species.id,
+    species: species.species,
+    img: species.img,
+
     name: "",
-    rarity: selectedRarity.rarity,
-    description: "Una criatura nacida de un huevo mágico",
-    price: 0,
-    baseProduction
+
+    rarity: rarity.name,
+    kind: `${type.emoji} ${type.name}`,
+
+    level: 1,
+    xp: 0,
+
+    baseRate: randomNumber(
+      rarity.minRate,
+      rarity.maxRate
+    ),
+
+    bornAt: Date.now()
   };
 }
 
-function mwGetMonsterProduction(monster, level = 1) {
-  const safeLevel = Math.max(1, Math.floor(Number(level) || 1));
-  let production = Number(monster.baseProduction) || 800;
-
-  for (let currentLevel = 2; currentLevel <= safeLevel; currentLevel++) {
-    production *= currentLevel <= 5 ? 1.10 : 1.22;
-  }
-
-  return Math.floor(production);
+export function getMonsterById(id) {
+  return monsters.find(
+    monster => monster.id === id
+  ) ?? null;
 }
