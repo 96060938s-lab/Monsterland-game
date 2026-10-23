@@ -48,26 +48,26 @@ export const rarities = [
   {
     name: "POCO COMÚN",
     chance: 22,
-    minRate: 1100,
+    minRate: 1300,
     maxRate: 1800
   },
   {
     name: "RARO",
     chance: 10,
-    minRate: 1500,
-    maxRate: 2500
+    minRate: 2000,
+    maxRate: 3500
   },
   {
     name: "ÉPICO",
     chance: 9,
-    minRate: 1800,
-    maxRate: 3500
+    minRate: 5000,
+    maxRate: 6500
   },
   {
     name: "LEGENDARIO",
     chance: 1,
-    minRate: 3500,
-    maxRate: 6000
+    minRate: 7000,
+    maxRate: 9000
   }
 ];
 
