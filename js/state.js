@@ -1,93 +1,40 @@
 
-const MW_DEFAULT_STATE = {
-  coins: 100,
-  playerLevel: 1,
-  owned: [],
-  monsters: {},
-  care: {},
-  lastDaily: "",
-  activeTab: "monstruos",
-
-  starterEgg: {
-    taps: 0,
-    opened: false,
-    creatureId: "",
-    named: false,
-    revealed: false
-  }
-};
-
-
-function mwCreateInitialState() {
-  return JSON.parse(JSON.stringify(MW_DEFAULT_STATE));
-}
-
-
-function mwNormalizeState(data) {
-  const defaults = mwCreateInitialState();
-
-  if (!data || typeof data !== "object" || Array.isArray(data)) {
-    return defaults;
-  }
-
-  const coins = Number(data.coins);
-  const playerLevel = Number(data.playerLevel);
-  const savedEgg = data.starterEgg || {};
-
-  const starterEgg = {
-    taps: Number.isInteger(savedEgg.taps)
-      ? Math.min(5, Math.max(0, savedEgg.taps))
-      : 0,
-
-    opened: savedEgg.opened === true,
-
-    creatureId: typeof savedEgg.creatureId === "string"
-      ? savedEgg.creatureId
-      : "",
-
-    named: savedEgg.named === true,
-
-    revealed: savedEgg.revealed === true
-  };
-
+export function createInitialState() {
   return {
-    ...defaults,
-    ...data,
+    coins: 100,
 
-    coins: Number.isFinite(coins) && coins >= 0
-      ? Math.floor(coins)
-      : defaults.coins,
+    // El primer huevo se entrega gratis.
+    starterEggClaimed: false,
+    eggs: [
+      {
+        id: "starter-egg",
+        type: "starter",
+        createdAt: Date.now()
+      }
+    ],
 
-    playerLevel: Number.isFinite(playerLevel) && playerLevel >= 1
-      ? Math.floor(playerLevel)
-      : defaults.playerLevel,
+    // No hay monstruos hasta abrir el huevo.
+    owned: [],
+    monsterProgress: {},
+    production: {},
+    needs: {},
+    care: {},
+    sleep: {},
 
-    owned: Array.isArray(data.owned)
-      ? [...new Set(data.owned.filter(
-          id => typeof id === "string"
-        ))]
-      : [...defaults.owned],
+    // Datos de la partida.
+    lastDaily: "",
+    trainerProgress: {
+      level: 1,
+      xp: 0
+    },
 
-    monsters: data.monsters &&
-      typeof data.monsters === "object" &&
-      !Array.isArray(data.monsters)
-      ? data.monsters
-      : {},
+    inventory: {},
+    incubating: [],
 
-    care: data.care &&
-      typeof data.care === "object" &&
-      !Array.isArray(data.care)
-      ? data.care
-      : {},
+    // Espacios iniciales.
+    spaceCount: 1,
+    monsterSlots: {},
 
-    starterEgg,
-
-    lastDaily: typeof data.lastDaily === "string"
-      ? data.lastDaily
-      : "",
-
-    activeTab: typeof data.activeTab === "string"
-      ? data.activeTab
-      : defaults.activeTab
+    xpBoostUntil: 0
   };
 }
