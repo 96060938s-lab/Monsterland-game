@@ -1,7 +1,7 @@
 
 export function createInitialState() {
   return {
-    coins: 100,
+    coins: 1000,
 
     // El primer huevo se entrega gratis.
     starterEggClaimed: false,
