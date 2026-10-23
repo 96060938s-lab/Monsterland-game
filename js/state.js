@@ -19,6 +19,7 @@ function mwCreateInitialState() {
   return JSON.parse(JSON.stringify(MW_DEFAULT_STATE));
 }
 
+
 function mwNormalizeState(data) {
   const defaults = mwCreateInitialState();
 
@@ -29,35 +30,54 @@ function mwNormalizeState(data) {
   const coins = Number(data.coins);
   const playerLevel = Number(data.playerLevel);
 
+  const savedEgg = data.starterEgg;
+
+  const starterEgg = {
+    taps: Number.isInteger(savedEgg?.taps)
+      ? Math.min(5, Math.max(0, savedEgg.taps))
+      : 0,
+    opened: savedEgg?.opened === true
+  };
+
   return {
     ...defaults,
     ...data,
+
     coins: Number.isFinite(coins) && coins >= 0
       ? Math.floor(coins)
       : defaults.coins,
+
     playerLevel: Number.isFinite(playerLevel) && playerLevel >= 1
       ? Math.floor(playerLevel)
       : defaults.playerLevel,
+
     owned: Array.isArray(data.owned)
       ? [...new Set(data.owned.filter(
           id => typeof id === "string"
         ))]
       : [...defaults.owned],
+
     monsters: data.monsters &&
       typeof data.monsters === "object" &&
       !Array.isArray(data.monsters)
       ? data.monsters
       : {},
+
     care: data.care &&
       typeof data.care === "object" &&
       !Array.isArray(data.care)
       ? data.care
       : {},
+
+    starterEgg,
+
     lastDaily: typeof data.lastDaily === "string"
       ? data.lastDaily
       : "",
+
     activeTab: typeof data.activeTab === "string"
       ? data.activeTab
       : defaults.activeTab
   };
 }
+
