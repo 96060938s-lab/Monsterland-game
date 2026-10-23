@@ -66,9 +66,6 @@ function mwGetOwnedMonsters(state) {
     .filter(Boolean);
 }
 
-    .filter(Boolean);
-}
-
 function mwRollMonster() {
   const species = MW_MONSTERS[
     Math.floor(Math.random() * MW_MONSTERS.length)
