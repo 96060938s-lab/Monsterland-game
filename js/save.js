@@ -1,7 +1,19 @@
-
 import { createInitialState } from "./state.js";
 
 const SAVE_KEY = "monsterWorldSave";
+
+export function resetGameSave() {
+  const initial = createInitialState();
+
+  try {
+    localStorage.removeItem(SAVE_KEY);
+    localStorage.setItem(SAVE_KEY, JSON.stringify(initial));
+    return initial;
+  } catch (error) {
+    console.error("No se pudo reiniciar MonsterWorld:", error);
+    return initial;
+  }
+}
 
 // Guarda el progreso del jugador.
 export function saveGame(save) {
@@ -19,6 +31,11 @@ export function loadGame() {
   const initial = createInitialState();
 
   try {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("resetGame") === "1") {
+      return resetGameSave();
+    }
+
     const stored = localStorage.getItem(SAVE_KEY);
 
     if (!stored) {
@@ -32,13 +49,11 @@ export function loadGame() {
       return initial;
     }
 
-    // Los valores nuevos se añaden sin borrar los antiguos.
     const save = {
       ...initial,
       ...previous
     };
 
-    // Comprueba que los datos esenciales tengan el formato correcto.
     save.coins =
       typeof save.coins === "number" && Number.isFinite(save.coins)
         ? save.coins
@@ -51,21 +66,17 @@ export function loadGame() {
       "care",
       "sleep",
       "inventory",
-      "monsterSlots"
+      "monsterSlots",
+      "monsterNames"
     ];
 
     for (const field of objectFields) {
-      if (
-        !save[field] ||
-        typeof save[field] !== "object" ||
-        Array.isArray(save[field])
-      ) {
+      if (!save[field] || typeof save[field] !== "object" || Array.isArray(save[field])) {
         save[field] = {};
       }
     }
 
     const arrayFields = ["eggs", "owned", "incubating"];
-
     for (const field of arrayFields) {
       if (!Array.isArray(save[field])) {
         save[field] = [];
@@ -92,14 +103,15 @@ export function loadGame() {
       save.xpBoostUntil = 0;
     }
 
-    // Conserva el guardado y completa los campos nuevos.
     saveGame(save);
-
     return save;
   } catch (error) {
     console.error("Error al cargar MonsterWorld:", error);
-
-    // No borra el guardado dañado automáticamente.
     return initial;
   }
+}
+
+if (typeof window !== "undefined") {
+  window.resetMonsterWorldProgress = resetGameSave;
+  window.clearMonsterWorldSave = resetGameSave;
 }
