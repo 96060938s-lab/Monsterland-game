@@ -50,22 +50,22 @@ function mwGetMonster(id) {
   return MW_MONSTERS.find(monster => monster.id === id) || null;
 }
 
+
 function mwGetOwnedMonsters(state) {
   return (state.owned || [])
     .map(id => {
-      const species = mwGetMonster(id);
       const saved = state.monsters?.[id];
 
-      if (!species || !saved) {
-        return null;
+      if (saved && typeof saved === "object") {
+        return { ...saved, id };
       }
 
-      return {
-        ...species,
-        ...saved,
-        id
-      };
+      const species = mwGetMonster(id);
+      return species || null;
     })
+    .filter(Boolean);
+}
+
     .filter(Boolean);
 }
 
