@@ -163,7 +163,7 @@ function mwRenderGame() {
   if (collection) {
     mwRenderMonsterCards(collection, mwState, "collection");
   }
-
+mwRenderStarterEgg();
   if (shop) {
     mwRenderMonsterCards(shop, mwState, "shop");
   }
