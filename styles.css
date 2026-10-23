@@ -692,3 +692,10 @@ body:has(#hatchArea:not(.hidden)) #gameInterface {
 .billetera {
   flex: 0 0 auto;
 }
+
+/* Mover el monedero al extremo contrario */
+.wallet,
+.billetera {
+  margin-left: 0;
+  margin-right: auto;
+}
