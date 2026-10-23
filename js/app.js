@@ -170,8 +170,9 @@ mwRenderStarterEgg();
 }
 
 function mwHandleMonsterAction(data) {
-  const monster = mwGetMonster(data.monsterId);
-
+  const monster =
+  mwState.monsters?.[data.monsterId] ||
+  mwGetMonster(data.monsterId);
   if (!monster) {
     return;
   }
