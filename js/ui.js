@@ -124,3 +124,86 @@ function mwCreateMonsterCard(monster, state, mode = "collection") {
     </article>
   `;
 }
+
+function mwRenderMonsterCards(container, state, mode = "collection") {
+  if (!container) {
+    console.error("MonsterWorld: no se encontró el contenedor.");
+    return;
+  }
+
+  if (typeof MW_MONSTERS === "undefined" || !Array.isArray(MW_MONSTERS)) {
+    console.error("MonsterWorld: no se encontró la lista MW_MONSTERS.");
+    return;
+  }
+
+  let monsters = [];
+
+  if (mode === "shop") {
+    monsters = MW_MONSTERS;
+  } else {
+    try {
+      if (typeof mwGetOwnedMonsters === "function") {
+        monsters = mwGetOwnedMonsters(state) || [];
+      } else {
+        const ownedIds = Array.isArray(state?.owned)
+          ? state.owned
+          : ["bubu"];
+
+        monsters = MW_MONSTERS.filter(monster =>
+          ownedIds.includes(monster.id)
+        );
+      }
+    } catch (error) {
+      console.error("MonsterWorld: error al cargar la colección.", error);
+      monsters = [];
+    }
+
+    // Bubu es el monstruo inicial.
+    if (
+      monsters.length === 0 &&
+      Array.isArray(state?.owned) &&
+      state.owned.includes("bubu")
+    ) {
+      const bubu = MW_MONSTERS.find(monster => monster.id === "bubu");
+
+      if (bubu) {
+        monsters = [bubu];
+      }
+    }
+  }
+
+  const monsterCards = monsters
+    .map(monster => {
+      try {
+        return mwCreateMonsterCard(monster, state, mode);
+      } catch (error) {
+        console.error(
+          "MonsterWorld: error al crear la tarjeta.",
+          monster?.id,
+          error
+        );
+        return "";
+      }
+    })
+    .join("");
+
+  if (mode === "shop") {
+    container.innerHTML = monsterCards;
+    return;
+  }
+
+  const extraSpace = `
+    <button
+      type="button"
+      class="monster-card extra-space"
+      id="addMonsterSpace"
+      aria-label="Comprar espacio adicional"
+      title="Comprar espacio adicional"
+      onclick="mwBuyMonsterSpace()"
+    >
+      <span class="extra-space-symbol">＋</span>
+    </button>
+  `;
+
+  container.innerHTML = monsterCards + extraSpace;
+}
