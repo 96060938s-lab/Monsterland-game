@@ -1,78 +1,34 @@
-export function defaultSave() {
-  return {
-    version: 1,
-    coins: 100,
-    owned: [],
-    petNames: {},
-    inventory: {
-      eggs: [
-        {
-          id: "starter-gift-egg",
-          type: "common",
-          gift: true,
-          hatchProgress: 0,
-          status: "sealed"
-        }
-      ],
-      food: [],
-      bath: [],
-      sleep: []
-    },
-    trainer: {
-      level: 1,
-      xp: 0
-    },
-    slots: {
-      capacity: 1
-    },
-    monsterProgress: {},
-    incubating: [],
-    starterEggClaimed: false
-  };
-}
 
-export function loadSave() {
+const MW_SAVE_KEY = "monsterWorldSave";
+
+function mwLoadState() {
   try {
-    const raw = localStorage.getItem("monsterWorldSave");
-    if (!raw) return defaultSave();
+    const savedData = localStorage.getItem(MW_SAVE_KEY);
 
-    const parsed = JSON.parse(raw);
-    return migrateSave(parsed);
+    if (!savedData) {
+      return mwCreateInitialState();
+    }
+
+    const parsedData = JSON.parse(savedData);
+    return mwNormalizeState(parsedData);
   } catch (error) {
-    console.error("Error loading save:", error);
-    return defaultSave();
+    console.error("Error al cargar MonsterWorld:", error);
+    return mwCreateInitialState();
   }
 }
 
-export function saveGame(state) {
+function mwSaveState(state) {
   try {
-    localStorage.setItem("monsterWorldSave", JSON.stringify(state));
+    const normalizedState = mwNormalizeState(state);
+
+    localStorage.setItem(
+      MW_SAVE_KEY,
+      JSON.stringify(normalizedState)
+    );
+
+    return true;
   } catch (error) {
-    console.error("Error saving game:", error);
+    console.error("Error al guardar MonsterWorld:", error);
+    return false;
   }
-}
-
-export function migrateSave(save) {
-  const base = defaultSave();
-
-  return {
-    ...base,
-    ...save,
-    inventory: {
-      ...base.inventory,
-      ...(save.inventory || {})
-    },
-    trainer: {
-      ...base.trainer,
-      ...(save.trainer || {})
-    },
-    slots: {
-      ...base.slots,
-      ...(save.slots || {})
-    },
-    monsterProgress: save.monsterProgress || {},
-    petNames: save.petNames || {},
-    incubating: Array.isArray(save.incubating) ? save.incubating : [],
-    starterEggClaimed: Boolean(save.starterEggClaimed)
-  };
 }
