@@ -605,3 +605,55 @@ hr {
 body:has(#hatchArea:not(.hidden)) #gameInterface {
   display: none !important;
 }
+
+/* TARJETA PARA COMPRAR ESPACIO EXTRA */
+
+#collection {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 12px;
+}
+
+#collection > .monster-card {
+  width: 100%;
+  min-width: 0;
+  min-height: 100%;
+}
+
+#collection > .extra-space {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  min-width: 0;
+  min-height: 100%;
+  margin: 0;
+  padding: 12px;
+  border: 2px dashed #9c7cff;
+  border-radius: 18px;
+  background: #211d38;
+  color: #ffd66b;
+}
+
+#collection > .extra-space .extra-space-symbol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 150px;
+  font-size: 64px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+#collection > .extra-space:active {
+  background: #302747;
+  transform: scale(0.97);
+}
+
+@media (min-width: 600px) {
+  #collection {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
