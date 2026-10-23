@@ -1,13 +1,19 @@
 
+
 const MW_DEFAULT_STATE = {
   coins: 100,
   playerLevel: 1,
-  owned: ["bubu"],
+  owned: [],
   monsters: {},
   care: {},
   lastDaily: "",
-  activeTab: "monstruos"
+  activeTab: "monstruos",
+  starterEgg: {
+    taps: 0,
+    opened: false
+  }
 };
+
 
 function mwCreateInitialState() {
   return JSON.parse(JSON.stringify(MW_DEFAULT_STATE));
