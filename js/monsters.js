@@ -32,7 +32,7 @@ export const monsters = [
     theme: "ghost",
     rarity: "ÉPICO",
     rate: 3000,
-    desc: "Un espíritu juguetón y brillante.",
+    desc: "Un espíritu juguetón.",
     emoji: "👻"
   },
   {
