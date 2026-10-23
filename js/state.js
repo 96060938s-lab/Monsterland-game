@@ -1,4 +1,3 @@
-
 export function createInitialState() {
   return {
     coins: 1000,
@@ -16,6 +15,7 @@ export function createInitialState() {
     // No hay monstruos hasta abrir el huevo.
     owned: [],
     monsterProgress: {},
+    monsterNames: {},
     production: {},
     needs: {},
     care: {},
