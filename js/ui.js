@@ -1,44 +1,100 @@
-import { getMonsterById } from "./monsters.js";
 
-export function renderCollection(state) {
-  const collection = document.getElementById("collection");
-  if (!collection) return;
+function mwEscapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, character => {
+    const entities = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    };
 
-  const monsters = state.owned
-    .map((id) => getMonsterById(id))
-    .filter(Boolean);
+    return entities[character];
+  });
+}
 
-  if (!monsters.length) {
-    collection.innerHTML = "<p class='empty'>Todavía no tienes compañeros.</p>";
+function mwCreateMonsterCard(monster, state, mode = "collection") {
+  const owned = state.owned.includes(monster.id);
+
+  const buttonLabel = mode === "shop"
+    ? (owned ? "ADQUIRIDO" : `COMPRAR · ${monster.price} 🪙`)
+    : (owned ? "VER MONSTRUO" : "BLOQUEADO");
+
+  const disabled = mode === "shop"
+    ? owned
+    : !owned;
+
+  return `
+    <article class="monster-card" data-monster-id="${mwEscapeHTML(monster.id)}">
+      <img
+        src="${mwEscapeHTML(monster.image)}"
+        alt="${mwEscapeHTML(monster.name)}"
+        loading="lazy"
+      >
+
+      <h3>${mwEscapeHTML(monster.name)}</h3>
+
+      <span class="badge">
+        ${mwEscapeHTML(monster.rarity)}
+      </span>
+
+      <p>${mwEscapeHTML(monster.description)}</p>
+
+      <p>${mwEscapeHTML(monster.kind)}</p>
+
+      <p>
+        <strong>Producción base:</strong>
+        ${mwGetMonsterProduction(monster, 1).toLocaleString("es-PE")}
+        monedas/h
+      </p>
+
+      <button
+        type="button"
+        class="${owned ? "success" : "primary"}"
+        data-monster-action="${mode}"
+        data-monster-id="${mwEscapeHTML(monster.id)}"
+        ${disabled ? "disabled" : ""}
+      >
+        ${buttonLabel}
+      </button>
+    </article>
+  `;
+}
+
+function mwRenderMonsterCards(container, state, mode = "collection") {
+  if (!container) {
+    console.error("MonsterWorld: no se encontró el contenedor de monstruos.");
     return;
   }
 
-  collection.innerHTML = monsters
-    .map((monster) => {
-      const progress = state.monsterProgress?.[monster.id] || { level: 1, xp: 0 };
-      const petName = state.petNames?.[monster.id] || monster.name;
+  const monsters = mode === "shop"
+    ? MW_MONSTERS
+    : mwGetOwnedMonsters(state);
 
-      return `
-        <article class="monster-card">
-          <div class="monster-art ${monster.theme}">
-            <span>${monster.emoji}</span>
-          </div>
-          <div class="monster-info">
-            <h3>${petName}</h3>
-            <small>${monster.rarity}</small>
-            <p>${monster.desc}</p>
-            <div class="monster-meta">
-              <span>Nv. ${progress.level}</span>
-              <span>${progress.xp} XP</span>
-            </div>
-            <div class="monster-actions">
-              <button type="button" class="mini-action" data-action="food" data-monster-id="${monster.id}">🍽 Comer</button>
-              <button type="button" class="mini-action" data-action="bath" data-monster-id="${monster.id}">🛁 Baño</button>
-              <button type="button" class="mini-action" data-action="sleep" data-monster-id="${monster.id}">💤 Dormir</button>
-            </div>
-          </div>
-        </article>
-      `;
-    })
+  container.innerHTML = monsters
+    .map(monster => mwCreateMonsterCard(monster, state, mode))
     .join("");
+}
+
+function mwBindMonsterActions(container, onAction) {
+  if (!container || typeof onAction !== "function") {
+    return;
+  }
+
+  container.addEventListener("click", event => {
+    const button = event.target.closest("[data-monster-action]");
+
+    if (!button || !container.contains(button)) {
+      return;
+    }
+
+    if (button.disabled) {
+      return;
+    }
+
+    onAction({
+      action: button.dataset.monsterAction,
+      monsterId: button.dataset.monsterId
+    });
+  });
 }
