@@ -1,1 +1,161 @@
+:root {
+  --bg: #17152d;
+  --panel: #211d38;
+  --gold: #ffd66b;
+  --green: #00c99a;
+  --text: #f8f5ff;
+  --muted: #a9a5c5;
+}
 
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(180deg, #17152d, #21182f, #111321);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+}
+
+#app {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 12px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #33264e;
+  border: 3px solid var(--gold);
+  font-size: 24px;
+}
+
+.wallet-button {
+  border: 1px solid #8c7443;
+  background: linear-gradient(145deg, #39304e, #211d38);
+  border-radius: 18px;
+  color: var(--gold);
+  padding: 9px 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.profile-panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 15px;
+  padding: 12px;
+  margin-bottom: 18px;
+}
+
+.level {
+  color: var(--gold);
+  font-weight: bold;
+}
+
+.profile-summary {
+  text-align: right;
+}
+
+.page-title h2 {
+  margin: 0 0 8px;
+  font-size: 24px;
+}
+
+.page-title p {
+  margin: 0 0 16px;
+  color: var(--muted);
+}
+
+.monster-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.monster-card {
+  background: linear-gradient(180deg, #36345a, #1b192d);
+  border: 1px solid #5d527d;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.monster-art {
+  height: 145px;
+  display: grid;
+  place-items: center;
+  font-size: 70px;
+}
+
+.monster-art.plant { background: linear-gradient(145deg, #9bc77c, #477e79, #f0bd9d); }
+.monster-art.fire { background: linear-gradient(145deg, #ffbc69, #dc5a63, #552b68); }
+.monster-art.ghost { background: linear-gradient(145deg, #c7c5ff, #777fc7, #efc6ec); }
+
+.monster-info {
+  padding: 12px;
+}
+
+.monster-info h3 {
+  margin: 0 0 6px;
+  font-size: 18px;
+}
+
+.monster-info p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.monster-meta {
+  display: flex;
+  justify-content: space-between;
+  color: var(--gold);
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+.notice {
+  min-height: 24px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  color: #a7f5cf;
+  text-align: center;
+  margin-top: 12px;
+}
+
+.notice.show {
+  opacity: 1;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.empty {
+  color: var(--muted);
+  text-align: center;
+  padding: 20px;
+}
