@@ -14,49 +14,79 @@ function mwEscapeHTML(value) {
 }
 
 function mwCreateMonsterCard(monster, state, mode = "collection") {
-  const owned = state.owned.includes(monster.id);
+  const owned = (state.owned || []).includes(monster.id);
+  const level = Math.max(1, Number(monster.level) || 1);
 
-  const buttonLabel = mode === "shop"
-    ? (owned ? "ADQUIRIDO" : `COMPRAR · ${monster.price} 🪙`)
-    : (owned ? "VER MONSTRUO" : "BLOQUEADO");
+  const production = mwGetMonsterProduction(monster, level);
 
-  const disabled = mode === "shop"
-    ? owned
-    : !owned;
+  const shopButton = `
+    <button
+      type="button"
+      class="${owned ? "success" : "primary"}"
+      data-monster-action="shop"
+      data-monster-id="${mwEscapeHTML(monster.id)}"
+      ${owned ? "disabled" : ""}
+    >
+      ${owned
+        ? "ADQUIRIDO"
+        : `COMPRAR · ${Number(monster.price) || 0} 🪙`}
+    </button>
+  `;
 
-  return `
-    <article class="monster-card" data-monster-id="${mwEscapeHTML(monster.id)}">
-      <img
-        src="${mwEscapeHTML(monster.image)}"
-        alt="${mwEscapeHTML(monster.name)}"
-        loading="lazy"
+  const careButtons = `
+    <div class="monster-care-actions">
+      <button
+        type="button"
+        onclick="mwOpenCareMenu('${mwEscapeHTML(monster.id)}', 'food')"
       >
-
-      <h3>${mwEscapeHTML(monster.name)}</h3>
-
-      <span class="badge">
-        ${mwEscapeHTML(monster.rarity)}
-      </span>
-
-      <p>${mwEscapeHTML(monster.description)}</p>
-
-      <p>${mwEscapeHTML(monster.kind)}</p>
-
-      <p>
-        <strong>Producción base:</strong>
-        ${mwGetMonsterProduction(monster, 1).toLocaleString("es-PE")}
-        monedas/h
-      </p>
+        🍎 COMER
+      </button>
 
       <button
         type="button"
-        class="${owned ? "success" : "primary"}"
-        data-monster-action="${mode}"
-        data-monster-id="${mwEscapeHTML(monster.id)}"
-        ${disabled ? "disabled" : ""}
+        onclick="mwOpenCareMenu('${mwEscapeHTML(monster.id)}', 'bath')"
       >
-        ${buttonLabel}
+        🛁 BAÑO
       </button>
+
+      <button
+        type="button"
+        onclick="mwOpenCareMenu('${mwEscapeHTML(monster.id)}', 'sleep')"
+      >
+        🌙 DORMIR
+      </button>
+    </div>
+  `;
+
+  return `
+    <article
+      class="monster-card"
+      data-monster-id="${mwEscapeHTML(monster.id)}"
+    >
+      <img
+        src="${mwEscapeHTML(monster.image)}"
+        alt="${mwEscapeHTML(monster.name || monster.kind)}"
+        loading="lazy"
+      >
+
+      <h3>${mwEscapeHTML(monster.name || "Monstruo")}</h3>
+
+      <span class="badge">
+        ${mwEscapeHTML(monster.rarity || "COMÚN")}
+      </span>
+
+      <p>${mwEscapeHTML(monster.kind || "✨ MÁGICO")}</p>
+
+      <p>
+        <strong>Nivel:</strong> ${level}
+      </p>
+
+      <p>
+        <strong>Producción:</strong>
+        ${production.toLocaleString("es-PE")} monedas/h
+      </p>
+
+      ${mode === "shop" ? shopButton : careButtons}
     </article>
   `;
 }
@@ -64,7 +94,9 @@ function mwCreateMonsterCard(monster, state, mode = "collection") {
 
 function mwRenderMonsterCards(container, state, mode = "collection") {
   if (!container) {
-    console.error("MonsterWorld: no se encontró el contenedor de monstruos.");
+    console.error(
+      "MonsterWorld: no se encontró el contenedor de monstruos."
+    );
     return;
   }
 
@@ -72,16 +104,14 @@ function mwRenderMonsterCards(container, state, mode = "collection") {
     ? MW_MONSTERS
     : mwGetOwnedMonsters(state);
 
-  if (mode === "shop") {
-    container.innerHTML = monsters
-      .map(monster => mwCreateMonsterCard(monster, state, mode))
-      .join("");
-    return;
-  }
-
   const monsterCards = monsters
     .map(monster => mwCreateMonsterCard(monster, state, mode))
     .join("");
+
+  if (mode === "shop") {
+    container.innerHTML = monsterCards;
+    return;
+  }
 
   const extraSpace = `
     <button
@@ -107,11 +137,7 @@ function mwBindMonsterActions(container, onAction) {
   container.addEventListener("click", event => {
     const button = event.target.closest("[data-monster-action]");
 
-    if (!button || !container.contains(button)) {
-      return;
-    }
-
-    if (button.disabled) {
+    if (!button || !container.contains(button) || button.disabled) {
       return;
     }
 
