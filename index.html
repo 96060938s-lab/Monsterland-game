@@ -3,10 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#17152d" />
   <title>MonsterWorld</title>
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
+  <div id="portada" aria-live="polite">
+    <div class="logo-loader">👾</div>
+    <div class="loading-bar">
+      <div id="barraCarga" class="loading-bar-fill"></div>
+    </div>
+  </div>
+
   <div id="app">
     <header class="topbar">
       <div class="brand">
@@ -17,7 +25,7 @@
         </div>
       </div>
 
-      <button class="wallet-button" id="walletButton">
+      <button class="wallet-button" id="walletButton" type="button">
         <span class="wallet-label">💎 BILLETERA</span>
         <span class="wallet-balance">🪙 <span id="coins">100</span></span>
       </button>
@@ -29,7 +37,7 @@
         <small>Entrenador de monstruos</small>
       </div>
       <div class="profile-summary">
-        <strong id="slotCounter">0 / 1</strong>
+        <strong id="slotCounter">1 / 1</strong>
         <small>Espacios ocupados</small>
       </div>
     </section>
