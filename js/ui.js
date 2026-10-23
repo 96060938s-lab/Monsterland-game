@@ -31,52 +31,14 @@ export function renderCollection(state) {
               <span>Nv. ${progress.level}</span>
               <span>${progress.xp} XP</span>
             </div>
+            <div class="monster-actions">
+              <button type="button" class="mini-action" data-action="food" data-monster-id="${monster.id}">🍽 Comer</button>
+              <button type="button" class="mini-action" data-action="bath" data-monster-id="${monster.id}">🛁 Baño</button>
+              <button type="button" class="mini-action" data-action="sleep" data-monster-id="${monster.id}">💤 Dormir</button>
+            </div>
           </div>
         </article>
       `;
     })
     .join("");
-}
-
-export function renderCoins(state) {
-  const coinsNode = document.getElementById("coins");
-  if (coinsNode) {
-    coinsNode.textContent = state.coins;
-  }
-}
-
-export function showNotice(message) {
-  const notice = document.getElementById("notice");
-  if (!notice) return;
-
-  notice.textContent = message;
-  notice.classList.add("show");
-
-  setTimeout(() => {
-    notice.classList.remove("show");
-  }, 2200);
-}
-
-export function renderStarterEgg(state) {
-  const holder = document.getElementById("starterEggHolder");
-  if (!holder) return;
-
-  const egg = state.inventory.eggs.find((item) => item.id === "starter-gift-egg");
-  if (!egg) {
-    holder.innerHTML = "";
-    return;
-  }
-
-  const remaining = Math.max(0, 4 - Number(egg.hatchProgress || 0));
-
-  holder.innerHTML = `
-    <div class="starter-egg-card">
-      <div class="starter-egg">🥚</div>
-      <div class="starter-egg-info">
-        <strong>Huevo de regalo</strong>
-        <small>Presiona ${remaining} vez${remaining === 1 ? "" : "es"} más para abrirlo</small>
-      </div>
-      <button id="starterEggButton" class="starter-egg-button" type="button">Aplasta el huevo</button>
-    </div>
-  `;
 }
