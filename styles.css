@@ -706,43 +706,57 @@ body:has(#hatchArea:not(.hidden)) #gameInterface {
   white-space: nowrap;
 }
 
-/* CUIDADOS: TRES BOTONES EN UNA FILA */
+
+/* CUIDADOS: ICONO ARRIBA Y TEXTO ABAJO */
 
 .monster-care-actions {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: stretch;
-  gap: 6px;
+  gap: 8px;
   width: 100%;
 }
 
 .monster-care-actions button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
   width: 100%;
   min-width: 0;
-  min-height: 40px;
+  min-height: 68px;
   margin: 0;
-  padding: 8px 2px;
-  border: 1px solid var(--gold);
+  padding: 8px 3px;
+  border: 1px solid #4a4267;
   border-radius: 12px;
-  background: transparent;
-  color: var(--gold);
+  background: transparent !important;
+  color: var(--text);
   font-size: 11px;
   font-weight: 700;
-  white-space: nowrap;
+  white-space: normal;
   box-shadow: none;
 }
 
+/* COMER */
 .monster-care-actions button:nth-child(1) {
   border-color: #00c99a;
   color: #00c99a;
 }
 
+/* BAÑAR */
 .monster-care-actions button:nth-child(2) {
   border-color: #64b5ff;
   color: #64b5ff;
 }
 
+/* DORMIR */
 .monster-care-actions button:nth-child(3) {
   border-color: #b69aff;
   color: #b69aff;
+}
+
+.monster-care-actions button:active {
+  background: #ffffff08 !important;
+  transform: scale(0.97);
 }
