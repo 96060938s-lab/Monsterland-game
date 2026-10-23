@@ -1,18 +1,4 @@
 
-function mwEscapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, character => {
-    const entities = {
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#39;"
-    };
-
-    return entities[character];
-  });
-}
-
 function mwCreateMonsterCard(monster, state, mode = "collection") {
   const owned = (state.owned || []).includes(monster.id);
   const level = Math.max(1, Number(monster.level) || 1);
@@ -37,22 +23,28 @@ function mwCreateMonsterCard(monster, state, mode = "collection") {
       <button
         type="button"
         onclick="mwOpenCareMenu('${mwEscapeHTML(monster.id)}', 'food')"
+        aria-label="Comer"
       >
-        🍎 COMER
+        <span class="care-icon">🍎</span>
+        <span class="care-label">Comer</span>
       </button>
 
       <button
         type="button"
         onclick="mwOpenCareMenu('${mwEscapeHTML(monster.id)}', 'bath')"
+        aria-label="Baño"
       >
-        🛁 BAÑO
+        <span class="care-icon">🛁</span>
+        <span class="care-label">Baño</span>
       </button>
 
       <button
         type="button"
         onclick="mwOpenCareMenu('${mwEscapeHTML(monster.id)}', 'sleep')"
+        aria-label="Dormir"
       >
-        🌙 DORMIR
+        <span class="care-icon">🌙</span>
+        <span class="care-label">Dormir</span>
       </button>
     </div>
   `;
@@ -62,86 +54,58 @@ function mwCreateMonsterCard(monster, state, mode = "collection") {
       class="monster-card"
       data-monster-id="${mwEscapeHTML(monster.id)}"
     >
-      <img
-        src="${mwEscapeHTML(monster.image)}"
-        alt="${mwEscapeHTML(monster.name || monster.kind)}"
-        loading="lazy"
-      >
+      <!-- PARTE SUPERIOR -->
+      <div class="monster-card-top">
 
-      <h3>${mwEscapeHTML(monster.name || "Monstruo")}</h3>
+        <div class="monster-card-top-info">
+          <span class="monster-level">
+            NIVEL ${level}
+          </span>
 
-      <span class="badge">
-        ${mwEscapeHTML(monster.rarity || "COMÚN")}
-      </span>
+          <span class="badge">
+            ${mwEscapeHTML(monster.rarity || "COMÚN")}
+          </span>
+        </div>
 
-      <p>${mwEscapeHTML(monster.kind || "✨ MÁGICO")}</p>
+        <img
+          class="monster-image"
+          src="${mwEscapeHTML(monster.image)}"
+          alt="${mwEscapeHTML(monster.name || monster.kind || "Monstruo")}"
+          loading="lazy"
+        >
 
-      <p>
-        <strong>Nivel:</strong> ${level}
-      </p>
+        <h3 class="monster-name">
+          ${mwEscapeHTML(monster.name || "Monstruo")}
+        </h3>
 
-      <p>
-        <strong>Producción:</strong>
-        ${production.toLocaleString("es-PE")} monedas/h
-      </p>
+      </div>
 
-      ${mode === "shop" ? shopButton : careButtons}
+      <!-- PARTE INFERIOR -->
+      <div class="monster-card-bottom">
+
+        <div class="monster-card-stats">
+
+          <div class="monster-type">
+            <span class="monster-stat-label">TIPO</span>
+
+            <span class="monster-stat-value">
+              ${mwEscapeHTML(monster.kind || "✨ MÁGICO")}
+            </span>
+          </div>
+
+          <div class="monster-power">
+            <span class="monster-stat-label">POTENCIA</span>
+
+            <span class="monster-power-value">
+              ${production.toLocaleString("es-PE")} k/h
+            </span>
+          </div>
+
+        </div>
+
+        ${mode === "shop" ? shopButton : careButtons}
+
+      </div>
     </article>
   `;
-}
-
-function mwRenderMonsterCards(container, state, mode = "collection") {
-  if (!container) {
-    console.error(
-      "MonsterWorld: no se encontró el contenedor de monstruos."
-    );
-    return;
-  }
-
-  const monsters = mode === "shop"
-    ? MW_MONSTERS
-    : mwGetOwnedMonsters(state);
-
-  const monsterCards = monsters
-    .map(monster => mwCreateMonsterCard(monster, state, mode))
-    .join("");
-
-  if (mode === "shop") {
-    container.innerHTML = monsterCards;
-    return;
-  }
-
-  const extraSpace = `
-    <button
-      type="button"
-      class="monster-card extra-space"
-      id="addMonsterSpace"
-      aria-label="Comprar espacio adicional"
-      title="Comprar espacio adicional"
-      onclick="mwBuyMonsterSpace()"
-    >
-      <span class="extra-space-symbol">＋</span>
-    </button>
-  `;
-
-  container.innerHTML = monsterCards + extraSpace;
-}
-
-function mwBindMonsterActions(container, onAction) {
-  if (!container || typeof onAction !== "function") {
-    return;
-  }
-
-  container.addEventListener("click", event => {
-    const button = event.target.closest("[data-monster-action]");
-
-    if (!button || !container.contains(button) || button.disabled) {
-      return;
-    }
-
-    onAction({
-      action: button.dataset.monsterAction,
-      monsterId: button.dataset.monsterId
-    });
-  });
 }
