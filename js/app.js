@@ -14,6 +14,146 @@ function mwUpdateWallet() {
   }
 }
 
+function mwRenderStarterEgg() {
+  const area = document.getElementById("hatchArea");
+  const title = document.getElementById("hatchTitle");
+  const content = document.getElementById("hatchContent");
+
+  if (!area || !title || !content || !mwState) return;
+
+  if (!mwState.starterEgg) {
+    mwState.starterEgg = {
+      taps: 0,
+      opened: false,
+      creatureId: ""
+    };
+  }
+
+  const egg = mwState.starterEgg;
+  const creature = egg.creatureId
+    ? mwState.monsters?.[egg.creatureId]
+    : null;
+
+  area.classList.remove("hidden");
+
+  if (egg.opened && creature) {
+    title.textContent = creature.name
+      ? "🎉 ¡Tu criatura ya tiene nombre!"
+      : "✨ ¡Tu criatura ha nacido!";
+
+    if (creature.name) {
+      content.innerHTML = `
+        <p>Tu compañero se llama
+          <strong>${mwEscapeHTML(creature.name)}</strong>.
+        </p>
+        <p>Rareza: ${mwEscapeHTML(creature.rarity)}</p>
+      `;
+      return;
+    }
+
+    content.innerHTML = `
+      <img
+        src="${mwEscapeHTML(creature.image)}"
+        alt="Tu nueva criatura"
+        style="width:160px;max-width:100%;display:block;margin:16px auto;"
+      >
+      <p>${mwEscapeHTML(creature.kind)}</p>
+      <p>Rareza: <strong>${mwEscapeHTML(creature.rarity)}</strong></p>
+      <p>Producción: <strong>${Number(creature.baseProduction).toLocaleString("es-PE")} monedas/h</strong></p>
+      <form onsubmit="mwNameStarterCreature(event)">
+        <label for="starterCreatureName">Elige su nombre:</label>
+        <input
+          id="starterCreatureName"
+          type="text"
+          maxlength="20"
+          placeholder="Escribe un nombre"
+          required
+        >
+        <button class="primary" type="submit">
+          💖 Confirmar nombre
+        </button>
+      </form>
+    `;
+    return;
+  }
+
+  title.textContent = "🥚 ¡Tu huevo de regalo!";
+  content.innerHTML = `
+    <div style="font-size:76px;text-align:center;">🥚✨</div>
+    <p>Toca el huevo 5 veces para descubrir tu criatura.</p>
+    <p>Toques: <strong>${egg.taps} / 5</strong></p>
+    <button
+      class="primary"
+      type="button"
+      onclick="mwTapStarterEgg()"
+    >
+      🥚 TOCAR HUEVO
+    </button>
+  `;
+}
+
+function mwTapStarterEgg() {
+  const egg = mwState.starterEgg;
+
+  if (egg.opened && egg.creatureId) return;
+
+  egg.taps = Math.min(5, egg.taps + 1);
+
+  if (egg.taps === 5) {
+    const creature = mwRollMonster();
+
+    creature.level = 1;
+    creature.xp = 0;
+
+    egg.opened = true;
+    egg.creatureId = creature.id;
+
+    mwState.monsters[creature.id] = creature;
+  }
+
+  if (!mwSaveState(mwState)) {
+    alert("No se pudo guardar el progreso del huevo.");
+    return;
+  }
+
+  mwRenderStarterEgg();
+}
+
+function mwNameStarterCreature(event) {
+  event.preventDefault();
+
+  const input = document.getElementById("starterCreatureName");
+  const egg = mwState.starterEgg;
+  const creature = egg?.creatureId
+    ? mwState.monsters?.[egg.creatureId]
+    : null;
+
+  if (!creature || !input) return;
+
+  const name = input.value.trim();
+
+  if (!name) {
+    alert("Escribe un nombre para tu criatura.");
+    return;
+  }
+
+  creature.name = name.slice(0, 20);
+
+  if (!mwState.owned.includes(creature.id)) {
+    mwState.owned.push(creature.id);
+  }
+
+  if (!mwSaveState(mwState)) {
+    mwState.owned = mwState.owned.filter(id => id !== creature.id);
+    creature.name = "";
+    alert("No se pudo guardar el nombre. Inténtalo de nuevo.");
+    return;
+  }
+
+  mwRenderGame();
+  alert(`¡Bienvenido, ${creature.name}!`);
+}
+
 function mwRenderGame() {
   mwUpdateWallet();
 
