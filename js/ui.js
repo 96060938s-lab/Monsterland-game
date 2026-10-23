@@ -61,6 +61,7 @@ function mwCreateMonsterCard(monster, state, mode = "collection") {
   `;
 }
 
+
 function mwRenderMonsterCards(container, state, mode = "collection") {
   if (!container) {
     console.error("MonsterWorld: no se encontró el contenedor de monstruos.");
@@ -71,10 +72,32 @@ function mwRenderMonsterCards(container, state, mode = "collection") {
     ? MW_MONSTERS
     : mwGetOwnedMonsters(state);
 
-  container.innerHTML = monsters
+  if (mode === "shop") {
+    container.innerHTML = monsters
+      .map(monster => mwCreateMonsterCard(monster, state, mode))
+      .join("");
+    return;
+  }
+
+  const monsterCards = monsters
     .map(monster => mwCreateMonsterCard(monster, state, mode))
     .join("");
+
+  const extraSpace = `
+    <button
+      type="button"
+      class="monster-card extra-space"
+      id="addMonsterSpace"
+      aria-label="Comprar espacio adicional"
+      onclick="mwBuyMonsterSpace()"
+    >
+      <span style="font-size:56px;">＋</span>
+    </button>
+  `;
+
+  container.innerHTML = monsterCards + extraSpace;
 }
+
 
 function mwBindMonsterActions(container, onAction) {
   if (!container || typeof onAction !== "function") {
