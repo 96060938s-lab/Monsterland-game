@@ -14,6 +14,7 @@ function mwUpdateWallet() {
   }
 }
 
+
 function mwRenderStarterEgg() {
   const area = document.getElementById("hatchArea");
   const title = document.getElementById("hatchTitle");
@@ -28,6 +29,74 @@ function mwRenderStarterEgg() {
       creatureId: ""
     };
   }
+
+  const egg = mwState.starterEgg;
+  const creature = egg.creatureId
+    ? mwState.monsters?.[egg.creatureId]
+    : null;
+
+  area.classList.remove("hidden");
+
+  if (egg.opened && creature) {
+    title.textContent = creature.name
+      ? "🎉 ¡Tu criatura ya tiene nombre!"
+      : "✨ ¡Tu criatura ha nacido!";
+
+    if (creature.name) {
+      content.innerHTML = `
+        <p>Tu compañero se llama
+          <strong>${mwEscapeHTML(creature.name)}</strong>.
+        </p>
+        <p>Rareza: ${mwEscapeHTML(creature.rarity)}</p>
+      `;
+      return;
+    }
+
+    content.innerHTML = `
+      <img
+        src="${mwEscapeHTML(creature.image)}"
+        alt="Tu nueva criatura"
+        style="width:160px;max-width:100%;display:block;margin:16px auto;"
+      >
+      <p>${mwEscapeHTML(creature.kind)}</p>
+      <p>Rareza: <strong>${mwEscapeHTML(creature.rarity)}</strong></p>
+      <p>Producción: <strong>${Number(creature.baseProduction).toLocaleString("es-PE")} monedas/h</strong></p>
+      <form onsubmit="mwNameStarterCreature(event)">
+        <label for="starterCreatureName">Elige su nombre:</label>
+        <input
+          id="starterCreatureName"
+          type="text"
+          maxlength="20"
+          placeholder="Escribe un nombre"
+          required
+        >
+        <button class="primary" type="submit">
+          💖 Confirmar nombre
+        </button>
+      </form>
+    `;
+    return;
+  }
+
+  title.textContent = "🥚 ¡Tu huevo de regalo!";
+
+  content.innerHTML = `
+    <div
+      role="button"
+      tabindex="0"
+      aria-label="Toca el huevo para descubrir tu compañero"
+      onclick="mwTapStarterEgg()"
+      onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();mwTapStarterEgg();}"
+      style="cursor:pointer;text-align:center;padding:20px 0;"
+    >
+      <div style="font-size:110px;line-height:1.4;">
+        🥚✨
+      </div>
+      <p>Toca el huevo para descubrir tu compañero</p>
+    </div>
+  `;
+}
+
 
   const egg = mwState.starterEgg;
   const creature = egg.creatureId
