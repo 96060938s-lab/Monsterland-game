@@ -1,32 +1,45 @@
-export function defaultSave() {
+export function loadSave() {
+  try {
+    const raw = localStorage.getItem("monsterWorldSave");
+    if (!raw) return defaultSave();
+
+    const parsed = JSON.parse(raw);
+    return migrateSave(parsed);
+  } catch (error) {
+    console.error("Error loading save:", error);
+    return defaultSave();
+  }
+}
+
+export function saveGame(state) {
+  try {
+    localStorage.setItem("monsterWorldSave", JSON.stringify(state));
+  } catch (error) {
+    console.error("Error saving game:", error);
+  }
+}
+
+export function migrateSave(save) {
+  const base = defaultSave();
+
   return {
-    version: 1,
-    coins: 100,
-    owned: [],
-    petNames: {},
+    ...base,
+    ...save,
     inventory: {
-      eggs: [
-        {
-          id: "starter-gift-egg",
-          type: "common",
-          gift: true,
-          hatchProgress: 0,
-          status: "sealed"
-        }
-      ],
-      food: [],
-      bath: [],
-      sleep: []
+      ...base.inventory,
+      ...(save.inventory || {})
     },
     trainer: {
-      level: 1,
-      xp: 0
+      ...base.trainer,
+      ...(save.trainer || {})
     },
     slots: {
-      capacity: 1
+      ...base.slots,
+      ...(save.slots || {})
     },
-    monsterProgress: {},
-    incubating: [],
-    starterEggClaimed: false
+    monsterProgress: save.monsterProgress || {},
+    petNames: save.petNames || {},
+    incubating: Array.isArray(save.incubating) ? save.incubating : [],
+    starterEggClaimed: Boolean(save.starterEggClaimed)
   };
 }
