@@ -2,6 +2,10 @@
 let mwState = null;
 let mwHatchTimer = null;
 
+/* =====================================
+   MONEDAS Y NIVEL DEL JUGADOR
+===================================== */
+
 function mwUpdateWallet() {
   if (!mwState) return;
 
@@ -18,13 +22,12 @@ function mwUpdateWallet() {
   }
 }
 
-
 /* =====================================
-   HUEVO INICIAL Y RECUPERACIÓN DEL NOMBRE
+   HUEVO INICIAL Y RECUPERACIÓN
 ===================================== */
 
 function mwEnsureStarterEgg() {
-  if (!mwState.starterEgg) {
+  if (!mwState.starterEgg || typeof mwState.starterEgg !== "object") {
     mwState.starterEgg = {
       taps: 0,
       opened: false,
@@ -38,9 +41,8 @@ function mwEnsureStarterEgg() {
 
   egg.taps = Math.min(5, Math.max(0, Number(egg.taps) || 0));
   egg.opened = egg.opened === true;
-  egg.creatureId = typeof egg.creatureId === "string"
-    ? egg.creatureId
-    : "";
+  egg.creatureId =
+    typeof egg.creatureId === "string" ? egg.creatureId : "";
   egg.named = egg.named === true;
   egg.revealed = egg.revealed === true;
 
@@ -59,7 +61,6 @@ function mwEnsureStarterEgg() {
   return egg;
 }
 
-
 function mwGetStarterCreature() {
   const egg = mwEnsureStarterEgg();
 
@@ -68,10 +69,9 @@ function mwGetStarterCreature() {
   return mwState.monsters[egg.creatureId] || null;
 }
 
-
 /*
-  Si el nombre ya está guardado, se recupera el nacimiento.
-  Así no se vuelve a pedir el nombre después de actualizar.
+  Recupera el nacimiento cuando el monstruo y su nombre
+  ya están guardados. No vuelve a pedir el nombre.
 */
 function mwRecoverStarterHatch() {
   if (!mwState) return;
@@ -81,36 +81,32 @@ function mwRecoverStarterHatch() {
 
   if (!egg.opened || !creature) return;
 
-  const savedName = typeof creature.name === "string"
-    ? creature.name.trim()
-    : "";
+  const savedName =
+    typeof creature.name === "string" ? creature.name.trim() : "";
 
   if (!savedName) return;
 
   creature.name = savedName.slice(0, 20);
 
-  // Evitar duplicados y colocar el monstruo primero.
   mwState.owned = mwState.owned.filter(
     id => id !== creature.id
   );
 
   mwState.owned.unshift(creature.id);
 
-  // Si el nombre existe, el nacimiento ya fue completado.
   egg.named = true;
   egg.revealed = true;
   mwState.activeTab = "monstruos";
 
   if (!mwSaveState(mwState)) {
     console.error(
-      "MonsterWorld: no se pudo guardar la recuperación del nacimiento."
+      "MonsterWorld: no se pudo recuperar el nacimiento."
     );
   }
 }
 
-
 /* =====================================
-   PRESENTACIÓN DEL HUEVO Y DEL MONSTRUO
+   MOSTRAR EL HUEVO Y EL NACIMIENTO
 ===================================== */
 
 function mwRenderStarterEgg() {
@@ -123,14 +119,17 @@ function mwRenderStarterEgg() {
   const egg = mwEnsureStarterEgg();
   const creature = mwGetStarterCreature();
 
+  // Ocultar el proceso solo cuando el nacimiento terminó.
   if (egg.named && egg.revealed && creature) {
     area.classList.add("hidden");
+    area.style.display = "";
     return;
   }
 
   area.classList.remove("hidden");
+  area.style.display = "flex";
 
-  // Primera etapa: mostrar solamente el huevo.
+  // ETAPA 1: huevo de regalo.
   if (!egg.opened || !creature) {
     title.textContent = "🥚 ¡Tu huevo de regalo!";
 
@@ -143,18 +142,24 @@ function mwRenderStarterEgg() {
         onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();mwTapStarterEgg();}"
         style="cursor:pointer;text-align:center;padding:24px 0;"
       >
-        <div style="font-size:110px;line-height:1.4;user-select:none;">
-          🥚✨
-        </div>
+        <div style="
+          font-size:110px;
+          line-height:1.4;
+          user-select:none;
+        ">🥚✨</div>
 
         <p>Toca el huevo para descubrir tu compañero</p>
+
+        <p style="opacity:.8;font-size:14px;">
+          Toques: ${egg.taps} / 5
+        </p>
       </div>
     `;
 
     return;
   }
 
-  // Segunda etapa: pedir el nombre únicamente si todavía no existe.
+  // ETAPA 2: elegir el nombre.
   if (!egg.named) {
     title.textContent = "✨ ¡Tu criatura ha nacido!";
 
@@ -162,7 +167,12 @@ function mwRenderStarterEgg() {
       <img
         src="${mwEscapeHTML(creature.image || "")}"
         alt="${mwEscapeHTML(creature.kind || "Tu monstruo")}"
-        style="width:180px;max-width:80%;display:block;margin:18px auto;"
+        style="
+          width:180px;
+          max-width:80%;
+          display:block;
+          margin:18px auto;
+        "
       >
 
       <h3>${mwEscapeHTML(creature.kind || "Criatura mágica")}</h3>
@@ -203,14 +213,19 @@ function mwRenderStarterEgg() {
     return;
   }
 
-  // Tercera etapa: mostrar la ficha del monstruo nacido.
+  // ETAPA 3: mostrar la ficha del monstruo.
   title.textContent = "🎉 ¡Conoce a tu nuevo compañero!";
 
   content.innerHTML = `
     <img
       src="${mwEscapeHTML(creature.image || "")}"
       alt="${mwEscapeHTML(creature.name || "Tu monstruo")}"
-      style="width:180px;max-width:80%;display:block;margin:18px auto;"
+      style="
+        width:180px;
+        max-width:80%;
+        display:block;
+        margin:18px auto;
+      "
     >
 
     <h2>${mwEscapeHTML(creature.name || "Nuevo compañero")}</h2>
@@ -249,7 +264,6 @@ function mwRenderStarterEgg() {
   }
 }
 
-
 /* =====================================
    TOCAR EL HUEVO
 ===================================== */
@@ -264,9 +278,15 @@ function mwTapStarterEgg() {
   egg.taps = Math.min(5, egg.taps + 1);
 
   if (egg.taps >= 5) {
+    if (typeof mwRollMonster !== "function") {
+      console.error("MonsterWorld: no existe mwRollMonster().");
+      alert("No se pudo cargar el sistema de monstruos.");
+      return;
+    }
+
     const creature = mwRollMonster();
 
-    if (!creature) {
+    if (!creature || !creature.id) {
       egg.taps = 4;
       mwSaveState(mwState);
 
@@ -294,7 +314,6 @@ function mwTapStarterEgg() {
 
   mwRenderStarterEgg();
 }
-
 
 /* =====================================
    GUARDAR EL NOMBRE ELEGIDO
@@ -347,7 +366,6 @@ function mwNameStarterCreature(event) {
   mwRenderStarterEgg();
 }
 
-
 /* =====================================
    TERMINAR EL NACIMIENTO
 ===================================== */
@@ -358,7 +376,14 @@ function mwFinishStarterHatch() {
   const egg = mwEnsureStarterEgg();
   const creature = mwGetStarterCreature();
 
-  if (!creature || !egg.named || !creature.name) return;
+  if (
+    !creature ||
+    !egg.named ||
+    typeof creature.name !== "string" ||
+    !creature.name.trim()
+  ) {
+    return;
+  }
 
   egg.revealed = true;
 
@@ -375,8 +400,17 @@ function mwFinishStarterHatch() {
     return;
   }
 
+  if (mwHatchTimer) {
+    clearTimeout(mwHatchTimer);
+    mwHatchTimer = null;
+  }
+
   const area = document.getElementById("hatchArea");
-  if (area) area.classList.add("hidden");
+
+  if (area) {
+    area.classList.add("hidden");
+    area.style.display = "";
+  }
 
   const game = document.getElementById("gameInterface");
 
@@ -407,7 +441,6 @@ function mwFinishStarterHatch() {
   mwUpdateWallet();
 }
 
-
 /* =====================================
    MOSTRAR COLECCIÓN Y TIENDA
 ===================================== */
@@ -420,98 +453,109 @@ function mwRenderGame() {
   const collection = document.getElementById("collection");
   const shop = document.getElementById("shopGrid");
 
-  if (collection) {
+  if (
+    collection &&
+    typeof mwRenderMonsterCards === "function"
+  ) {
     mwRenderMonsterCards(collection, mwState, "collection");
   }
 
-  if (shop) {
+  if (
+    shop &&
+    typeof mwRenderMonsterCards === "function"
+  ) {
     mwRenderMonsterCards(shop, mwState, "shop");
   }
 
   mwRenderStarterEgg();
 }
 
-
 /* =====================================
    ACCIONES DE LAS TARJETAS
 ===================================== */
 
 function mwHandleMonsterAction(data) {
-  if (!mwState) return;
+  if (!mwState || !data) return;
 
   const monster =
     mwState.monsters?.[data.monsterId] ||
-    mwGetMonster(data.monsterId);
+    (typeof mwGetMonster === "function"
+      ? mwGetMonster(data.monsterId)
+      : null);
 
   if (!monster) return;
 
-  if (data.action === "shop") {
-    if (mwState.owned.includes(monster.id)) return;
+  if (data.action !== "shop") return;
 
-    const price = Number(monster.price) || 0;
+  if (mwState.owned.includes(monster.id)) return;
 
-    if (mwState.coins < price) {
-      alert("No tienes suficientes monedas.");
-      return;
-    }
+  const price = Number(monster.price) || 0;
 
-    if (!confirm(
-      `¿Quieres comprar a ${monster.name || monster.kind} por ${price} monedas?`
-    )) {
-      return;
-    }
-
-    const previousCoins = mwState.coins;
-    const previousOwned = [...mwState.owned];
-    const previousMonster = mwState.monsters[monster.id];
-
-    mwState.coins -= price;
-
-    if (!mwState.monsters[monster.id]) {
-      mwState.monsters[monster.id] = {
-        ...monster,
-        level: 1,
-        xp: 0
-      };
-    }
-
-    if (!mwState.owned.includes(monster.id)) {
-      mwState.owned.push(monster.id);
-    }
-
-    if (!mwSaveState(mwState)) {
-      mwState.coins = previousCoins;
-      mwState.owned = previousOwned;
-
-      if (previousMonster) {
-        mwState.monsters[monster.id] = previousMonster;
-      } else {
-        delete mwState.monsters[monster.id];
-      }
-
-      alert("No se pudo guardar la compra en este dispositivo.");
-      return;
-    }
-
-    mwRenderGame();
-    alert(`¡Has conseguido a ${monster.name || monster.kind}!`);
+  if (Number(mwState.coins) < price) {
+    alert("No tienes suficientes monedas.");
+    return;
   }
-}
 
+  if (!confirm(
+    `¿Quieres comprar a ${monster.name || monster.kind} por ${price} monedas?`
+  )) {
+    return;
+  }
+
+  const previousCoins = mwState.coins;
+  const previousOwned = [...mwState.owned];
+  const previousMonster = mwState.monsters[monster.id];
+
+  mwState.coins -= price;
+
+  if (!mwState.monsters[monster.id]) {
+    mwState.monsters[monster.id] = {
+      ...monster,
+      level: 1,
+      xp: 0
+    };
+  }
+
+  if (!mwState.owned.includes(monster.id)) {
+    mwState.owned.push(monster.id);
+  }
+
+  if (!mwSaveState(mwState)) {
+    mwState.coins = previousCoins;
+    mwState.owned = previousOwned;
+
+    if (previousMonster) {
+      mwState.monsters[monster.id] = previousMonster;
+    } else {
+      delete mwState.monsters[monster.id];
+    }
+
+    alert("No se pudo guardar la compra en este dispositivo.");
+    return;
+  }
+
+  mwRenderGame();
+  alert(`¡Has conseguido a ${monster.name || monster.kind}!`);
+}
 
 function mwSetupMonsterActions() {
   const collection = document.getElementById("collection");
   const shop = document.getElementById("shopGrid");
 
-  if (collection) {
+  if (
+    collection &&
+    typeof mwBindMonsterActions === "function"
+  ) {
     mwBindMonsterActions(collection, mwHandleMonsterAction);
   }
 
-  if (shop) {
+  if (
+    shop &&
+    typeof mwBindMonsterActions === "function"
+  ) {
     mwBindMonsterActions(shop, mwHandleMonsterAction);
   }
 }
-
 
 /* =====================================
    NAVEGACIÓN
@@ -519,14 +563,18 @@ function mwSetupMonsterActions() {
 
 function mwSetupNavigation() {
   document.querySelectorAll(".bottom-nav button").forEach(button => {
+    if (button.dataset.mwEggGuard === "true") return;
+
+    button.dataset.mwEggGuard = "true";
+
     button.addEventListener("click", () => {
       const egg = mwEnsureStarterEgg();
 
+      // No permitir entrar a otras secciones antes del nacimiento.
       if (!egg.revealed) return;
     });
   });
 }
-
 
 function mwRestoreNavigation() {
   if (!mwState) return;
@@ -542,12 +590,16 @@ function mwRestoreNavigation() {
   }
 }
 
-
 /* =====================================
    INICIO DEL JUEGO
 ===================================== */
 
 function mwStartGame() {
+  if (typeof mwLoadState !== "function") {
+    console.error("MonsterWorld: no existe mwLoadState().");
+    return;
+  }
+
   mwState = mwLoadState();
 
   if (!mwState) {
@@ -555,53 +607,44 @@ function mwStartGame() {
     return;
   }
 
-  mwEnsureStarterEgg();
+  const egg = mwEnsureStarterEgg();
+  const creature = mwGetStarterCreature();
 
   /*
-    Recuperar el nacimiento si el monstruo y su nombre
-    ya estaban guardados.
+    CORRECCIÓN PRINCIPAL:
+    Si el huevo todavía no tiene una criatura con nombre,
+    debe mostrarse el regalo, aunque el guardado anterior
+    tenga por error revealed=true.
+
+    No se reinician las monedas ni los demás monstruos.
   */
-  mwRecoverStarterHatch();
+  const completed =
+    egg.opened === true &&
+    !!creature &&
+    typeof creature.name === "string" &&
+    creature.name.trim() !== "";
 
-  /*
-    CORRECCIÓN:
-    Si la partida indica que el huevo ya se completó,
-    pero no hay ningún monstruo en la colección ni un
-    nacimiento recuperable, volver a mostrar el regalo.
-  */
-  const starterEgg = mwEnsureStarterEgg();
-
-  if (
-    Array.isArray(mwState.owned) &&
-    mwState.owned.length === 0 &&
-    starterEgg.revealed === true
-  ) {
-    mwState.starterEgg = {
-      taps: 0,
-      opened: false,
-      creatureId: "",
-      named: false,
-      revealed: false
-    };
-
-    if (!mwSaveState(mwState)) {
-      console.error(
-        "MonsterWorld: no se pudo reparar el estado del huevo."
-      );
-    }
+  if (!completed) {
+    egg.named = false;
+    egg.revealed = false;
   }
+
+  mwRecoverStarterHatch();
 
   mwSetupMonsterActions();
   mwSetupNavigation();
-  mwRenderGame();
 
-  const egg = mwEnsureStarterEgg();
+  const currentEgg = mwEnsureStarterEgg();
   const game = document.getElementById("gameInterface");
   const area = document.getElementById("hatchArea");
 
-  if (!egg.revealed) {
+  if (!currentEgg.revealed) {
     if (game) game.style.display = "none";
-    if (area) area.classList.remove("hidden");
+
+    if (area) {
+      area.classList.remove("hidden");
+      area.style.display = "flex";
+    }
 
     document.querySelectorAll("[data-page]").forEach(page => {
       page.hidden = true;
@@ -611,12 +654,20 @@ function mwStartGame() {
       button.classList.remove("active");
     });
 
-    // Si aún no tiene nombre, continuar el proceso pendiente.
     mwRenderStarterEgg();
+
+    // Guardar la corrección del estado del huevo.
+    if (!mwSaveState(mwState)) {
+      console.error("No se pudo guardar el estado del huevo inicial.");
+    }
 
   } else {
     if (game) game.style.display = "";
-    if (area) area.classList.add("hidden");
+
+    if (area) {
+      area.classList.add("hidden");
+      area.style.display = "";
+    }
 
     document.querySelectorAll("[data-page]").forEach(page => {
       const isCollection = page.dataset.page === "monstruos";
@@ -640,6 +691,7 @@ function mwStartGame() {
     });
 
     mwRestoreNavigation();
+    mwRenderGame();
   }
 
   mwUpdateWallet();
@@ -647,6 +699,9 @@ function mwStartGame() {
   console.log("MonsterWorld iniciado correctamente.");
 }
 
+/* =====================================
+   EJECUTAR AL CARGAR LA PÁGINA
+===================================== */
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", mwStartGame);
