@@ -50,7 +50,9 @@ function tryOpenStarterEgg() {
 
   const customName = namePrompt && namePrompt.trim() ? namePrompt.trim() : monster.name;
 
+  if (!state.petNames) state.petNames = {};
   state.petNames[monster.id] = customName;
+
   state.starterEggClaimed = true;
   state.inventory.eggs = state.inventory.eggs.filter((item) => item.id !== "starter-gift-egg");
 
