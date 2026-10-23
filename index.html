@@ -10,13 +10,23 @@
 </head>
 <body>
 
-<div id="portada">
-  <h1 style="color:#f4cc70;margin:0">MonsterWorld</h1>
-  <p class="portada-sub">Tu mundo mágico te espera</p>
-  <div class="intro-art">🔥　🌿　💧</div>
-  <div class="loadbar"><div id="barraCarga"></div></div>
-  <p id="textoCarga" style="color:#f4cc70">Cargando tu mundo... 0%</p>
+
+<div id="portada" aria-live="polite">
+  <img
+    src="./portada.png"
+    alt="Portada de MonsterWorld"
+    class="portada-imagen"
+  >
+
+  <div class="portada-contenido">
+    <p id="textoCarga">Cargando mundo...</p>
+
+    <div class="loadbar">
+      <div id="barraCarga"></div>
+    </div>
+  </div>
 </div>
+
 
 <div class="top">
   <div class="brand">
