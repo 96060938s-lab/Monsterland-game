@@ -208,5 +208,48 @@
 <script src="./js/monsters.js"></script>
 <script src="./js/ui.js"></script>
 <script src="./js/app.js"></script>
+
+<script>
+(function () {
+  const portada = document.getElementById("portada");
+  const barra = document.getElementById("barraCarga");
+  const texto = document.getElementById("textoCarga");
+
+  if (!portada || !barra || !texto) {
+    console.error("No se encontraron los elementos de la portada.");
+    return;
+  }
+
+  portada.style.opacity = "1";
+  portada.style.visibility = "visible";
+  portada.style.transition = "opacity 0.5s ease";
+
+  barra.style.width = "0%";
+  texto.textContent = "Cargando mundo...";
+
+  setTimeout(function () {
+    barra.style.width = "35%";
+  }, 300);
+
+  setTimeout(function () {
+    texto.textContent = "Despertando monstruos...";
+    barra.style.width = "70%";
+  }, 1800);
+
+  setTimeout(function () {
+    texto.textContent = "¡Todo listo! Tu aventura comienza.";
+    barra.style.width = "100%";
+  }, 3300);
+
+  setTimeout(function () {
+    portada.style.opacity = "0";
+    portada.style.visibility = "hidden";
+    portada.style.pointerEvents = "none";
+  }, 4500);
+})();
+</script>
+</body>
+</html>
+
 </body>
 </html>
