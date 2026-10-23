@@ -37,32 +37,40 @@ export const monsters = [
   }
 ];
 
+
 export const rarities = [
   {
     name: "COMÚN",
-    chance: 70,
+    chance: 58,
     minRate: 800,
     maxRate: 1100
   },
   {
     name: "POCO COMÚN",
-    chance: 20,
+    chance: 22,
     minRate: 1100,
     maxRate: 1800
   },
   {
+    name: "RARO",
+    chance: 10,
+    minRate: 1500,
+    maxRate: 2500
+  },
+  {
     name: "ÉPICO",
-    chance: 8,
+    chance: 9,
     minRate: 1800,
     maxRate: 3500
   },
   {
     name: "LEGENDARIO",
-    chance: 2,
+    chance: 1,
     minRate: 3500,
     maxRate: 6000
   }
 ];
+
 
 export const monsterTypes = [
   { name: "FUEGO", emoji: "🔥" },
