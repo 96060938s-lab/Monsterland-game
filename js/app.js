@@ -17,7 +17,7 @@ function mwUpdateWallet() {
 function mwRenderGame() {
   mwUpdateWallet();
 
-  const collection = document.getElementById("monstersGrid");
+  const collection = document.getElementById("collection");
   const shop = document.getElementById("shopGrid");
 
   if (collection) {
