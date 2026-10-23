@@ -32,12 +32,16 @@ function mwNormalizeState(data) {
 
   const savedEgg = data.starterEgg;
 
-  const starterEgg = {
-    taps: Number.isInteger(savedEgg?.taps)
-      ? Math.min(5, Math.max(0, savedEgg.taps))
-      : 0,
-    opened: savedEgg?.opened === true
-  };
+  
+const starterEgg = {
+  taps: Number.isInteger(savedEgg?.taps)
+    ? Math.min(5, Math.max(0, savedEgg.taps))
+    : 0,
+  opened: savedEgg?.opened === true,
+  creatureId: typeof savedEgg?.creatureId === "string"
+    ? savedEgg.creatureId
+    : ""
+};
 
   return {
     ...defaults,
