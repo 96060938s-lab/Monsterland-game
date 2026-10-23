@@ -1,114 +1,140 @@
-import { loadSave, saveGame } from "./save.js";
-import { getRandomMonsterFromPool, getRandomRarity } from "./monsters.js";
-import { renderCollection, renderCoins, renderStarterEgg, showNotice } from "./ui.js";
 
-const portada = document.getElementById("portada");
-const barra = document.getElementById("barraCarga");
-const loadingCopy = document.getElementById("loadingCopy");
+let mwState = null;
 
-const phrases = [
-  "Despertando monstruos...",
-  "Preparando la incubadora...",
-  "Revisando el bosque mágico...",
-  "Conectando energía de las criaturas...",
-  "Listos para jugar..."
-];
+function mwUpdateWallet() {
+  const coinsElement = document.getElementById("coins");
+  const levelElement = document.getElementById("playerLevel");
 
-if (portada && barra && loadingCopy) {
-  let width = 0;
-  let phraseIndex = 0;
+  if (coinsElement) {
+    coinsElement.textContent = mwState.coins.toLocaleString("es-PE");
+  }
 
-  const interval = setInterval(() => {
-    width += 10;
-    barra.style.width = width + "%";
-
-    if (width % 25 === 0 && phraseIndex < phrases.length - 1) {
-      phraseIndex++;
-      loadingCopy.textContent = phrases[phraseIndex];
-    }
-
-    if (width >= 100) {
-      clearInterval(interval);
-      loadingCopy.textContent = "Listos para jugar...";
-      setTimeout(() => {
-        portada.classList.add("hidden");
-      }, 400);
-    }
-  }, 120);
+  if (levelElement) {
+    levelElement.textContent = mwState.playerLevel;
+  }
 }
 
-const state = loadSave();
+function mwRenderGame() {
+  mwUpdateWallet();
 
-function persist() {
-  saveGame(state);
+  const collection = document.getElementById("monstersGrid");
+  const shop = document.getElementById("shopGrid");
+
+  if (collection) {
+    mwRenderMonsterCards(collection, mwState, "collection");
+  }
+
+  if (shop) {
+    mwRenderMonsterCards(shop, mwState, "shop");
+  }
 }
 
-function tryOpenStarterEgg() {
-  const egg = state.inventory.eggs.find((item) => item.id === "starter-gift-egg");
-  if (!egg || state.starterEggClaimed) return;
+function mwHandleMonsterAction(data) {
+  const monster = mwGetMonster(data.monsterId);
 
-  egg.hatchProgress = Number(egg.hatchProgress || 0) + 1;
-
-  if (egg.hatchProgress < 4) {
-    const remaining = 4 - egg.hatchProgress;
-    showNotice(`¡El huevo se está abriendo! Falta${remaining === 1 ? "" : "n"} ${remaining} toque${remaining === 1 ? "" : "s"}.`);
-    persist();
-    renderStarterEgg(state);
+  if (!monster) {
     return;
   }
 
-  const rarity = getRandomRarity();
-  const chosen = getRandomMonsterFromPool(state.owned);
+  if (data.action === "shop") {
+    if (mwState.owned.includes(monster.id)) {
+      return;
+    }
 
-  if (!chosen) {
-    showNotice("No hay más monstruos disponibles.");
-    state.starterEggClaimed = true;
-    state.inventory.eggs = state.inventory.eggs.filter((item) => item.id !== "starter-gift-egg");
-    persist();
-    renderStarterEgg(state);
-    renderCollection(state);
+    if (mwState.coins < monster.price) {
+      alert("No tienes suficientes monedas.");
+      return;
+    }
+
+    const confirmed = confirm(
+      `¿Quieres comprar a ${monster.name} por ${monster.price} monedas?`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    mwState.coins -= monster.price;
+    mwState.owned.push(monster.id);
+
+    if (!mwSaveState(mwState)) {
+      alert("No se pudo guardar la compra en este dispositivo.");
+      return;
+    }
+
+    mwRenderGame();
+    alert(`¡Has conseguido a ${monster.name}!`);
     return;
   }
 
-  const monster = { ...chosen, rarity };
+  if (data.action === "collection") {
+    if (mwState.owned.includes(monster.id)) {
+      alert(`¡${monster.name} es uno de tus monstruos!`);
+    }
+  }
+}
 
-  state.owned.push(monster.id);
-  state.monsterProgress[monster.id] = { level: 1, xp: 0 };
+function mwSetupMonsterActions() {
+  const collection = document.getElementById("monstersGrid");
+  const shop = document.getElementById("shopGrid");
 
-  const namePrompt = window.prompt(
-    `¡Descubriste a ${monster.name} (${rarity})! ¿Cómo quieres llamarlo?`,
-    monster.name
+  if (collection) {
+    mwBindMonsterActions(collection, mwHandleMonsterAction);
+  }
+
+  if (shop) {
+    mwBindMonsterActions(shop, mwHandleMonsterAction);
+  }
+}
+
+function mwSetupNavigation() {
+  const tabs = document.querySelectorAll("[data-tab]");
+
+  tabs.forEach(button => {
+    button.addEventListener("click", () => {
+      const tab = button.dataset.tab;
+
+      document.querySelectorAll("[data-page]").forEach(page => {
+        page.hidden = page.dataset.page !== tab;
+      });
+
+      tabs.forEach(item => {
+        item.classList.toggle("active", item === button);
+      });
+
+      mwState.activeTab = tab;
+      mwSaveState(mwState);
+    });
+  });
+}
+
+function mwRestoreNavigation() {
+  if (!mwState.activeTab) {
+    return;
+  }
+
+  const button = document.querySelector(
+    `[data-tab="${mwState.activeTab}"]`
   );
 
-  const customName = namePrompt && namePrompt.trim() ? namePrompt.trim() : monster.name;
-
-  if (!state.petNames) state.petNames = {};
-  state.petNames[monster.id] = customName;
-
-  state.starterEggClaimed = true;
-  state.inventory.eggs = state.inventory.eggs.filter((item) => item.id !== "starter-gift-egg");
-
-  persist();
-  renderCoins(state);
-  renderCollection(state);
-  renderStarterEgg(state);
-
-  showNotice(`¡${customName} ha llegado a tu vida!`);
+  if (button) {
+    button.click();
+  }
 }
 
-function init() {
-  if (!state.starterEggClaimed) {
-    renderStarterEgg(state);
-  }
+function mwStartGame() {
+  mwState = mwLoadState();
 
-  renderCoins(state);
-  renderCollection(state);
+  mwSetupMonsterActions();
+  mwSetupNavigation();
+  mwRenderGame();
+  mwRestoreNavigation();
+
+  console.log("MonsterWorld iniciado correctamente.");
 }
 
-document.addEventListener("click", (event) => {
-  if (event.target && event.target.id === "starterEggButton") {
-    tryOpenStarterEgg();
-  }
-});
-
-init();
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", mwStartGame);
+} else {
+  mwStartGame();
+}
