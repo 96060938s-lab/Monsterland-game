@@ -305,3 +305,19 @@ body {
   padding: 10px 12px;
   cursor: pointer;
 }
+.monster-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.mini-action {
+  border: 0;
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: linear-gradient(180deg, #f5d57d, #d19735);
+  color: #271d2d;
+  font-weight: bold;
+  cursor: pointer;
+}
