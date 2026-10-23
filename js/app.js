@@ -1,12 +1,17 @@
+import { createGameState } from "./state.js";
+import { renderCollection, renderCoins, showNotice } from "./ui.js";
+
+const game = createGameState();
+
 const portada = document.getElementById("portada");
 const barra = document.getElementById("barraCarga");
 const loadingCopy = document.getElementById("loadingCopy");
 
 const phrases = [
+  "Cargando mundo...",
   "Despertando monstruos...",
   "Preparando la incubadora...",
   "Revisando el bosque mágico...",
-  "Conectando energía de las criaturas...",
   "Listos para jugar..."
 ];
 
@@ -19,7 +24,7 @@ if (portada && barra && loadingCopy) {
     barra.style.width = width + "%";
 
     if (width % 25 === 0 && phraseIndex < phrases.length - 1) {
-      phraseIndex++;
+      phraseIndex += 1;
       loadingCopy.textContent = phrases[phraseIndex];
     }
 
@@ -32,3 +37,15 @@ if (portada && barra && loadingCopy) {
     }
   }, 120);
 }
+
+function init() {
+  renderCoins(game.state);
+  renderCollection(game.state);
+  showNotice("¡MonsterWorld cargado!");
+}
+
+document.getElementById("walletButton")?.addEventListener("click", () => {
+  showNotice("Billetera no conectada aún");
+});
+
+init();
