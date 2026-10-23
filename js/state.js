@@ -1,5 +1,4 @@
 
-
 const MW_DEFAULT_STATE = {
   coins: 100,
   playerLevel: 1,
@@ -8,9 +7,13 @@ const MW_DEFAULT_STATE = {
   care: {},
   lastDaily: "",
   activeTab: "monstruos",
+
   starterEgg: {
     taps: 0,
-    opened: false
+    opened: false,
+    creatureId: "",
+    named: false,
+    revealed: false
   }
 };
 
@@ -29,19 +32,23 @@ function mwNormalizeState(data) {
 
   const coins = Number(data.coins);
   const playerLevel = Number(data.playerLevel);
+  const savedEgg = data.starterEgg || {};
 
-  const savedEgg = data.starterEgg;
+  const starterEgg = {
+    taps: Number.isInteger(savedEgg.taps)
+      ? Math.min(5, Math.max(0, savedEgg.taps))
+      : 0,
 
-  
-const starterEgg = {
-  taps: Number.isInteger(savedEgg?.taps)
-    ? Math.min(5, Math.max(0, savedEgg.taps))
-    : 0,
-  opened: savedEgg?.opened === true,
-  creatureId: typeof savedEgg?.creatureId === "string"
-    ? savedEgg.creatureId
-    : ""
-};
+    opened: savedEgg.opened === true,
+
+    creatureId: typeof savedEgg.creatureId === "string"
+      ? savedEgg.creatureId
+      : "",
+
+    named: savedEgg.named === true,
+
+    revealed: savedEgg.revealed === true
+  };
 
   return {
     ...defaults,
@@ -84,4 +91,3 @@ const starterEgg = {
       : defaults.activeTab
   };
 }
-
